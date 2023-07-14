@@ -136,13 +136,14 @@
             var song = songs.find(x => x.searchTitle.toLocaleLowerCase().includes(search_text));
         }
         if (song && song.Song) {
-            song_html = buildSongHtml(song.Song)
+            song_html = buildSongHtml(song.Song, song.SongNumber)
         }
         $("#full_song_lyrics").html(song_html)
     }
 
-    function buildSongHtml(song) {
+    function buildSongHtml(song, song_number) {
         let html = "<div>";
+            html += "<h4>Song no :"+song_number+"</h4>";
         if (song.Chorus) {
             html += "<p class='line' name='Chorus'><span>" + song.Chorus + "</span></p>"
         }
