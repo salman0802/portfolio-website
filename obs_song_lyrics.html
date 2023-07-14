@@ -132,7 +132,8 @@
         if (song_no > 0) {
             var song = songs.find(x => x.SongNumber == song_no)
         } else {
-            var song = songs.find(x => x.searchTitle.toLocaleLowerCase().includes($(ele).val()))
+            let search_text = $(ele).val().toLocaleLowerCase();
+            var song = songs.find(x => x.searchTitle.toLocaleLowerCase().includes(search_text));
         }
         if (song && song.Song) {
             song_html = buildSongHtml(song.Song)
