@@ -24,12 +24,14 @@
 
 		function updateText(newText) {
 			// Check if the new window exists and update its text
-			if (!newWindow || !newWindow.document) {
+			if (!newWindow || (newWindow && newWindow.closed)) {
 				openWindow()
 			}
-			fontsize = getFontSize(newText.length);
-			newWindow.document.getElementById('text').style.fontSize = fontsize
-			newWindow.document.getElementById('text').innerHTML = newText;
+			if(!newWindow.closed){
+				fontsize = getFontSize(newText.length);
+				newWindow.document.getElementById('text').style.fontSize = fontsize
+				newWindow.document.getElementById('text').innerHTML = newText;
+			}
 		}
 
 		const getFontSize = (textLength) => {
