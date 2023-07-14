@@ -176,10 +176,12 @@
 		getSong(null, song_number);
 		$('html,body').animate({ scrollTop: ($("#main_container ").offset().top - $("header").offset().top) }, 'fast');
 	})
-
+	var obs_view = window.location.hash.substring(1);
 	$("body").on("click", ".line", function () {
 		let verse = $(this).find("span").html();
-		updateText(verse)
+		if(obs_view == "obs_view"){
+			updateText(verse);
+		}
 	})
 </script>
 
