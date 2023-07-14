@@ -53,11 +53,13 @@
 			src: url('fonts/Sree-Krushnadevaraya.woff') format('woff');
 		}
 		
-		#full_song_lyrics,
 		body {
 			font-family: Sree Krushnadevaraya;
 		}
-
+		
+		#full_song_lyrics{
+			font-size: 25px;
+		}
 		.accordion-button {
 			font-size: 20px;
 			padding: 4px 8px;
@@ -65,7 +67,7 @@
 		}
 
 		.accordion-body p {
-			font-size: 16px;
+			font-size: 20px;
 			padding: 1px 1px;
 			margin-bottom: 1px;
 		}
@@ -81,7 +83,7 @@
 	<header class="py-3 mb-3 border-bottom sticky-top" style=" background-color: #031633; ">
 		<div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: 1fr 2fr;">
 			<div class="dropdown">
-				<p id="page_title" class="text-center mb-0" style="color: #cfe2ff;font-size: 21px;">సీయోను గీతములు -
+				<p id="page_title" class="text-center mb-0" style="color: #cfe2ff;font-size: 25px;">సీయోను గీతములు -
 					Songs of Zion</p>
 			</div>
 
@@ -151,7 +153,7 @@
 
 	function buildSongHtml(song, song_number) {
 		let html = "<div>";
-		html += "<h4>Song no :" + song_number + "</h4>";
+		html += "<h1>Song no :" + song_number + "</h1>";
 		if (song.Chorus) {
 			html += "<p class='line' name='Chorus'><span>" + song.Chorus + "</span></p>"
 		}
