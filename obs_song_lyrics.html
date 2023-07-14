@@ -24,7 +24,7 @@
 
 		function updateText(newText) {
 			// Check if the new window exists and update its text
-			if (!(newWindow && !newWindow.document)) {
+			if (!newWindow || !newWindow.document) {
 				openWindow()
 			}
 			fontsize = getFontSize(newText.length);
