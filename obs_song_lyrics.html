@@ -178,9 +178,8 @@
 		var song_no = parseInt($(ele).val());
 		if (song_no > 0) {
 			getSong(song_no);
-		} else {
+		} else if($(ele).val()) {
 			let search_text = $(ele).val().toLocaleLowerCase();
-			// var song = songs.find(x => x.searchTitle.toLocaleLowerCase().includes(search_text));
 			var suggestions = titles.filter(x => x.title.toLocaleLowerCase().includes(search_text) == true);
 			sug_html = '';
 			for (index in suggestions) {
@@ -193,6 +192,8 @@
 			} else {
 				$("#suggestions").hide();
 			}
+		}else{
+			$("#suggestions").hide();
 		}
 	}
 
