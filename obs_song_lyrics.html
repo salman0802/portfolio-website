@@ -16,7 +16,7 @@
 			// Check if the new window is opened
 			if (newWindow) {
 				// Add an event listener to update the text on button click
-				newWindow.document.write('<html><head><title>Song lyric</title></head><body style="display: flex; justify-content: center; align-items: center; font-family: Sree Krushnadevaraya; background-color: green; color: white;"><p id="text" style=" font-size: 50px; text-align: center; margin: 0;"></p></body></html>');
+				newWindow.document.write('<html><head><title>Song lyric</title><style> @font-face { font-family: Sree-Krushnadevaraya; src: url("fonts/Sree-Krushnadevaraya.woff"); } </style></head><body style="display: flex; justify-content: center; align-items: center; font-family:Sree-Krushnadevaraya; background-color: green; color: white;"><p id="text" style=" font-size: 50px; text-align: center; margin: 0;"></p></body></html>');
 			} else {
 				alert('The browser blocked opening a new window.');
 			}
