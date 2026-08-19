@@ -304,10 +304,10 @@
 
             if (newWindow && !newWindow.closed) {
                 badge.className = "text-[11px] font-bold px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5 shadow-sm backdrop-blur-md";
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>OBS Active`;
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>OBS Screen`;
             } else {
                 badge.className = "text-[11px] font-bold px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 flex items-center gap-1.5 backdrop-blur-md";
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS Inactive`;
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS Screen`;
             }
         }
 
@@ -399,7 +399,7 @@
                 <!-- OBS Status Badge Placed Beside OBS Settings -->
                 <span id="obsStatusBadge"
                     class="text-[11px] font-bold px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 flex items-center gap-1.5 backdrop-blur-md shadow-sm">
-                    <span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS Inactive
+                    <span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS Screen
                 </span>
 
                 <button onclick="openAddSongModal()"
