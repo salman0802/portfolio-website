@@ -192,7 +192,7 @@
         }
 
         function openWindow() {
-            if (window.innerWidth < 768) return; // Prevent OBS window opening on mobile view
+            if (window.innerWidth < 768) return; 
             if (newWindow && !newWindow.closed) return;
             newWindow = window.open('', '_blank', 'width=1920,height=470');
             if (newWindow) {
@@ -294,7 +294,7 @@
         }
 
         function updateText(rawText, elementRef = null) {
-            if (window.innerWidth < 768) return; // Do nothing on mobile click for projection
+            if (window.innerWidth < 768) return; 
             if (!newWindow || newWindow.closed) openWindow();
             if (newWindow && !newWindow.closed) {
                 let processedText = processPipesInText(rawText);
@@ -457,7 +457,7 @@
                 </div>
             </div>
 
-            <!-- Action Toolbar (OBS controls hidden on mobile via hidden md:flex or custom display classes) -->
+            <!-- Action Toolbar -->
             <div class="flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 justify-start sm:justify-end">
                 <button onclick="clearOBSScreen()" title="Clear active lyrics from OBS Screen (Esc)"
                     class="hidden md:flex bg-white/10 hover:bg-white/20 text-amber-300 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold items-center gap-1 transition border border-white/15 shadow-sm backdrop-blur-sm shrink-0">
@@ -489,7 +489,7 @@
     <div
         class="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-start overflow-hidden min-h-0 relative">
 
-        <!-- Mobile Slide-out Drawer Backdrop -->
+        <!-- Mobile Slide-out Drawer -->
         <div id="mobileCategoryDrawer" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 md:hidden hidden flex flex-col justify-end">
             <div class="glass-card rounded-t-3xl p-4 max-h-[80vh] flex flex-col shadow-2xl border-t border-blue-400/40 animate-in slide-in-from-bottom duration-300">
                 <div class="flex justify-between items-center pb-3 border-b border-slate-200/80 mb-2">
@@ -555,7 +555,6 @@
                     </div>
                 </div>
 
-                <!-- Responsive Content Area: Single Scroll Container on Mobile, Split on Desktop/Tablet -->
                 <div class="flex-1 flex flex-col overflow-y-auto overflow-x-hidden pr-1 sm:pr-2 min-h-0 md:overflow-hidden">
                     <div id="fixed_song_meta" class="space-y-2 mb-2 shrink-0 md:shrink-0"></div>
                     <div id="full_song_lyrics"
@@ -607,8 +606,7 @@
                     <div
                         class="flex items-center justify-between p-3 bg-blue-50/70 rounded-2xl border border-blue-200/80">
                         <div>
-                            <label for="obsHidePipesText" class="font-bold text-slate-800 cursor-pointer block text-xs">Hide
-                                Text Between '||'</label>
+                            <label for="obsHidePipesText" class="font-bold text-slate-800 cursor-pointer block text-xs">Hide Chorus Hint</label>
                             <span class="text-[10px] text-slate-500 font-normal">Hides trailing verse tags to save space
                                 on stream.</span>
                         </div>
@@ -649,7 +647,6 @@
                         </div>
                     </div>
 
-                    <!-- Custom Background Image File Upload -->
                     <div>
                         <label class="block mb-1">Custom Background Image File</label>
                         <input type="file" id="obsBgImageFile" accept="image/*" onchange="handleBgImageUpload(event)"
@@ -658,7 +655,6 @@
                             display as the wallpaper behind lyrics.</span>
                     </div>
 
-                    <!-- Quick Background Presets -->
                     <div>
                         <label class="block mb-1">Quick Background Presets</label>
                         <div class="flex gap-2 flex-wrap">
@@ -774,6 +770,16 @@
     <!-- Application Script Logic -->
     <script src="./songs.js"></script>
     <script>
+        if (typeof categoryList === 'undefined') {
+            var categoryList = [
+                { id: 'cat1', name: 'కీర్తనలు (Psalms & Hymns)', range: [1, 100] },
+                { id: 'cat2', name: 'ఆరాధన గీతములు (Worship Songs)', range: [101, 200] },
+                { id: 'cat3', name: 'పరిశుద్ధాత్మ గీతములు (Holy Spirit)', range: [201, 300] },
+                { id: 'cat4', name: 'రక్షణ గీతములు (Salvation)', range: [301, 400] },
+                { id: 'cat5', name: 'క్రిస్మస్ & నూతన సంవత్సర గీతములు (Special)', range: [401, 500] }
+            ];
+        }
+
         var activeSong = null;
         var currentFontSize = 22;
         var chorusQuill = null;
@@ -798,8 +804,7 @@
             renderAccordionCategories();
             startOBSStatusMonitor();
 
-            // Open a random song on page open/refresh
-            if (songs.length > 0) {
+            if (typeof songs !== 'undefined' && songs.length > 0) {
                 var randomIndex = Math.floor(Math.random() * songs.length);
                 loadSong(songs[randomIndex].SongNumber);
             }
@@ -817,6 +822,7 @@
 
         function populateCategorySelectDropdown() {
             var select = document.getElementById('inputCategory');
+            if (!select) return;
             select.innerHTML = '';
             categoryList.forEach(function (cat) {
                 var opt = document.createElement('option');
@@ -837,6 +843,8 @@
                 var container = document.getElementById(containerId);
                 if (!container) return;
                 container.innerHTML = '';
+                
+                if (typeof songs === 'undefined') return;
                 songs.sort((a, b) => a.SongNumber - b.SongNumber);
 
                 categoryList.forEach(function (cat) {
@@ -854,7 +862,7 @@
                     headerBtn.innerHTML = `<span class="font-telugu">${cat.name}</span><div class="flex items-center gap-2"><span class="text-[10px] font-bold bg-slate-200/50 text-slate-600 px-2 py-0.5 rounded-full">${categorySongs.length}</span><i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i></div>`;
 
                     var songListDiv = document.createElement('div');
-                    songListDiv.className = 'bg-slate-50/40 backdrop-blur-sm divide-y divide-slate-100/60 hidden';
+                    songListDiv.className = 'song-list-pane bg-slate-50/40 backdrop-blur-sm divide-y divide-slate-100/60 hidden';
 
                     if (categorySongs.length === 0) {
                         songListDiv.innerHTML = `<div class="px-4 py-2.5 text-xs text-slate-400 italic">No songs in this category</div>`;
@@ -864,6 +872,7 @@
                             var isSelected = activeSong && activeSong.SongNumber === s.SongNumber;
                             songItem.className = `px-4 py-2.5 cursor-pointer text-xs flex items-center justify-between transition ${isSelected ? 'bg-blue-600/10 text-blue-900 font-bold border-l-4 border-blue-600' : 'hover:bg-white/90 text-slate-700'}`;
                             songItem.innerHTML = `<span class="truncate font-telugu"><span class="font-bold text-blue-600 mr-1.5 font-sans">#${s.SongNumber}</span> ${s.title}</span><i class="fa-solid fa-chevron-right text-[9px] text-slate-400 opacity-60"></i>`;
+                            
                             songItem.onclick = function (e) { 
                                 e.stopPropagation(); 
                                 loadSong(s.SongNumber); 
@@ -874,11 +883,16 @@
                         });
                     }
 
-                    headerBtn.onclick = function () {
-                        var isHidden = songListDiv.classList.contains('hidden');
-                        container.querySelectorAll('div > div').forEach(d => d.classList.add('hidden'));
-                        container.querySelectorAll('i.fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)');
-                        if (isHidden) {
+                    headerBtn.onclick = function (e) {
+                        e.preventDefault();
+                        var isCurrentlyHidden = songListDiv.classList.contains('hidden');
+                        
+                        // Close all category panels within this container
+                        container.querySelectorAll('.song-list-pane').forEach(pane => pane.classList.add('hidden'));
+                        container.querySelectorAll('i.fa-chevron-down').forEach(icon => icon.style.transform = 'rotate(0deg)');
+                        
+                        // Toggle clicked panel
+                        if (isCurrentlyHidden) {
                             songListDiv.classList.remove('hidden');
                             headerBtn.querySelector('i.fa-chevron-down').style.transform = 'rotate(180deg)';
                         }

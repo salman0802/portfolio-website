@@ -1,120 +1,5 @@
-var categoryList = [
-  { id: "psalms", name: "కీర్తనలు - Psalms", range: [
-      1,
-      73
-    ]
-  },
-  { id: "worship", name: "ఆరాధన - Worship", range: [
-      74,
-      199
-    ]
-  },
-  { id: "praise", name: "స్తుతి - Praise", range: [
-      200,
-      227
-    ]
-  },
-  { id: "thanksgiving", name: "కృతజ్ఞతార్పణ - Thanks Giving", range: [
-      228,
-      250
-    ]
-  },
-  { id: "newyear", name: "క్రొత్త సంవత్సరము - New Year", range: [
-      251,
-      261
-    ]
-  },
-  { id: "birthofchrist", name: "క్రీస్తు జన్మము - Birth of Christ", range: [
-      262,
-      268
-    ]
-  },
-  { id: "sufferings", name: "శ్రమలు - మరణము - Sufferings and Death", range: [
-      269,
-      286
-    ]
-  },
-  { id: "resurrection", name: "పునరుత్థానము - Resurrection", range: [
-      287,
-      292
-    ]
-  },
-  { id: "secondcoming", name: "రెండవ రాకడ - Second Coming", range: [
-      293,
-      324
-    ]
-  },
-  { id: "gospelproclamation", name: "సువార్త ప్రకటన - Gospel Proclamation", range: [
-      325,
-      378
-    ]
-  },
-  { id: "gospelappeal", name: "సువార్త - ఆహ్వానము - Gospel Appeal", range: [
-      379,
-      416
-    ]
-  },
-  { id: "gospelconfession", name: "సువార్త ఒప్పుకోలు - Gospel Confession", range: [
-      417,
-      433
-    ]
-  },
-  { id: "church", name: "సంఘము - Church", range: [
-      434,
-      466
-    ]
-  },
-  { id: "wordofgod", name: "దేవుని వాక్యము - Word of God", range: [
-      467,
-      479
-    ]
-  },
-  { id: "christianlife", name: "క్రైస్తవ జీవితము - Christian Life", range: [
-      480,
-      543
-    ]
-  },
-  { id: "christianprayer", name: "క్రైస్తవ ప్రార్ధన - Christian Prayer", range: [
-      544,
-      593
-    ]
-  },
-  { id: "christianwitness", name: "క్రైస్తవ సాక్ష్యము - Christian Witness", range: [
-      594,
-      612
-    ]
-  },
-  { id: "christianservice", name: "క్రైస్తవ సేవ - Christian Service", range: [
-      613,
-      635
-    ]
-  },
-  { id: "christianvictory", name: "క్రైస్తవ విజయము - Christian Victory", range: [
-      636,
-      654
-    ]
-  },
-  { id: "christianhope", name: "క్రైస్తవ నిరీక్షణ - Christian Hope", range: [
-      655,
-      726
-    ]
-  },
-  { id: "christianconsecration", name: "క్రైస్తవ ప్రతిష్ఠత - Christian Consecration", range: [
-      727,
-      753
-    ]
-  },
-  { id: "youthsongs", name: "యౌవనస్థుల పాటలు - Youth Songs", range: [
-      754,
-      767
-    ]
-  },
-  { id: "choruses", name: "పల్లవులు - Choruses", range: [
-      768,
-      816
-    ]
-  }
-]; var songs = [
+var categoryList = [ { id: "psalms", name: "కీర్తనలు - Psalms", range: [ 1, 73 ] }, { id: "worship", name: "ఆరాధన - Worship", range: [ 74, 199 ] }, { id: "praise", name: "స్తుతి - Praise", range: [ 200, 227 ] }, { id: "thanksgiving", name: "కృతజ్ఞతార్పణ - Thanks Giving", range: [ 228, 250 ] }, { id: "newyear", name: "క్రొత్త సంవత్సరము - New Year", range: [ 251, 261 ] }, { id: "birthofchrist", name: "క్రీస్తు జన్మము - Birth of Christ", range: [ 262, 268 ] }, { id: "sufferings", name: "శ్రమలు - మరణము - Sufferings and Death", range: [ 269, 286 ] }, { id: "resurrection", name: "పునరుత్థానము - Resurrection", range: [ 287, 292 ] }, { id: "secondcoming", name: "రెండవ రాకడ - Second Coming", range: [ 293, 324 ] }, { id: "gospelproclamation", name: "సువార్త ప్రకటన - Gospel Proclamation", range: [ 325, 378 ] }, { id: "gospelappeal", name: "సువార్త - ఆహ్వానము - Gospel Appeal", range: [ 379, 416 ] }, { id: "gospelconfession", name: "సువార్త ఒప్పుకోలు - Gospel Confession", range: [ 417, 433 ] }, { id: "church", name: "సంఘము - Church", range: [ 434, 466 ] }, { id: "wordofgod", name: "దేవుని వాక్యము - Word of God", range: [ 467, 479 ] }, { id: "christianlife", name: "క్రైస్తవ జీవితము - Christian Life", range: [ 480, 543 ] }, { id: "christianprayer", name: "క్రైస్తవ ప్రార్ధన - Christian Prayer", range: [ 544, 593 ] }, { id: "christianwitness", name: "క్రైస్తవ సాక్ష్యము - Christian Witness", range: [ 594, 612 ] }, { id: "christianservice", name: "క్రైస్తవ సేవ - Christian Service", range: [ 613, 635 ] }, { id: "christianvictory", name: "క్రైస్తవ విజయము - Christian Victory", range: [ 636, 654 ] }, { id: "christianhope", name: "క్రైస్తవ నిరీక్షణ - Christian Hope", range: [ 655, 726 ] }, { id: "christianconsecration", name: "క్రైస్తవ ప్రతిష్ఠత - Christian Consecration", range: [ 727, 753 ] }, { id: "youthsongs", name: "యౌవనస్థుల పాటలు - Youth Songs", range: [ 754, 767 ] }, { id: "choruses", name: "పల్లవులు - Choruses", range: [ 768, 816 ] } ]; 
+var songs = [
   {
     "id": 195,
     "bookId": 1,
@@ -3003,7 +2888,7 @@ var categoryList = [
     "Song": {
       "Chorus": "పల్లవి : నీ జల్దరు వృక్షపు నీడలలో - నే నానంద భరితుడనైతిని (2)",
       "Bridge":"అనుపల్లవి: బలురక్కసి వృక్షపుగాయములు (2)<br/>ప్రేమాహస్తములతో తాకు ప్రభు (2)",
-      "1": "నా హృదయపు వాకిలి తీయుమని<br/>పలు దినములు మంచులో నిలిచితివి<br/>నీ శిరము వానకు తడిసినను<br/>నను రక్షించుటకు వేచితివి <ch>|| నీ జల్దరు ||</ch>",
+      "1": "నా హృదయపు వాకిలి తీయుమని పలు దినములు మంచులో నిలిచితివి<br/>నీ శిరము వానకు తడిసినను నను రక్షించుటకు వేచితివి <ch>|| నీ జల్దరు ||</ch>",
       "2": "ఓ ప్రియుడా నా అతిసుందరుడా దవళ వర్ణుడా నాకతి ప్రియుడా<br/>వ్యసనా క్రాంతుడుగా మార్చబడి నీ సొగసును నాకు నొసగితివి <ch>|| నీ జల్దరు ||</ch>",
       "3": "నీ పరిమళ పుష్ప సుగంధములు నా రోత హృదయమును నింపినవి<br/>ద్రాక్షారస ధారలకన్న మరి నీ ప్రేమే ఎంతో అతిమధురం <ch>|| నీ జల్దరు ||</ch>",
       "4": "ఉన్నత శిఖరములు దాటుచును ఇదిగో అతడొచ్చు చున్నాడు<br/>నా హృదయపు తలుపులు తెరచుకొని నా ప్రియుని కొరకు కనిపెట్టెదను <ch>|| నీ జల్దరు ||</ch>",
