@@ -192,6 +192,7 @@
         }
 
         function openWindow() {
+            if (window.innerWidth < 768) return; // Prevent OBS window opening on mobile view
             if (newWindow && !newWindow.closed) return;
             newWindow = window.open('', '_blank', 'width=1920,height=470');
             if (newWindow) {
@@ -293,6 +294,7 @@
         }
 
         function updateText(rawText, elementRef = null) {
+            if (window.innerWidth < 768) return; // Do nothing on mobile click for projection
             if (!newWindow || newWindow.closed) openWindow();
             if (newWindow && !newWindow.closed) {
                 let processedText = processPipesInText(rawText);
@@ -351,6 +353,7 @@
         }
 
         window.addEventListener('keydown', function (e) {
+            if (window.innerWidth < 768) return;
             if (e.key === 'Escape') {
                 clearOBSScreen();
             } else if (e.key === 'ArrowDown') {
@@ -454,22 +457,22 @@
                 </div>
             </div>
 
-            <!-- Action Toolbar -->
+            <!-- Action Toolbar (OBS controls hidden on mobile via hidden md:flex or custom display classes) -->
             <div class="flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 justify-start sm:justify-end">
                 <button onclick="clearOBSScreen()" title="Clear active lyrics from OBS Screen (Esc)"
-                    class="bg-white/10 hover:bg-white/20 text-amber-300 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold flex items-center gap-1 transition border border-white/15 shadow-sm backdrop-blur-sm shrink-0">
+                    class="hidden md:flex bg-white/10 hover:bg-white/20 text-amber-300 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold items-center gap-1 transition border border-white/15 shadow-sm backdrop-blur-sm shrink-0">
                     <i class="fa-solid fa-eraser"></i>
                     <span class="hidden lg:inline">Clear Screen</span>
                 </button>
 
                 <button onclick="openOBSSettingsModal()" title="OBS Projection Settings"
-                    class="bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition border border-white/15 shadow-sm backdrop-blur-sm shrink-0">
+                    class="hidden md:flex bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-semibold items-center gap-1.5 transition border border-white/15 shadow-sm backdrop-blur-sm shrink-0">
                     <i class="fa-solid fa-sliders text-blue-400"></i>
                     <span class="hidden sm:inline">OBS Settings</span>
                 </button>
 
                 <span id="obsStatusBadge"
-                    class="text-[10px] sm:text-[11px] font-bold px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 flex items-center gap-1.5 backdrop-blur-md shadow-sm shrink-0">
+                    class="hidden md:flex text-[10px] sm:text-[11px] font-bold px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 items-center gap-1.5 backdrop-blur-md shadow-sm shrink-0">
                     <span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS Inactive
                 </span>
 
