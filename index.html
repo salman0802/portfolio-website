@@ -1,262 +1,205 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
-	<meta charset="utf-8">
-	<title>Solomon Satya Raj</title>
-	<meta name="keywords" content="Solomon Satya Raj">
-	<meta name="description" content="Solomon Satya Raj">
-	<meta name="author" content="Solomon Satya Raj">
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Solomon Satya Raj | Full Stack Developer</title>
+    <meta name="keywords" content="Solomon Satya Raj, Full Stack Developer, Musician, Astronomy Enthusiast">
+    <meta name="description" content="Portfolio of Solomon Satya Raj - Full Stack Developer, Musician, and Astronomy Enthusiast.">
+    <meta name="author" content="Solomon Satya Raj">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- animate -->
-	<link rel="stylesheet" href="css/animate.min.css">
-	<!-- bootstrap -->
-	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<!-- font-awesome -->
-	<link rel="stylesheet" href="css/font-awesome.min.css">
-	<!-- google font -->
-	<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700,800' rel='stylesheet' type='text/css'>
-	<!-- fullpage -->
-	<link rel="stylesheet" href="css/jquery.fullPage.css">
-	<!-- custom -->
-	<link rel="stylesheet" href="css/templatemo-style.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
 
-	<div id="fullpage">
+    <!-- Top Navigation / Quick App Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/60">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#home" class="font-bold text-lg tracking-tight bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+                SSR.
+            </a>
+            <nav class="flex items-center gap-3 sm:gap-4">
+                <a href="/obs_song_lyrics.html" class="text-xs sm:text-sm font-medium px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 transition-all duration-200">
+                    Songs of Zion
+                </a>
+                <a href="/soz_te_v2.html" class="text-xs sm:text-sm font-medium px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 transition-all duration-200">
+                    Songs of Zion V2
+                </a>
+                <a href="/qr_code_generator.html" class="text-xs sm:text-sm font-medium px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all duration-200">
+                    QR Generator
+                </a>
+            </nav>
+        </div>
+    </header>
 
-		<!-- start home -->
-		<div id="home" class="section">
-			<a href="/obs_song_lyrics.html" class="btn btn-default smoothScroll wow fadeInUp" data-wow-delay="1s">Songs of Zion</a>
-			<a href="/soz_te_v2.html" class="btn btn-success smoothScroll wow fadeInUp" data-wow-delay="1s">Songs of Zion V2</a>
-			<div class="container">
-				<div class="row">
-					<div class="col-md-2"></div>
-					<div class="col-md-8 wow fadeIn" data-wow-delay="0.9s">
-						<h1>Solomon Satya Raj</h1>
-						<h2 class="rotate">FULL STACK DEVELOPER 💻, MUSICIAN 🎹, ASTRONOMY ENTHUSIAST 🔭</h2>
-						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-							tincidunt ut laoreet. Dolore magna aliquam erat volutpat.</p>
-						<a href="#work" class="btn btn-default smoothScroll wow fadeInUp" data-wow-delay="1s">Get
-							started</a>
-					</div>
-					<div class="col-md-2"></div>
-				</div>
-			</div>
-		</div>
-		<!-- end home -->
+    <!-- Main Container -->
+    <main class="max-w-6xl mx-auto px-6 pt-28 pb-16 space-y-32">
 
-		<!-- start work -->
-		<div id="work" class="section">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12 wow bounce">
-						<h2>WHAT I DO</h2>
-					</div>
-				</div>
+        <!-- Start Home / Hero Section -->
+        <section id="home" class="min-h-[calc(100vh-10rem)] flex flex-col justify-center items-center text-center">
+            <div class="max-w-3xl space-y-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-indigo-400 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Available for new opportunities
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white">
+                    Solomon Satya Raj
+                </h1>
+                <p class="text-lg sm:text-xl font-medium text-indigo-400">
+                    FULL STACK DEVELOPER 💻 &bull; MUSICIAN 🎹 &bull; ASTRONOMY ENTHUSIAST 🔭
+                </p>
+                <p class="text-slate-400 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+                    Crafting robust digital solutions, exploring cosmic wonders, and creating inspiring melodies. Welcome to my personal corner of the web.
+                </p>
+                <div class="pt-4 flex flex-wrap justify-center gap-4">
+                    <a href="#work" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow-lg shadow-indigo-600/20 transition-all duration-200">
+                        Explore My Work
+                    </a>
+                    <a href="#contact" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 font-medium transition-all duration-200">
+                        Get in Touch
+                    </a>
+                </div>
+            </div>
+        </section>
+        <!-- End Home -->
 
-				<div class="row">
-					<div class="col-md-4 col-xs-11 wow fadeInUp" data-wow-delay="0.6s">
-						<div class="media">
-							<div class="media-object media-left">
-								<i class="fa fa-laptop"></i>
-							</div>
-							<div class="media-body">
-								<h3 class="media-heading">Full Stack Developer</h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-									euismod.</p>
-							</div>
-						</div>
-					</div>
+        <!-- Start Work / What I Do Section with Immersive Images -->
+        <section id="work" class="space-y-12">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">What I Do</h2>
+                <p class="text-slate-400 text-sm sm:text-base">Combining technical precision with creative passion.</p>
+            </div>
 
-					<div class="col-md-4 col-xs-11 wow fadeInUp" data-wow-delay="0.6s">
-						<div class="media">
-							<div class="media-object media-left">
-								<i class="fa fa-link"></i>
-							</div>
-							<div class="media-body">
-								<h3 class="media-heading">Musician</h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-									euismod.</p>
-							</div>
-						</div>
-					</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1: Full Stack Developer -->
+                <div class="relative h-[420px] rounded-2xl overflow-hidden border border-slate-800 group shadow-xl">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
+                         style="background-image: url('https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop');"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"></div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-500/20 border border-indigo-500/40 backdrop-blur-md flex items-center justify-center text-indigo-300 mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa fa-laptop text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Full Stack Developer</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Crafting robust digital solutions, responsive web apps, and scalable backend systems.
+                        </p>
+                    </div>
+                </div>
 
-					<div class="col-md-4 col-xs-11 wow fadeInUp" data-wow-delay="0.6s">
-						<div class="media">
-							<div class="media-object media-left">
-								<i class="fa fa-paper-plane"></i>
-							</div>
-							<div class="media-body">
-								<h3 class="media-heading">Astronomy Enthusiast</h3>
-								<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh
-									euismod.</p>
-							</div>
-						</div>
-					</div>
+                <!-- Card 2: Musician -->
+                <div class="relative h-[420px] rounded-2xl overflow-hidden border border-slate-800 group shadow-xl">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
+                         style="background-image: url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000&auto=format&fit=crop');"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"></div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md flex items-center justify-center text-emerald-300 mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa fa-music text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Musician</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Creating inspiring melodies, composing spiritual music, and sharing songs.
+                        </p>
+                    </div>
+                </div>
 
-				</div>
-			</div>
-		</div>
-		<!-- end work -->
+                <!-- Card 3: Astronomy Enthusiast -->
+                <div class="relative h-[420px] rounded-2xl overflow-hidden border border-slate-800 group shadow-xl">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
+                         style="background-image: url('https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=1000&auto=format&fit=crop');"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent"></div>
+                    <div class="absolute inset-0 p-8 flex flex-col justify-end">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/40 backdrop-blur-md flex items-center justify-center text-cyan-300 mb-4 group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa fa-telescope text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Astronomy Enthusiast</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Gazing at the night sky, tracking celestial events, and marveling at the cosmic wonders.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- End Work -->
 
-		<!-- start about -->
-		<!-- <div id="about" class="section">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6 col-xs-11 wow fadeInLeft" data-wow-delay="0.9s">
-						<h2>ABOUT LAVISH</h2>
-						<h4>DESIGNER &AMP; DEVELOPER</h4>
-						<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet. Dolore magna aliquam erat volutpat.</p>
-						<p>Dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet.</p>
-					</div>
-					<div class="col-md-6 col-xs-11 wow fadeInRight" data-wow-delay="0.9s">
-						<span class="text-top">Web Design <small>95%</small></span>
-							<div class="progress">
-								<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 95%;"></div>
-							</div>
-						<span>Mobile Apps <small>80%</small></span>
-							<div class="progress">
-								<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
-							</div>
-						<span>SEO Stuffs <small>70%</small></span>
-							<div class="progress">
-								<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
-							</div>
-						<span>HTLM5 &AMP; CSS3 <small>90%</small></span>
-							<div class="progress">
-								<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 90%;"></div>
-							</div>
-					</div>
-				</div>
-			</div>
-		</div> -->
-		<!-- end about -->
+        <!-- Start Contact Section -->
+        <section id="contact" class="grid grid-cols-1 md:grid-cols-2 gap-12 pt-8">
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-2">Let's Connect</h2>
+                    <p class="text-slate-400 text-sm sm:text-base">Have a project in mind or want to talk tech and astronomy? Reach out.</p>
+                </div>
+                <div class="space-y-4 text-slate-300">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-indigo-400">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <span>+91 00000 00000</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-indigo-400">
+                            <i class="fa fa-envelope"></i>
+                        </div>
+                        <span>info@solomoniam.com</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-indigo-400">
+                            <i class="fa fa-map-marker"></i>
+                        </div>
+                        <span>Chennai, India</span>
+                    </div>
+                </div>
+            </div>
 
-		<!-- start portfolio -->
-		<!-- <div id="portfolio" class="section">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<h2 class="wow bounce">PORTFOLIO</h2>
-					</div>
-					<div class="col-md-4 col-xs-6 wow fadeIn" data-wow-delay="0.6s">
-						<div class="portfolio-thumb">
-							<img src="images/portfolio-img1.jpg" class="img-responsive" alt="portfolio img">
-							<div class="portfolio-overlay">
-								<h4>Web Design</h4>
-								<h5>Author: Cindy</h5>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4 col-xs-6 wow fadeIn" data-wow-delay="0.6s">
-						<div class="portfolio-thumb">
-							<img src="images/portfolio-img2.jpg" class="img-responsive" alt="portfolio img">
-							<div class="portfolio-overlay">
-								<h4>Web App</h4>
-								<h5>Author: Linda</h5>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4 col-xs-6 wow fadeIn" data-wow-delay="0.6s">
-						<div class="portfolio-thumb">
-							<img src="images/portfolio-img3.jpg" class="img-responsive" alt="portfolio img">
-							<div class="portfolio-overlay">
-								<h4>Mobile App</h4>
-								<h5>Author: Kate</h5>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 col-xs-6 wow fadeIn" data-wow-delay="0.6s">
-						<div class="portfolio-thumb">
-							<img src="images/portfolio-img4.jpg" class="img-responsive" alt="portfolio img">
-							<div class="portfolio-overlay">
-								<h4>Old Artwork</h4>
-								<h5>Author: Catherine</h5>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-6 col-xs-6 wow fadeIn" data-wow-delay="0.6s">
-						<div class="portfolio-thumb">
-							<img src="images/portfolio-img5.jpg" class="img-responsive" alt="portfolio img">
-							<div class="portfolio-overlay">
-								<h4>New Animation</h4>
-								<h5>Author: Kathy</h5>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div> -->
-		<!-- end portfolio -->
+            <div class="p-8 rounded-2xl bg-slate-900/60 border border-slate-800/80 backdrop-blur-md">
+                <form role="form" method="post" action="#" class="space-y-4">
+                    <div>
+                        <input name="name" type="text" id="name" placeholder="Your Name" required
+                            class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <div>
+                        <input name="email" type="email" id="email" placeholder="Your Email" required
+                            class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <div>
+                        <textarea name="message" rows="4" id="message" placeholder="Your Message" required
+                            class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"></textarea>
+                    </div>
+                    <button type="submit"
+                        class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors shadow-lg shadow-indigo-600/20">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </section>
+        <!-- End Contact -->
 
-		<!-- start contact -->
-		<div id="contact" class="section">
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-5 col-lg-offset-1 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
-						<address>
-							<p class="contact-title">CONTACT ME</p>
-							<p><i class="fa fa-phone"></i> 00000 00000</p>
-							<p><i class="fa fa-envelope-o"></i> info@solomoniam.com</p>
-							<p><i class="fa fa-map-marker"></i> Chennai, India</p>
-						</address>
-					</div>
-					<div class="col-lg-6 col-md-6 col-xs-10 wow fadeInUp" data-wow-delay="0.6s">
-						<form role="form" method="post" action="#">
-							<input name="name" type="text" class="form-control" id="name" placeholder="Your Name">
-							<input name="email" type="email" class="form-control" id="email" placeholder="Your Email">
-							<textarea name="message" rows="5" class="form-control" id="message"
-								placeholder="Your Message"></textarea>
-							<input name="send" type="submit" class="form-control" id="send" value="SEND ME">
-						</form>
-					</div>
-					<div class="col-md-1 col-sm-1"></div>
-				</div>
-			</div>
-		</div>
-		<!-- end contact -->
+    </main>
 
-		<!-- start footer -->
-		<footer>
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12 wow fadeIn" data-wow-delay="0.9s">
-						<p>Copyright &copy; Solomon Satya Raj</p>
-						<hr>
-						<ul class="social-icon">
-							<li><a href="#" class="fa fa-facebook"></a></li>
-							<li><a href="/qr_code_generator.html" class="fa">QR Code Generator</a></li>
-							<li><a href="#" class="fa fa-twitter"></a></li>
-							<li><a href="#" class="fa fa-instagram"></a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</footer>
-		<!-- end footer -->
-
-	</div>
-
-	<!-- jQuery -->
-	<script src="js/jquery.js"></script>
-	<!-- bootstrap -->
-	<script src="js/bootstrap.min.js"></script>
-	<!-- fullpage -->
-	<script src="js/jquery.fullPage.js"></script>
-	<!-- smoothScroll -->
-	<script src="js/smoothscroll.js"></script>
-	<!-- wow -->
-	<script src="js/wow.min.js"></script>
-	<!-- text rotater -->
-	<script src="js/jquery.simple-text-rotator.js"></script>
-	<!-- custom -->
-	<script src="js/custom.js"></script>
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-8">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+            <p class="text-sm text-slate-500">&copy; 2026 Solomon Satya Raj. All rights reserved.</p>
+            <div class="flex items-center gap-5 text-slate-400">
+                <a href="#" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
 
 </body>
 
