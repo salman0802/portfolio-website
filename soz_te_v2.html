@@ -155,14 +155,19 @@
             document.getElementById('obsSettingsModal').classList.add('hidden');
         }
 
+        function toggleMobileDrawer() {
+            var drawer = document.getElementById('mobileCategoryDrawer');
+            drawer.classList.toggle('hidden');
+        }
+
         function setOBSAlignment(align) {
             obsConfig.textAlign = align;
             ['Left', 'Center', 'Right'].forEach(dir => {
                 let btn = document.getElementById(`align${dir}Btn`);
                 if (dir.toLowerCase() === align) {
-                    btn.className = "py-2 border border-blue-600 bg-blue-50 text-blue-700 font-bold rounded-xl flex items-center justify-center gap-1 shadow-sm transition";
+                    btn.className = "py-2.5 border border-blue-600 bg-blue-50 text-blue-700 font-bold rounded-xl flex items-center justify-center gap-1 shadow-sm transition text-xs";
                 } else {
-                    btn.className = "py-2 border border-slate-200/80 bg-white/60 hover:bg-slate-50 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition";
+                    btn.className = "py-2.5 border border-slate-200/80 bg-white/60 hover:bg-slate-50 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition text-xs";
                 }
             });
             applyOBSStyles();
@@ -323,10 +328,10 @@
             var badge = document.getElementById('obsStatusBadge');
             if (!badge) return;
             if (newWindow && !newWindow.closed) {
-                badge.className = "text-[11px] font-bold px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5 shadow-sm backdrop-blur-md";
+                badge.className = "text-[10px] sm:text-[11px] font-bold px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5 shadow-sm backdrop-blur-md shrink-0";
                 badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>OBS Active`;
             } else {
-                badge.className = "text-[11px] font-bold px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 flex items-center gap-1.5 backdrop-blur-md";
+                badge.className = "text-[10px] sm:text-[11px] font-bold px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 flex items-center gap-1.5 backdrop-blur-md shrink-0";
                 badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS Inactive`;
             }
         }
@@ -335,9 +340,9 @@
             if (!titleString) return '';
             var parts = titleString.split('||');
             if (parts.length === 2) {
-                return `<div class="space-y-0.5"><h2 class="text-2xl md:text-1xl font-extrabold text-slate-700 font-telugu text-center leading-snug tracking-tight">${parts[1].trim()}<p class="text-xs font-bold uppercase tracking-widest text-blue-600 font-sans">${parts[0].trim()}</p></h2></div>`;
+                return `<div class="space-y-0.5"><h2 class="text-lg sm:text-2xl font-extrabold text-slate-700 font-telugu text-center leading-snug tracking-tight">${parts[1].trim()}<p class="text-xs font-bold uppercase tracking-widest text-blue-600 font-sans">${parts[0].trim()}</p></h2></div>`;
             }
-            return `<h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 text-center font-telugu leading-snug tracking-tight">${titleString}</h2>`;
+            return `<h2 class="text-lg sm:text-3xl font-extrabold text-slate-900 text-center font-telugu leading-snug tracking-tight">${titleString}</h2>`;
         }
 
         function formatLyricText(text) {
@@ -403,32 +408,40 @@
 
     <!-- Top Navigation Header -->
     <header class="glass-header text-white sticky top-0 z-40 shadow-2xl shrink-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-auto py-2.5 sm:h-16 flex flex-col sm:flex-row items-center justify-between gap-3">
 
-            <!-- Brand Logo -->
-            <div class="flex items-center gap-3 shrink-0">
-                <div
-                    class="bg-gradient-to-tr from-blue-600 to-indigo-400 text-white p-2.5 rounded-xl shadow-lg shadow-blue-600/40 border border-blue-400/30">
-                    <i class="fa-solid fa-music text-lg"></i>
+            <!-- Brand Logo & Mobile Drawer Toggle -->
+            <div class="flex items-center justify-between w-full sm:w-auto gap-3">
+                <div class="flex items-center gap-2.5">
+                    <div
+                        class="bg-gradient-to-tr from-blue-600 to-indigo-400 text-white p-2 sm:p-2.5 rounded-xl shadow-lg shadow-blue-600/40 border border-blue-400/30">
+                        <i class="fa-solid fa-music text-base sm:text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-sm sm:text-base font-bold leading-none text-white tracking-wide font-telugu">సీయోను గీతములు</h1>
+                        <p class="text-[10px] sm:text-[11px] text-blue-200/80 mt-0.5 sm:mt-1 font-medium tracking-wide">Songs of Zion (OBS Edition)</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-base font-bold leading-none text-white tracking-wide font-telugu">సీయోను గీతములు
-                    </h1>
-                    <p class="text-[11px] text-blue-200/80 mt-1 font-medium tracking-wide">Songs of Zion (OBS Edition)
-                    </p>
-                </div>
+
+                <button 
+                    onclick="toggleMobileDrawer()" 
+                    class="md:hidden bg-blue-600/40 hover:bg-blue-600/60 text-blue-200 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 border border-blue-400/30 shrink-0"
+                >
+                    <i class="fa-solid fa-bars"></i>
+                    <span>Categories</span>
+                </button>
             </div>
 
             <!-- Live Search Input -->
-            <div class="flex-1 max-w-xl relative">
+            <div class="w-full sm:flex-1 sm:max-w-xl relative">
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-blue-300">
-                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                        <i class="fa-solid fa-magnifying-glass text-xs sm:text-sm"></i>
                     </div>
                     <input type="text" id="song_no"
                         placeholder="Search by song number, title or lyric (e.g., 81 or సుందర)..."
                         onkeyup="songSearch(this)" autocomplete="off"
-                        class="w-full pl-10 pr-10 py-2.5 bg-slate-900/50 backdrop-blur-md text-white placeholder-blue-200/50 border border-blue-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm transition shadow-inner">
+                        class="w-full pl-9 sm:pl-10 pr-9 sm:pr-10 py-2 sm:py-2.5 bg-slate-900/50 backdrop-blur-md text-white placeholder-blue-200/50 border border-blue-500/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-xs sm:text-sm transition shadow-inner">
                     <button id="clearSearch" onclick="clearSearchInput()"
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-blue-300 hover:text-white hidden">
                         <i class="fa-solid fa-circle-xmark"></i>
@@ -436,32 +449,32 @@
                 </div>
 
                 <div id="suggestions"
-                    class="absolute left-0 right-0 mt-2 glass-modal rounded-2xl shadow-2xl border border-white/60 hidden max-h-80 overflow-y-auto z-50 divide-y divide-slate-100">
-                    <ul id="suggestionsList" class="py-1 text-slate-700 text-sm"></ul>
+                    class="absolute left-0 right-0 mt-2 glass-modal rounded-2xl shadow-2xl border border-white/60 hidden max-h-60 sm:max-h-80 overflow-y-auto z-50 divide-y divide-slate-100">
+                    <ul id="suggestionsList" class="py-1 text-slate-700 text-xs sm:text-sm"></ul>
                 </div>
             </div>
 
             <!-- Action Toolbar -->
-            <div class="flex items-center gap-2.5">
+            <div class="flex items-center gap-1.5 sm:gap-2.5 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 justify-start sm:justify-end">
                 <button onclick="clearOBSScreen()" title="Clear active lyrics from OBS Screen (Esc)"
-                    class="bg-white/10 hover:bg-white/20 text-amber-300 px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition border border-white/15 shadow-sm backdrop-blur-sm">
+                    class="bg-white/10 hover:bg-white/20 text-amber-300 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold flex items-center gap-1 transition border border-white/15 shadow-sm backdrop-blur-sm shrink-0">
                     <i class="fa-solid fa-eraser"></i>
                     <span class="hidden lg:inline">Clear Screen</span>
                 </button>
 
                 <button onclick="openOBSSettingsModal()" title="OBS Projection Settings"
-                    class="bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition border border-white/15 shadow-sm backdrop-blur-sm">
+                    class="bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition border border-white/15 shadow-sm backdrop-blur-sm shrink-0">
                     <i class="fa-solid fa-sliders text-blue-400"></i>
-                    <span class="hidden md:inline">OBS Settings</span>
+                    <span class="hidden sm:inline">OBS Settings</span>
                 </button>
 
                 <span id="obsStatusBadge"
-                    class="text-[11px] font-bold px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 flex items-center gap-1.5 backdrop-blur-md shadow-sm">
+                    class="text-[10px] sm:text-[11px] font-bold px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 flex items-center gap-1.5 backdrop-blur-md shadow-sm shrink-0">
                     <span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS Inactive
                 </span>
 
                 <button onclick="openAddSongModal()"
-                    class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition shadow-lg shadow-blue-600/30 border border-blue-400/30">
+                    class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-lg shadow-blue-600/30 border border-blue-400/30 shrink-0">
                     <i class="fa-solid fa-plus"></i>
                     <span class="hidden sm:inline">Add Song</span>
                 </button>
@@ -471,10 +484,21 @@
 
     <!-- Workspace Container -->
     <div
-        class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1 grid grid-cols-1 md:grid-cols-12 gap-6 items-start overflow-hidden min-h-0">
+        class="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-1 grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-start overflow-hidden min-h-0 relative">
+
+        <!-- Mobile Slide-out Drawer Backdrop -->
+        <div id="mobileCategoryDrawer" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 md:hidden hidden flex flex-col justify-end">
+            <div class="glass-card rounded-t-3xl p-4 max-h-[80vh] flex flex-col shadow-2xl border-t border-blue-400/40 animate-in slide-in-from-bottom duration-300">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-200/80 mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-800">Song Categories</span>
+                    <button onclick="toggleMobileDrawer()" class="text-slate-500 hover:text-slate-800 p-1.5"><i class="fa-solid fa-xmark text-base"></i></button>
+                </div>
+                <div id="song_categories_mobile" class="divide-y divide-slate-100/80 overflow-y-auto flex-1"></div>
+            </div>
+        </div>
 
         <!-- Left Sidebar -->
-        <aside class="md:col-span-4 lg:col-span-3 h-full flex flex-col min-h-0">
+        <aside class="hidden md:flex md:col-span-4 lg:col-span-3 h-full flex-col min-h-0">
             <div
                 class="glass-card rounded-2xl overflow-hidden shadow-2xl border border-blue-200/40 flex flex-col h-full min-h-0">
 
@@ -497,42 +521,42 @@
         </aside>
 
         <!-- Main View -->
-        <main class="md:col-span-8 lg:col-span-9 flex flex-col h-full min-h-0">
+        <main class="col-span-1 md:col-span-8 lg:col-span-9 flex flex-col h-full min-h-0">
             <div
-                class="glass-card rounded-2xl p-6 md:p-8 flex-1 flex flex-col shadow-2xl border border-blue-200/40 text-slate-800 overflow-hidden min-h-0">
+                class="glass-card rounded-2xl p-4 sm:p-6 md:p-8 flex-1 flex flex-col shadow-2xl border border-blue-200/40 text-slate-800 overflow-hidden min-h-0">
 
                 <div
-                    class="border-b border-slate-200/80 pb-3 mb-3 flex items-start justify-between gap-4 flex-wrap shrink-0">
-                    <div class="space-y-2">
+                    class="border-b border-slate-200/80 pb-3 mb-3 flex items-start justify-between gap-3 flex-wrap shrink-0">
+                    <div class="space-y-1">
                         <div
-                            class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-50 text-blue-800 border border-blue-200 rounded-full text-xs font-bold backdrop-blur-md shadow-xs">
-                            <i class="fa-solid fa-book-open text-blue-600"></i>
-                            <span>•</span>
+                            class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-800 border border-blue-200 rounded-full text-xs font-bold backdrop-blur-md shadow-xs">
+                            <i class="fa-solid fa-book-open text-blue-600 text-[10px]"></i>
                             <span>Song #<span id="displaySongNum">81</span></span>
                         </div>
                     </div>
-                    <div id="displayTitle">
-                        <h2 class="text-xl md:text-2xl font-bold text-slate-900 leading-relaxed font-telugu">Select a
+                    <div id="displayTitle" class="flex-1 min-w-[200px]">
+                        <h2 class="text-lg sm:text-2xl font-bold text-slate-900 leading-relaxed font-telugu">Select a
                             song from the categories on the left...</h2>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5">
                         <button id="editCurrentSongBtn" onclick="openEditCurrentSong()"
-                            class="px-3.5 py-1.5 border border-slate-200/80 bg-white/90 hover:bg-white text-slate-700 text-xs font-semibold flex items-center gap-1.5 transition rounded-xl shadow-xs"><i
-                                class="fa-solid fa-pen-to-square text-blue-600"></i> Edit Song</button>
-                        <div class="h-4 w-[1px] bg-slate-300/80 mx-1"></div>
+                            class="px-3 py-1.5 border border-slate-200/80 bg-white/90 hover:bg-white text-slate-700 text-xs font-semibold flex items-center gap-1 transition rounded-xl shadow-xs"><i
+                                class="fa-solid fa-pen-to-square text-blue-600"></i> <span class="hidden sm:inline">Edit</span></button>
+                        <div class="h-4 w-[1px] bg-slate-300/80 mx-0.5"></div>
                         <button onclick="changeFontSize(2)"
-                            class="p-2 border border-slate-200/80 bg-white/90 hover:bg-white text-slate-700 text-xs font-bold rounded-xl shadow-xs"
+                            class="p-1.5 sm:p-2 border border-slate-200/80 bg-white/90 hover:bg-white text-slate-700 text-xs font-bold rounded-xl shadow-xs"
                             title="Font Size +">A+</button>
                         <button onclick="changeFontSize(-2)"
-                            class="p-2 border border-slate-200/80 bg-white/90 hover:bg-white text-slate-700 text-xs font-bold rounded-xl shadow-xs"
+                            class="p-1.5 sm:p-2 border border-slate-200/80 bg-white/90 hover:bg-white text-slate-700 text-xs font-bold rounded-xl shadow-xs"
                             title="Font Size -">A-</button>
                     </div>
                 </div>
 
-                <div class="flex-1 flex flex-col overflow-hidden min-h-0">
-                    <div id="fixed_song_meta" class="space-y-2 mb-2 shrink-0"></div>
+                <!-- Responsive Content Area: Single Scroll Container on Mobile, Split on Desktop/Tablet -->
+                <div class="flex-1 flex flex-col overflow-y-auto overflow-x-hidden pr-1 sm:pr-2 min-h-0 md:overflow-hidden">
+                    <div id="fixed_song_meta" class="space-y-2 mb-2 shrink-0 md:shrink-0"></div>
                     <div id="full_song_lyrics"
-                        class="space-y-2 text-slate-800 text-lg leading-relaxed overflow-y-auto overflow-x-hidden pr-2 flex-1 min-h-0">
+                        class="space-y-2 text-slate-800 text-base sm:text-lg leading-relaxed flex-1 md:overflow-y-auto">
                     </div>
                 </div>
 
@@ -542,18 +566,18 @@
 
     <!-- OBS Settings Modal -->
     <div id="obsSettingsModal"
-        class="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        class="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div
             class="glass-modal rounded-3xl shadow-2xl w-full max-w-lg flex flex-col overflow-hidden border border-blue-300/50 text-slate-800">
 
-            <div class="px-6 py-4 border-b border-slate-200/60 flex justify-between items-center bg-blue-50/80">
-                <h3 class="font-bold text-slate-800 text-base flex items-center gap-2"><i
+            <div class="px-5 py-3.5 border-b border-slate-200/60 flex justify-between items-center bg-blue-50/80">
+                <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2"><i
                         class="fa-solid fa-sliders text-blue-600"></i><span>OBS Projection Settings</span></h3>
                 <button onclick="closeOBSSettingsModal()" class="text-slate-400 hover:text-slate-600 p-1 transition"><i
                         class="fa-solid fa-xmark text-lg"></i></button>
             </div>
 
-            <div class="p-6 space-y-5 overflow-y-auto max-h-[75vh]">
+            <div class="p-5 sm:p-6 space-y-4 overflow-y-auto max-h-[75vh]">
                 <div class="space-y-4 text-xs font-semibold text-slate-700">
 
                     <div>
@@ -568,7 +592,7 @@
                     <div>
                         <label class="block mb-1">Telugu Font Family</label>
                         <select id="obsFontFamily" onchange="applyOBSStyles()"
-                            class="w-full border border-slate-300/80 rounded-xl p-2.5 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none font-telugu shadow-xs">
+                            class="w-full border border-slate-300/80 rounded-xl p-2.5 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none font-telugu shadow-xs text-xs">
                             <option value="'Mandali', 'Noto Sans Telugu', sans-serif">Mandali (Standard)</option>
                             <option value="'Noto Sans Telugu', sans-serif">Noto Sans Telugu (Clear)</option>
                             <option value="'Gidugu', sans-serif">Gidugu (Bold Headers)</option>
@@ -578,11 +602,11 @@
                     </div>
 
                     <div
-                        class="flex items-center justify-between p-3.5 bg-blue-50/70 rounded-2xl border border-blue-200/80">
+                        class="flex items-center justify-between p-3 bg-blue-50/70 rounded-2xl border border-blue-200/80">
                         <div>
-                            <label for="obsHidePipesText" class="font-bold text-slate-800 cursor-pointer block">Hide
+                            <label for="obsHidePipesText" class="font-bold text-slate-800 cursor-pointer block text-xs">Hide
                                 Text Between '||'</label>
-                            <span class="text-[11px] text-slate-500 font-normal">Hides trailing verse tags to save space
+                            <span class="text-[10px] text-slate-500 font-normal">Hides trailing verse tags to save space
                                 on stream.</span>
                         </div>
                         <input type="checkbox" id="obsHidePipesText" onchange="applyOBSStyles()"
@@ -593,17 +617,17 @@
                         <label class="block mb-1.5">Text Alignment</label>
                         <div class="grid grid-cols-3 gap-2">
                             <button type="button" onclick="setOBSAlignment('left')" id="alignLeftBtn"
-                                class="py-2 border border-slate-200/80 bg-white/90 hover:bg-slate-50 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition">Left</button>
+                                class="py-2.5 border border-slate-200/80 bg-white/90 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition text-xs">Left</button>
                             <button type="button" onclick="setOBSAlignment('center')" id="alignCenterBtn"
-                                class="py-2 border border-blue-600 bg-blue-50 text-blue-700 font-bold rounded-xl flex items-center justify-center gap-1 shadow-xs transition">Center</button>
+                                class="py-2.5 border border-blue-600 bg-blue-50 text-blue-700 font-bold rounded-xl flex items-center justify-center gap-1 shadow-xs transition text-xs">Center</button>
                             <button type="button" onclick="setOBSAlignment('right')" id="alignRightBtn"
-                                class="py-2 border border-slate-200/80 bg-white/90 hover:bg-slate-50 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition">Right</button>
+                                class="py-2.5 border border-slate-200/80 bg-white/90 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition text-xs">Right</button>
                         </div>
                     </div>
 
                     <div
-                        class="flex items-center justify-between p-3.5 bg-blue-50/50 rounded-2xl border border-blue-200/60">
-                        <div><label for="obsTextShadow" class="font-bold text-slate-800 cursor-pointer block">Text
+                        class="flex items-center justify-between p-3 bg-blue-50/50 rounded-2xl border border-blue-200/60">
+                        <div><label for="obsTextShadow" class="font-bold text-slate-800 cursor-pointer block text-xs">Text
                                 Shadow</label></div>
                         <input type="checkbox" id="obsTextShadow" checked onchange="applyOBSStyles()"
                             class="w-5 h-5 accent-blue-600 rounded cursor-pointer">
@@ -622,11 +646,11 @@
                         </div>
                     </div>
 
-                    <!-- NEW: Custom Background Image File Upload -->
+                    <!-- Custom Background Image File Upload -->
                     <div>
                         <label class="block mb-1">Custom Background Image File</label>
                         <input type="file" id="obsBgImageFile" accept="image/*" onchange="handleBgImageUpload(event)"
-                            class="w-full border border-slate-300/80 rounded-xl p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none bg-white shadow-xs file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                            class="w-full border border-slate-300/80 rounded-xl p-2 text-xs focus:ring-2 focus:ring-blue-500 outline-none bg-white shadow-xs file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                         <span class="text-[10px] text-slate-500 font-normal mt-0.5 block">Upload a local image file to
                             display as the wallpaper behind lyrics.</span>
                     </div>
@@ -634,15 +658,15 @@
                     <!-- Quick Background Presets -->
                     <div>
                         <label class="block mb-1">Quick Background Presets</label>
-                        <div class="flex gap-2">
+                        <div class="flex gap-2 flex-wrap">
                             <button type="button" onclick="setBgPreset('green')"
-                                class="px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-xs font-bold">Chroma
+                                class="px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-lg text-[11px] font-bold">Chroma
                                 Green</button>
                             <button type="button" onclick="setBgPreset('#000000')"
-                                class="px-3 py-1 bg-slate-200 text-slate-900 border border-slate-400 rounded-lg text-xs font-bold">Pure
+                                class="px-2.5 py-1 bg-slate-200 text-slate-900 border border-slate-400 rounded-lg text-[11px] font-bold">Pure
                                 Black</button>
                             <button type="button" onclick="setBgPreset('#FFFFFF')"
-                                class="px-3 py-1 bg-white text-slate-900 border border-slate-300 rounded-lg text-xs font-bold">Pure
+                                class="px-2.5 py-1 bg-white text-slate-900 border border-slate-300 rounded-lg text-[11px] font-bold">Pure
                                 White</button>
                         </div>
                     </div>
@@ -650,9 +674,9 @@
                 </div>
             </div>
 
-            <div class="px-6 py-4 border-t border-slate-200/60 bg-blue-50/80 flex justify-end">
+            <div class="px-5 py-3.5 border-t border-slate-200/60 bg-blue-50/80 flex justify-end">
                 <button type="button" onclick="closeOBSSettingsModal()"
-                    class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition">Done</button>
+                    class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition">Done</button>
             </div>
 
         </div>
@@ -660,46 +684,46 @@
 
     <!-- Add/Edit Song Modal -->
     <div id="songModal"
-        class="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        class="fixed inset-0 bg-slate-950/60 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 hidden">
         <div
             class="glass-modal rounded-3xl shadow-2xl w-full max-w-3xl max-h-[92vh] flex flex-col overflow-hidden border border-blue-300/50 text-slate-800">
 
-            <div class="px-6 py-4 border-b border-slate-200/60 flex justify-between items-center bg-blue-50/80">
-                <h3 id="modalHeaderTitle" class="font-bold text-slate-800 text-base flex items-center gap-2"><i
+            <div class="px-5 py-3.5 border-b border-slate-200/60 flex justify-between items-center bg-blue-50/80">
+                <h3 id="modalHeaderTitle" class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2"><i
                         class="fa-solid fa-file-pen text-blue-600"></i><span>Add New Song</span></h3>
                 <button onclick="closeSongModal()" class="text-slate-400 hover:text-slate-600 p-1 transition"><i
                         class="fa-solid fa-xmark text-lg"></i></button>
             </div>
 
-            <div class="p-6 overflow-y-auto space-y-4 flex-1">
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-4 flex-1">
                 <input type="hidden" id="editSongId">
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1">Song Number *</label>
                         <input type="number" id="inputSongNum"
-                            class="w-full border border-slate-300/80 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white/95 shadow-xs">
+                            class="w-full border border-slate-300/80 rounded-xl p-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white shadow-xs">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1">Category *</label>
                         <select id="inputCategory"
-                            class="w-full border border-slate-300/80 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white/95 shadow-xs"></select>
+                            class="w-full border border-slate-300/80 rounded-xl p-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white shadow-xs"></select>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1">Book Name</label>
                         <input type="text" id="inputBook" value="Seeyonu Geethalu"
-                            class="w-full border border-slate-300/80 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white/95 shadow-xs">
+                            class="w-full border border-slate-300/80 rounded-xl p-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white shadow-xs">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">Song Title (English || Telugu) *</label>
                     <input type="text" id="inputTitle"
-                        class="w-full border border-slate-300/80 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white/95 shadow-xs">
+                        class="w-full border border-slate-300/80 rounded-xl p-2.5 text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 outline-none bg-white shadow-xs">
                 </div>
 
                 <div
-                    class="bg-amber-50/70 border border-amber-200 rounded-2xl p-3.5 space-y-2 backdrop-blur-sm shadow-xs">
+                    class="bg-amber-50/70 border border-amber-200 rounded-2xl p-3 space-y-2 backdrop-blur-sm shadow-xs">
                     <label class="block text-xs font-bold text-amber-900 flex items-center gap-1.5"><i
                             class="fa-solid fa-star text-amber-500"></i> Chorus (పల్లవి)</label>
                     <div id="chorusEditorContainer">
@@ -708,7 +732,7 @@
                 </div>
 
                 <div
-                    class="bg-purple-50/70 border border-purple-200 rounded-2xl p-3.5 space-y-2 backdrop-blur-sm shadow-xs">
+                    class="bg-purple-50/70 border border-purple-200 rounded-2xl p-3 space-y-2 backdrop-blur-sm shadow-xs">
                     <label class="block text-xs font-bold text-purple-900 flex items-center justify-between"><span
                             class="flex items-center gap-1.5"><i class="fa-solid fa-layer-group text-purple-500"></i>
                             Bridge (అనుపల్లవి)</span><span
@@ -729,7 +753,7 @@
                 </div>
             </div>
 
-            <div class="px-6 py-4 border-t border-slate-200/60 bg-blue-50/80 flex justify-between items-center">
+            <div class="px-5 py-3.5 border-t border-slate-200/60 bg-blue-50/80 flex justify-between items-center">
                 <button type="button" id="deleteSongBtn" onclick="deleteCurrentSong()"
                     class="px-3.5 py-2 rounded-xl text-red-600 border border-red-200 hover:bg-red-50 text-xs font-semibold hidden transition"><i
                         class="fa-solid fa-trash mr-1"></i> Delete Song</button>
@@ -737,8 +761,7 @@
                     <button type="button" onclick="closeSongModal()"
                         class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-200/60 text-xs font-semibold transition">Cancel</button>
                     <button type="button" onclick="saveSongForm()"
-                        class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition">Save
-                        Song</button>
+                        class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition">Save Song</button>
                 </div>
             </div>
 
@@ -807,53 +830,61 @@
         }
 
         function renderAccordionCategories() {
-            var container = document.getElementById('song_categories');
-            container.innerHTML = '';
-            songs.sort((a, b) => a.SongNumber - b.SongNumber);
+            ['song_categories', 'song_categories_mobile'].forEach(containerId => {
+                var container = document.getElementById(containerId);
+                if (!container) return;
+                container.innerHTML = '';
+                songs.sort((a, b) => a.SongNumber - b.SongNumber);
 
-            categoryList.forEach(function (cat) {
-                var categorySongs = songs.filter(s => {
-                    if (s.categoryId) return s.categoryId === cat.id;
-                    return s.SongNumber >= cat.range[0] && s.SongNumber <= cat.range[1];
-                });
-
-                var catBox = document.createElement('div');
-                catBox.className = 'border-b border-slate-100/80';
-
-                var headerBtn = document.createElement('button');
-                headerBtn.type = 'button';
-                headerBtn.className = 'w-full px-4 py-3 text-left font-semibold text-sm text-slate-700 hover:bg-white/80 hover:text-blue-700 flex justify-between items-center transition';
-                headerBtn.innerHTML = `<span class="font-telugu">${cat.name}</span><div class="flex items-center gap-2"><span class="text-[10px] font-bold bg-slate-200/50 text-slate-600 px-2.5 py-0.5 rounded-full">${categorySongs.length}</span><i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i></div>`;
-
-                var songListDiv = document.createElement('div');
-                songListDiv.className = 'bg-slate-50/40 backdrop-blur-sm divide-y divide-slate-100/60 hidden';
-
-                if (categorySongs.length === 0) {
-                    songListDiv.innerHTML = `<div class="px-5 py-2.5 text-xs text-slate-400 italic">No songs in this category</div>`;
-                } else {
-                    categorySongs.forEach(function (s) {
-                        var songItem = document.createElement('div');
-                        var isSelected = activeSong && activeSong.SongNumber === s.SongNumber;
-                        songItem.className = `px-5 py-2.5 cursor-pointer text-xs flex items-center justify-between transition ${isSelected ? 'bg-blue-600/10 text-blue-900 font-bold border-l-4 border-blue-600' : 'hover:bg-white/90 text-slate-700'}`;
-                        songItem.innerHTML = `<span class="truncate font-telugu"><span class="font-bold text-blue-600 mr-1.5 font-sans">#${s.SongNumber}</span> ${s.title}</span><i class="fa-solid fa-chevron-right text-[9px] text-slate-400 opacity-60"></i>`;
-                        songItem.onclick = function (e) { e.stopPropagation(); loadSong(s.SongNumber); };
-                        songListDiv.appendChild(songItem);
+                categoryList.forEach(function (cat) {
+                    var categorySongs = songs.filter(s => {
+                        if (s.categoryId) return s.categoryId === cat.id;
+                        return s.SongNumber >= cat.range[0] && s.SongNumber <= cat.range[1];
                     });
-                }
 
-                headerBtn.onclick = function () {
-                    var isHidden = songListDiv.classList.contains('hidden');
-                    document.querySelectorAll('#song_categories > div > div').forEach(d => d.classList.add('hidden'));
-                    document.querySelectorAll('#song_categories i.fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)');
-                    if (isHidden) {
-                        songListDiv.classList.remove('hidden');
-                        headerBtn.querySelector('i.fa-chevron-down').style.transform = 'rotate(180deg)';
+                    var catBox = document.createElement('div');
+                    catBox.className = 'border-b border-slate-100/80';
+
+                    var headerBtn = document.createElement('button');
+                    headerBtn.type = 'button';
+                    headerBtn.className = 'w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-700 hover:bg-white/80 hover:text-blue-700 flex justify-between items-center transition';
+                    headerBtn.innerHTML = `<span class="font-telugu">${cat.name}</span><div class="flex items-center gap-2"><span class="text-[10px] font-bold bg-slate-200/50 text-slate-600 px-2 py-0.5 rounded-full">${categorySongs.length}</span><i class="fa-solid fa-chevron-down text-xs text-slate-400 transition-transform duration-200"></i></div>`;
+
+                    var songListDiv = document.createElement('div');
+                    songListDiv.className = 'bg-slate-50/40 backdrop-blur-sm divide-y divide-slate-100/60 hidden';
+
+                    if (categorySongs.length === 0) {
+                        songListDiv.innerHTML = `<div class="px-4 py-2.5 text-xs text-slate-400 italic">No songs in this category</div>`;
+                    } else {
+                        categorySongs.forEach(function (s) {
+                            var songItem = document.createElement('div');
+                            var isSelected = activeSong && activeSong.SongNumber === s.SongNumber;
+                            songItem.className = `px-4 py-2.5 cursor-pointer text-xs flex items-center justify-between transition ${isSelected ? 'bg-blue-600/10 text-blue-900 font-bold border-l-4 border-blue-600' : 'hover:bg-white/90 text-slate-700'}`;
+                            songItem.innerHTML = `<span class="truncate font-telugu"><span class="font-bold text-blue-600 mr-1.5 font-sans">#${s.SongNumber}</span> ${s.title}</span><i class="fa-solid fa-chevron-right text-[9px] text-slate-400 opacity-60"></i>`;
+                            songItem.onclick = function (e) { 
+                                e.stopPropagation(); 
+                                loadSong(s.SongNumber); 
+                                var drawer = document.getElementById('mobileCategoryDrawer');
+                                if (drawer) drawer.classList.add('hidden');
+                            };
+                            songListDiv.appendChild(songItem);
+                        });
                     }
-                };
 
-                catBox.appendChild(headerBtn);
-                catBox.appendChild(songListDiv);
-                container.appendChild(catBox);
+                    headerBtn.onclick = function () {
+                        var isHidden = songListDiv.classList.contains('hidden');
+                        container.querySelectorAll('div > div').forEach(d => d.classList.add('hidden'));
+                        container.querySelectorAll('i.fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)');
+                        if (isHidden) {
+                            songListDiv.classList.remove('hidden');
+                            headerBtn.querySelector('i.fa-chevron-down').style.transform = 'rotate(180deg)';
+                        }
+                    };
+
+                    catBox.appendChild(headerBtn);
+                    catBox.appendChild(songListDiv);
+                    container.appendChild(catBox);
+                });
             });
         }
 
@@ -878,7 +909,7 @@
 
             if (songObj.Chorus) {
                 var chorusDiv = document.createElement('div');
-                chorusDiv.className = 'p-2 bg-amber-50/80 border-l-4 border-amber-500 rounded-r-xl font-medium text-amber-900 shadow-sm lyric-line cursor-pointer font-telugu';
+                chorusDiv.className = 'p-2.5 bg-amber-50/80 border-l-4 border-amber-500 rounded-r-xl font-medium text-amber-900 shadow-sm lyric-line cursor-pointer font-telugu';
                 chorusDiv.onclick = function () { updateText(songObj.Chorus, chorusDiv); };
                 chorusDiv.innerHTML = formatLyricText(songObj.Chorus);
                 fixedMetaContainer.appendChild(chorusDiv);
@@ -887,7 +918,7 @@
 
             if (songObj.Bridge) {
                 var bridgeDiv = document.createElement('div');
-                bridgeDiv.className = 'p-2 bg-purple-50/80 border-l-4 border-purple-500 rounded-r-xl font-medium text-purple-900 shadow-sm lyric-line cursor-pointer font-telugu';
+                bridgeDiv.className = 'p-2.5 bg-purple-50/80 border-l-4 border-purple-500 rounded-r-xl font-medium text-purple-900 shadow-sm lyric-line cursor-pointer font-telugu';
                 bridgeDiv.onclick = function () { updateText(songObj.Bridge, bridgeDiv); };
                 bridgeDiv.innerHTML = formatLyricText(songObj.Bridge);
                 fixedMetaContainer.appendChild(bridgeDiv);
@@ -898,10 +929,10 @@
                 if (key === 'Chorus' || key === 'Bridge' || key === 'Verse') return;
 
                 var stanzaDiv = document.createElement('div');
-                stanzaDiv.className = 'p-4.5 bg-white/70 hover:bg-blue-50/50 border border-slate-200/70 rounded-2xl transition lyric-line cursor-pointer flex gap-4 items-center backdrop-blur-sm shadow-xs';
+                stanzaDiv.className = 'p-3 sm:p-4.5 bg-white/70 hover:bg-blue-50/50 border border-slate-200/70 rounded-2xl transition lyric-line cursor-pointer flex gap-3 sm:gap-4 items-center backdrop-blur-sm shadow-xs';
 
                 var stanzaNum = document.createElement('span');
-                stanzaNum.className = 'text-xs font-bold bg-slate-200/80 text-slate-700 px-2.5 py-1 ml-2 rounded-lg shrink-0 shadow-xs font-sans';
+                stanzaNum.className = 'text-xs font-bold bg-slate-200/80 text-slate-700 px-2.5 py-1 rounded-lg shrink-0 shadow-xs font-sans';
                 stanzaNum.textContent = key;
 
                 var textDiv = document.createElement('div');
