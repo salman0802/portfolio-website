@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jubal Studio | Web DAW</title>
+    <title>Jubal Studio | MIDI Workstation</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     
     <!-- Cloud CDNs -->
@@ -24,7 +24,7 @@
 
         body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, #0d1b33 0%, #020408 75%); }
         
-        header { background: var(--bg-panel); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); height: 70px; padding: 0 35px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.7); z-index: 50; }
+        header { position: sticky; top: 0; background: var(--bg-panel); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); height: 70px; padding: 0 35px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.7); z-index: 50; }
         .brand { display: flex; align-items: center; gap: 14px; }
         .brand-icon { font-size: 1.4rem; filter: drop-shadow(0 0 12px var(--accent-gold)); }
         header h2 { margin: 0; font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; background: linear-gradient(135deg, var(--text-main) 30%, var(--accent-gold) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -37,6 +37,10 @@
         .status-badge { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.65rem; letter-spacing: 1px; color: var(--text-muted); background: rgba(3, 5, 8, 0.6); padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border-color); }
         .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--danger); transition: 0.3s; }
         .status-dot.active { background: var(--success); box-shadow: 0 0 12px var(--success); }
+
+        .panel-toggler-bar { background: rgba(10, 15, 25, 0.7); border-bottom: 1px solid var(--border-color); padding: 8px 35px; display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-size: 0.65rem; }
+        .toggle-chip { background: rgba(3, 5, 8, 0.6); border: 1px solid var(--border-color); color: var(--text-muted); padding: 4px 12px; border-radius: 15px; cursor: pointer; transition: 0.2s; }
+        .toggle-chip.active { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-glow); }
 
         .view-section { display: none; flex: 1; flex-direction: column; padding: 25px 35px; box-sizing: border-box; max-width: 1750px; width: 100%; margin: 0 auto; gap: 20px;}
         .view-section.active { display: flex; }
@@ -168,7 +172,7 @@
         </div>
         <div class="header-right">
             <div class="status-badge" id="mic-status-badge" style="display: none;">
-                <div class="status-dot" id="mic-dot"></div><span id="mic-text">Mic Off</span>
+                <div class="status-dot active" id="mic-dot"></div><span id="mic-text">Mic On</span>
             </div>
             <div class="status-badge">
                 <div class="status-dot" id="midi-dot"></div><span id="midi-text">MIDI: Offline</span>
@@ -176,14 +180,21 @@
         </div>
     </header>
 
+    <div class="panel-toggler-bar">
+        <span>Show/Hide Panels:</span>
+        <div class="toggle-chip active" id="toggle-scale-panel" onclick="togglePanel('scale')">Scale & Accomp</div>
+        <div class="toggle-chip active" id="toggle-hardware-panel" onclick="togglePanel('hardware')">Hardware Console</div>
+        <div class="toggle-chip active" id="toggle-seq-panel" onclick="togglePanel('seq')">Sequencer & Voice</div>
+    </div>
+
     <!-- VIEW 1: LIVE PERFORMANCE MATRIX -->
     <section id="view-live" class="view-section active">
         <div class="display-container">
             <div class="note-display" id="live-note">--</div>
         </div>
         
-        <div class="studio-workspace">
-            <div class="panel-card">
+        <div class="studio-workspace" id="live-workspace-grid">
+            <div class="panel-card" id="panel-scale">
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SCALE ASSIST</label>
                     <div style="display: flex; gap: 8px;">
@@ -210,7 +221,18 @@
                         <button id="accompaniment-toggle" class="primary" style="padding: 4px 8px; font-size: 0.6rem;">Accomp: On</button>
                     </div>
 
-                    <div style="margin-top: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+                        <label style="font-size: 0.55rem; color: var(--text-muted);">ACCOMPANY VOICE</label>
+                        <select id="accomp-voice-select" style="width: 100%; font-size: 0.75rem; padding: 6px;">
+                            <option value="warm-ep">Rhodes Electric Piano</option>
+                            <option value="strings">Symphonic Strings</option>
+                            <option value="grand">Sanctuary Grand Piano</option>
+                            <option value="bass">Warm Deep Bass</option>
+                            <option value="choir">Cosmic Choir Synth</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-top: 6px;">
                         <label style="font-family: var(--font-display); font-size: 0.55rem; color: var(--text-muted); font-weight: 700;">DIATONIC CHORDS</label>
                         <div id="live-chord-suggest" style="font-size: 0.72rem; color: var(--scale-color); font-weight: 500; line-height: 1.4;">Select scale...</div>
                     </div>
@@ -219,7 +241,7 @@
                 </div>
             </div>
 
-            <div class="panel-card" style="align-items: center;">
+            <div class="panel-card" id="panel-hardware" style="align-items: center;">
                 <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700; letter-spacing: 2px;">8x8 Hardware Console</label>
                 
                 <div class="hardware-matrix">
@@ -260,7 +282,7 @@
                 </div>
             </div>
 
-            <div class="panel-card">
+            <div class="panel-card" id="panel-seq">
                 <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SEQUENCER & VOICE</label>
                 
                 <select id="live-voice" style="width: 100%;">
@@ -467,11 +489,38 @@
             'strings': new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sawtooth" }, envelope: { attack: 0.4, decay: 1.0, sustain: 0.8, release: 2.0 } }).connect(mainBus),
             'accordion': new Tone.PolySynth(Tone.Synth, { oscillator: { type: "square8" }, envelope: { attack: 0.08, decay: 0.3, sustain: 0.9, release: 0.5 } }).connect(mainBus),
             'bansuri': new Tone.PolySynth(Tone.AMSynth, { harmonicity: 1.5, oscillator: { type: "sine" }, envelope: { attack: 0.15, decay: 0.3, sustain: 0.8, release: 0.6 } }).connect(mainBus),
-            'recorder': new Tone.PolySynth(Tone.Synth, { oscillator: { type: "triangle" }, envelope: { attack: 0.04, decay: 0.1, sustain: 0.9, release: 0.2 } }).connect(mainBus)
+            'recorder': new Tone.PolySynth(Tone.Synth, { oscillator: { type: "triangle" }, envelope: { attack: 0.04, decay: 0.1, sustain: 0.9, release: 0.2 } }).connect(mainBus),
+            'bass': new Tone.PolySynth(Tone.Synth, { oscillator: { type: "sawtooth" }, envelope: { attack: 0.02, decay: 0.8, sustain: 0.4, release: 0.5 } }).connect(mainBus),
+            'choir': new Tone.PolySynth(Tone.FMSynth, { harmonicity: 0.5, modulationIndex: 1.0, oscillator: { type: "sine" }, envelope: { attack: 0.3, decay: 1.5, sustain: 0.8, release: 1.5 } }).connect(mainBus)
         };
         let activeLiveVoice = voices['grand'];
         let activeLearnVoice = voices['grand'];
+        let activeAccompanimentVoice = voices['warm-ep'];
         const editorVoice = new Tone.PolySynth(Tone.Synth).toDestination();
+
+        document.getElementById('accomp-voice-select').addEventListener('change', (e) => {
+            activeAccompanimentVoice = voices[e.target.value] || voices['warm-ep'];
+        });
+
+        function togglePanel(panelKey) {
+            const panelEl = document.getElementById(`panel-${panelKey}`);
+            const chipEl = document.getElementById(`toggle-${panelKey}-panel`);
+            if (!panelEl || !chipEl) return;
+            
+            const isHidden = panelEl.style.display === 'none';
+            panelEl.style.display = isHidden ? 'flex' : 'none';
+            chipEl.classList.toggle('active', isHidden);
+            
+            // Adjust grid layout depending on active visible panels
+            const grid = document.getElementById('live-workspace-grid');
+            if (grid) {
+                const visiblePanels = ['scale', 'hardware', 'seq'].filter(k => {
+                    const el = document.getElementById(`panel-${k}`);
+                    return el && el.style.display !== 'none';
+                });
+                grid.style.gridTemplateColumns = visiblePanels.length === 3 ? '450px 1fr 450px' : visiblePanels.length === 2 ? '1fr 1fr' : '1fr';
+            }
+        }
 
         let drumPadsEnabled = true;
         document.getElementById('pads-toggle').addEventListener('click', (e) => {
@@ -622,14 +671,14 @@
             const endMidi = getSafeMidi(endZoneInput.value, 59);
 
             if (!autoAccompanimentEnabled || currentScaleType === 'none' || midiNote < startMidi || midiNote > endMidi) {
-                return [Tone.Frequency(midiNote, "midi").toNote()];
+                return { notes: [Tone.Frequency(midiNote, "midi").toNote()], isAccomp: false };
             }
 
             const rootIdx = notesArray.indexOf(currentScaleRoot);
             const intervals = scaleIntervals[currentScaleType];
             const semitoneFromRoot = ((midiNote % 12) - rootIdx + 12) % 12;
             const scaleDegreeIdx = intervals.indexOf(semitoneFromRoot);
-            if (scaleDegreeIdx === -1) return [Tone.Frequency(midiNote, "midi").toNote()];
+            if (scaleDegreeIdx === -1) return { notes: [Tone.Frequency(midiNote, "midi").toNote()], isAccomp: false };
 
             let thirdOffset = 4, fifthOffset = 7;
             let qualities = degreeQualitiesMajor;
@@ -641,7 +690,10 @@
             if (q === 'Minor') { thirdOffset = 3; fifthOffset = 7; }
             else if (q === 'Diminished') { thirdOffset = 3; fifthOffset = 6; }
 
-            return [midiNote, midiNote + thirdOffset, midiNote + fifthOffset].map(m => Tone.Frequency(m, "midi").toNote());
+            return { 
+                notes: [midiNote, midiNote + thirdOffset, midiNote + fifthOffset].map(m => Tone.Frequency(m, "midi").toNote()), 
+                isAccomp: true 
+            };
         }
 
         function updateScaleHighlight() {
@@ -766,7 +818,7 @@
                 key.addEventListener('mousedown', (e) => {
                     e.preventDefault();
                     if (Tone.context.state !== 'running') Tone.start();
-                    activeLiveVoice.triggerAttackRelease(`${noteStr}3`, "8n");
+                    activeAccompanimentVoice.triggerAttackRelease(`${noteStr}3`, "8n");
                 });
                 
                 container.appendChild(key);
@@ -793,46 +845,57 @@
         document.getElementById('live-voice').addEventListener('change', (e) => activeLiveVoice = voices[e.target.value]);
 
         let activeMouseNotes = new Set();
+        let activeMouseAccompMap = new Map();
 
         function handleMouseKey(isDown, noteStr, octave, containerId) {
             if (isDown && Tone.context.state !== 'running') Tone.start();
             let baseMidi = Tone.Frequency(`${noteStr}${octave}`).toMidi();
             let finalMidi = containerId === 'live-keyboard' ? baseMidi + liveTranspose : baseMidi;
             
-            const chordNotes = containerId === 'live-keyboard' ? getAccompanimentNotes(finalMidi) : [Tone.Frequency(finalMidi, "midi").toNote()];
             const primaryNoteName = Tone.Frequency(finalMidi, "midi").toNote();
             const voice = containerId === 'live-keyboard' ? activeLiveVoice : activeLearnVoice;
+
+            let chordResult = containerId === 'live-keyboard' ? getAccompanimentNotes(finalMidi) : { notes: [primaryNoteName], isAccomp: false };
+            const targetVoice = chordResult.isAccomp ? activeAccompanimentVoice : voice;
 
             if (isDown) {
                 if (activeMouseNotes.has(primaryNoteName)) return;
                 activeMouseNotes.add(primaryNoteName);
-                voice.triggerAttack(chordNotes, Tone.now(), 0.8);
+                targetVoice.triggerAttack(chordResult.notes, Tone.now(), 0.8);
                 
                 if (containerId === 'live-keyboard') {
-                    chordNotes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, true));
+                    chordResult.notes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, true));
+                    if(chordResult.isAccomp) activeMouseAccompMap.set(primaryNoteName, chordResult.notes);
                     if (isRec) {
-                        chordNotes.forEach(cn => {
+                        chordResult.notes.forEach(cn => {
                             let cnMidi = Tone.Frequency(cn).toMidi();
                             activeRecs[cn] = { midi: cnMidi, time: Tone.now() - recStart, velocity: 0.8 };
                         });
                     }
-                } else { chordNotes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, true)); }
+                } else { chordResult.notes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, true)); }
             } else {
                 if (!activeMouseNotes.has(primaryNoteName)) return;
                 activeMouseNotes.delete(primaryNoteName);
-                voice.triggerRelease(chordNotes);
+                
+                let releaseNotes = chordResult.notes;
+                if (containerId === 'live-keyboard' && activeMouseAccompMap.has(primaryNoteName)) {
+                    releaseNotes = activeMouseAccompMap.get(primaryNoteName);
+                    activeMouseAccompMap.delete(primaryNoteName);
+                }
+
+                targetVoice.triggerRelease(releaseNotes);
                 
                 if (containerId === 'live-keyboard') {
-                    chordNotes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, false));
+                    releaseNotes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, false));
                     if (isRec) {
-                        chordNotes.forEach(cn => {
+                        releaseNotes.forEach(cn => {
                             if (activeRecs[cn]) {
                                 recNotes.push({ midi: activeRecs[cn].midi, name: cn, time: activeRecs[cn].time, duration: (Tone.now() - recStart) - activeRecs[cn].time, velocity: 0.8 });
                                 delete activeRecs[cn];
                             }
                         });
                     }
-                } else { chordNotes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, false)); }
+                } else { releaseNotes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, false)); }
             }
             updateVisuals(containerId === 'live-keyboard');
         }
@@ -1179,7 +1242,6 @@
                 rollCanvasBg.appendChild(bgRow);
             }
 
-            // Calculate precise track duration limit so the editor container & playhead stop at the exact track end
             editorMaxDuration = validNotes.reduce((max, n) => Math.max(max, n.time + n.duration), 1);
             const totalWidth = Math.max(800, editorMaxDuration * editorScaleX + 100);
             
@@ -1446,14 +1508,31 @@
         document.getElementById('live-tempo').addEventListener('input', (e) => { Tone.Transport.bpm.value = e.target.value; document.getElementById('live-tempo-val').innerText = e.target.value; });
         document.getElementById('learn-tempo').addEventListener('input', (e) => { Tone.Transport.bpm.value = e.target.value; document.getElementById('learn-tempo-val').innerText = e.target.value; });
 
+        let activeAccompNotesMap = new Map();
+
         async function initMIDI() {
             if (navigator.requestMIDIAccess) {
                 try {
                     const access = await navigator.requestMIDIAccess();
+                    const updateMIDIStatus = () => {
+                        let hasInputs = false;
+                        access.inputs.forEach(input => { if (input.state === 'connected') hasInputs = true; });
+                        
+                        if (hasInputs) {
+                            document.getElementById('midi-text').innerText = "MIDI: Active";
+                            document.getElementById('midi-dot').className = "status-dot active";
+                        } else {
+                            document.getElementById('midi-text').innerText = "MIDI: Offline";
+                            document.getElementById('midi-dot').className = "status-dot";
+                        }
+                    };
+
+                    updateMIDIStatus();
+                    access.onstatechange = updateMIDIStatus;
                     access.inputs.forEach(input => input.onmidimessage = processMIDI);
-                    document.getElementById('midi-text').innerText = "MIDI: Active";
-                    document.getElementById('midi-dot').className = "status-dot active";
-                } catch (e) { document.getElementById('midi-text').innerText = "MIDI Blocked"; }
+                } catch (e) { 
+                    document.getElementById('midi-text').innerText = "MIDI Blocked"; 
+                }
             }
         }
 
@@ -1487,34 +1566,41 @@
             }
 
             const note = isLiveActive ? data1 + liveTranspose : data1;
-            const playedNotes = isLiveActive ? getAccompanimentNotes(note) : [Tone.Frequency(note, "midi").toNote()];
-            const activeVoice = isLiveActive ? activeLiveVoice : activeLearnVoice;
+            const chordResult = isLiveActive ? getAccompanimentNotes(note) : { notes: [Tone.Frequency(note, "midi").toNote()], isAccomp: false };
+            const activeVoice = isLiveActive ? (chordResult.isAccomp ? activeAccompanimentVoice : activeLiveVoice) : activeLearnVoice;
 
             if (cmd === 144 && vel > 0) {
-                activeVoice.triggerAttack(playedNotes, Tone.now(), vel);
+                activeVoice.triggerAttack(chordResult.notes, Tone.now(), vel);
                 if (isLiveActive) {
-                    playedNotes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, true));
+                    chordResult.notes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, true));
+                    if(chordResult.isAccomp) activeAccompNotesMap.set(data1, chordResult.notes);
                     if (isRec) {
-                        playedNotes.forEach(cn => {
+                        chordResult.notes.forEach(cn => {
                             activeRecs[cn] = { midi: Tone.Frequency(cn).toMidi(), time: Tone.now() - recStart, velocity: vel };
                         });
                     }
-                } else { playedNotes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, true)); }
+                } else { chordResult.notes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, true)); }
                 Tone.Draw.schedule(() => updateVisuals(isLiveActive), Tone.now());
                 
             } else if (cmd === 128 || (cmd === 144 && vel === 0)) {
-                activeVoice.triggerRelease(playedNotes);
+                let releaseNotes = chordResult.notes;
+                if (isLiveActive && activeAccompNotesMap.has(data1)) {
+                    releaseNotes = activeAccompNotesMap.get(data1);
+                    activeAccompNotesMap.delete(data1);
+                }
+
+                activeVoice.triggerRelease(releaseNotes);
                 if (isLiveActive) {
-                    playedNotes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, false));
+                    releaseNotes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, false));
                     if (isRec) {
-                        playedNotes.forEach(cn => {
+                        releaseNotes.forEach(cn => {
                             if (activeRecs[cn]) {
                                 recNotes.push({ midi: activeRecs[cn].midi, name: cn, time: activeRecs[cn].time, duration: (Tone.now() - recStart) - activeRecs[cn].time, velocity: activeRecs[cn].velocity });
                                 delete activeRecs[cn];
                             }
                         });
                     }
-                } else { playedNotes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, false)); }
+                } else { releaseNotes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, false)); }
                 Tone.Draw.schedule(() => updateVisuals(isLiveActive), Tone.now());
             }
         }

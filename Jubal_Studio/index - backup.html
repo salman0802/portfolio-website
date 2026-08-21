@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jubal Studio | Workstation Pro v20.0</title>
+    <title>Jubal Studio | Web DAW</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     
     <!-- Cloud CDNs -->
@@ -58,14 +58,12 @@
 
         .panel-card { background: var(--bg-panel); backdrop-filter: blur(24px); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.7); display: flex; flex-direction: column; gap: 14px; box-sizing: border-box; }
         
-        /* Updated Workspace Columns */
         .studio-workspace { display: grid; grid-template-columns: 450px 1fr 450px; gap: 20px; width: 100%; align-items: stretch; margin-bottom: 10px; }
         @media (max-width: 1400px) { .studio-workspace { grid-template-columns: 1fr; } }
 
         .display-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 4px; width: 100%; }
         .note-display { font-family: var(--font-display); font-size: 2.2rem; font-weight: 900; color: var(--accent-cyan); letter-spacing: 3px; height: 45px; text-shadow: 0 0 20px var(--accent-glow); text-align: center; }
 
-        /* Hardware Matrix & Knob Grid Tweaks */
         .hardware-matrix { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 400px; margin: 0 auto; }
         .pad-grid { display: grid; grid-template-columns: repeat(4, 55px); justify-content: center; gap: 12px; }
         .drum-pad { aspect-ratio: 1; width: 55px; height: 55px; background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid #334155; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.5rem; font-weight: 700; color: #64748b; transition: 0.1s; box-shadow: inset 0 4px 6px rgba(255,255,255,0.05); user-select: none; }
@@ -77,7 +75,6 @@
         .cc-knob-indicator { position: absolute; width: 2px; height: 15px; background: var(--accent-cyan); top: 2px; left: 50%; transform-origin: bottom center; transform: translateX(-50%) rotate(-135deg); transition: transform 0.1s; }
         .cc-label { font-size: 0.55rem; font-family: var(--font-display); color: var(--text-muted); text-transform: uppercase; text-align: center; }
 
-        /* Master Keyboard */
         .keyboard-dock { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; width: 100%; box-sizing: border-box; box-shadow: 0 20px 50px rgba(0,0,0,0.7); display: flex; justify-content: flex-start; overflow-x: auto; backdrop-filter: blur(24px); }
         .keyboard { display: block; position: relative; height: 170px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); border-radius: 8px; overflow: hidden; background: #030508; border: 1px solid var(--border-color); }
         .key { transition: background 0.05s, box-shadow 0.05s; box-sizing: border-box; cursor: pointer; position: absolute; user-select: none; top: 0; }
@@ -93,7 +90,6 @@
         
         .key-label { position: absolute; bottom: 8px; width: 100%; text-align: center; font-size: 9px; color: #475569; font-weight: 700; pointer-events: none; font-family: var(--font-display); }
 
-        /* Fixed 1-Octave Mini Chord Visualizer UI */
         .mini-chord-viz { position: relative; height: 75px; background: #030508; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; margin: 10px auto 0 auto; display: block; width: 280px; }
         .mini-key { position: absolute; top: 0; transition: 0.1s; box-sizing: border-box; cursor: pointer; }
         .mini-key.white { background: linear-gradient(to bottom, #e2e8f0, #cbd5e1); border-right: 1px solid #94a3b8; z-index: 1; height: 75px; width: 40px; }
@@ -101,7 +97,6 @@
         .mini-key.white.active { background: linear-gradient(to bottom, #bae6fd, var(--accent-cyan)) !important; border-color: var(--accent-cyan) !important; box-shadow: inset 0 -10px 15px var(--accent-glow) !important; z-index: 2 !important; }
         .mini-key.black.active { background: var(--accent-cyan) !important; border-color: var(--accent-cyan) !important; box-shadow: 0 0 12px var(--accent-cyan) !important; z-index: 4 !important; }
 
-        /* Waterfall & Academy Layout */
         .academy-dock { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; width: 100%; box-sizing: border-box; box-shadow: 0 20px 50px rgba(0,0,0,0.7); display: flex; flex-direction: column; overflow: hidden; backdrop-filter: blur(24px); }
         .academy-scroll-wrapper { width: 100%; overflow-x: auto; padding: 25px; box-sizing: border-box; display: flex; justify-content: center; }
         .piano-waterfall-sync-wrapper { width: 1400px; min-width: 1400px; display: flex; flex-direction: column; position: relative; }
@@ -116,12 +111,10 @@
         .timeline-loop-region { position: absolute; top: 0; height: 100%; background: rgba(255, 215, 0, 0.25); border-left: 2px dashed var(--accent-gold); border-right: 2px dashed var(--accent-gold); z-index: 3; pointer-events: none; display: none; }
         #timeline-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 
-        /* Intonation Meter */
         .intonation-meter { width: 100%; height: 10px; background: #0f172a; border-radius: 5px; position: relative; border: 1px solid #334155; margin-top: 8px; overflow: hidden;}
         .intonation-center { position: absolute; left: 50%; top: 0; height: 100%; width: 2px; background: #fff; transform: translateX(-50%); z-index: 2; }
         .intonation-fill { position: absolute; left: 50%; top: 0; height: 100%; width: 0%; background: var(--success); transition: 0.1s ease-out; }
 
-        /* Wind Instruments Visualizer */
         .wind-container { position: relative; width: 100%; height: 140px; display: flex; align-items: center; justify-content: center; margin: 20px 0; }
         .rotated-wrapper { position: relative; height: 520px; width: 95px; transform: rotate(-90deg); transform-origin: center center; display: flex; justify-content: center; filter: drop-shadow(0 0 25px rgba(0,240,255,0.25)); }
         .hole-overlay { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: transparent; border: 2px solid transparent; transform: translate(-50%, -50%); z-index: 10; display: none; }
@@ -132,7 +125,6 @@
         #rec-0 { top: 35%; left: 0%; } #rec-1 { top: 43.5%; left: 50%; } #rec-2 { top: 51%; left: 50%; } #rec-3 { top: 57.5%; left: 50%; } #rec-4 { top: 67%; left: 50%; } #rec-5 { top: 73.5%; left: 50%; } #rec-6a{ top: 80%; left: 42%; } #rec-6b{ top: 80%; left: 58%; } #rec-7a{ top: 86.5%; left: 44%; } #rec-7b{ top: 86.5%; left: 56%; }
         #ban-1 { top: 40%; left: 50%; } #ban-2 { top: 48%; left: 50%; } #ban-3 { top: 56%; left: 50%; } #ban-4 { top: 68%; left: 50%; } #ban-5 { top: 76%; left: 50%; } #ban-6 { top: 84%; left: 50%; }
 
-        /* Professional DAW Modal MIDI Editor */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; z-index: 100; }
         .modal-card { background: #111; border: 1px solid #333; border-radius: 12px; width: 96vw; height: 95vh; max-width: none; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.9); }
         
@@ -168,7 +160,7 @@
     <header>
         <div class="brand">
             <span class="brand-icon">⚡</span>
-            <h2>Jubal Studio Pro v20.0</h2>
+            <h2>Jubal Studio</h2>
         </div>
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="switchView('live')">Live Matrix & Pads</button>
@@ -191,7 +183,6 @@
         </div>
         
         <div class="studio-workspace">
-            <!-- Left Rack: Diatonic Theory & Accomp Zone -->
             <div class="panel-card">
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SCALE ASSIST</label>
@@ -224,12 +215,10 @@
                         <div id="live-chord-suggest" style="font-size: 0.72rem; color: var(--scale-color); font-weight: 500; line-height: 1.4;">Select scale...</div>
                     </div>
 
-                    <!-- 1-Octave Mini Chord Visualizer (Inverse Chord Display) -->
                     <div class="mini-chord-viz" id="mini-accomp-viz"></div>
                 </div>
             </div>
 
-            <!-- Center Console: Hardware Matrix (Max Width 400px) -->
             <div class="panel-card" style="align-items: center;">
                 <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700; letter-spacing: 2px;">8x8 Hardware Console</label>
                 
@@ -271,7 +260,6 @@
                 </div>
             </div>
 
-            <!-- Right Rack: Master Sequencer & Pitch -->
             <div class="panel-card">
                 <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SEQUENCER & VOICE</label>
                 
@@ -324,7 +312,6 @@
             </div>
         </div>
 
-        <!-- Master Docked Keyboard (5 Octaves) -->
         <div class="keyboard-dock">
             <div class="keyboard" id="live-keyboard"></div>
         </div>
@@ -779,8 +766,7 @@
                 key.addEventListener('mousedown', (e) => {
                     e.preventDefault();
                     if (Tone.context.state !== 'running') Tone.start();
-                    const noteFull = `${noteStr}3`;
-                    activeLiveVoice.triggerAttackRelease(noteFull, "8n");
+                    activeLiveVoice.triggerAttackRelease(`${noteStr}3`, "8n");
                 });
                 
                 container.appendChild(key);
@@ -1193,9 +1179,9 @@
                 rollCanvasBg.appendChild(bgRow);
             }
 
-            editorMaxDuration = validNotes.reduce((max, n) => Math.max(max, n.time + n.duration), 2);
-            // Ensure ruler spans fully until the end of the midi track + padding
-            const totalWidth = Math.max(1600, editorMaxDuration * editorScaleX + 500);
+            // Calculate precise track duration limit so the editor container & playhead stop at the exact track end
+            editorMaxDuration = validNotes.reduce((max, n) => Math.max(max, n.time + n.duration), 1);
+            const totalWidth = Math.max(800, editorMaxDuration * editorScaleX + 100);
             
             rollCanvasContent.style.width = `${totalWidth}px`;
             rollCanvasContent.style.height = `${totalRows * currentRowHeight}px`;
@@ -1278,14 +1264,19 @@
         setInterval(() => {
             if (editorModal.style.display === 'flex') {
                 const currentPos = Tone.Transport.seconds;
-                editorPlayhead.style.left = `${currentPos * editorScaleX}px`;
+                const progressPx = Math.min(editorMaxDuration * editorScaleX, currentPos * editorScaleX);
+                editorPlayhead.style.left = `${progressPx}px`;
                 document.getElementById('editor-time-display').innerText = `Time: ${currentPos.toFixed(1)}s`;
                 
                 if (Tone.Transport.state === "started") {
-                    const playheadPx = currentPos * editorScaleX;
-                    const rollViewport = document.getElementById('roll-viewport');
-                    if (playheadPx > rollViewport.scrollLeft + rollViewport.clientWidth - 150 || playheadPx < rollViewport.scrollLeft) {
-                        rollViewport.scrollLeft = Math.max(0, playheadPx - 100);
+                    if (!editorLoopActive && currentPos >= editorMaxDuration) {
+                        document.getElementById('editor-btn-stop').click();
+                        Tone.Transport.seconds = 0;
+                    } else {
+                        const rollViewport = document.getElementById('roll-viewport');
+                        if (progressPx > rollViewport.scrollLeft + rollViewport.clientWidth - 150 || progressPx < rollViewport.scrollLeft) {
+                            rollViewport.scrollLeft = Math.max(0, progressPx - 100);
+                        }
                     }
                 }
             }
@@ -1307,7 +1298,6 @@
             timelineDuration = fileMidi.duration;
             btnFilePlay.disabled = false; document.getElementById('btn-open-file-editor').disabled = false;
             
-            // Draw waveform preview on telemetry timeline
             timelineCanvas.width = timelineTrack.clientWidth;
             timelineCanvas.height = timelineTrack.clientHeight;
             timelineCtx.clearRect(0, 0, timelineCanvas.width, timelineCanvas.height);
@@ -1395,7 +1385,13 @@
 
         setInterval(() => {
             if (Tone.Transport.state === "started" && timelineDuration > 0 && document.getElementById('view-learning').classList.contains('active')) {
-                timelineProgress.style.width = `${Math.min(100, (Tone.Transport.seconds / timelineDuration) * 100)}%`;
+                const currentSec = Tone.Transport.seconds;
+                const progressPct = Math.min(100, (currentSec / timelineDuration) * 100);
+                timelineProgress.style.width = `${progressPct}%`;
+
+                if (!Tone.Transport.loop && currentSec >= timelineDuration) {
+                    btnFileStop.click();
+                }
             }
         }, 50);
 
