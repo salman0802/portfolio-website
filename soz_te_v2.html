@@ -144,7 +144,9 @@
             bgImage: "",
             textStrokeColor: "#000000",
             textStrokeWidth: 0,
-            hidePipesText: false
+            hidePipesText: false,
+            windowWidth: 1920,
+            windowHeight: 470
         };
 
         function openOBSSettingsModal() {
@@ -194,7 +196,9 @@
         function openWindow() {
             if (window.innerWidth < 768) return; 
             if (newWindow && !newWindow.closed) return;
-            newWindow = window.open('', '_blank', 'width=1920,height=470');
+            var w = obsConfig.windowWidth || 1920;
+            var h = obsConfig.windowHeight || 470;
+            newWindow = window.open('', '_blank', `width=${w},height=${h},resizable=no`);
             if (newWindow) {
                 newWindow.document.write(`
           <html>
@@ -247,6 +251,8 @@
             var strokeColorInput = document.getElementById('obsStrokeColor');
             var strokeWidthInput = document.getElementById('obsStrokeWidth');
             var hidePipesInput = document.getElementById('obsHidePipesText');
+            var widthInput = document.getElementById('obsWindowWidth');
+            var heightInput = document.getElementById('obsWindowHeight');
 
             if (sizeInput) {
                 obsConfig.fontSize = sizeInput.value + 'vw';
@@ -262,6 +268,8 @@
                 document.getElementById('strokeWidthVal').textContent = obsConfig.textStrokeWidth + 'px';
             }
             if (hidePipesInput) obsConfig.hidePipesText = hidePipesInput.checked;
+            if (widthInput) obsConfig.windowWidth = parseInt(widthInput.value) || 1920;
+            if (heightInput) obsConfig.windowHeight = parseInt(heightInput.value) || 470;
 
             if (newWindow && !newWindow.closed) {
                 var bodyElem = newWindow.document.body;
@@ -293,7 +301,7 @@
             return text.replace(/<ch>(.*?)<\/ch>/gi, "$1");
         }
 
-                function updateText(rawText, elementRef = null) {
+        function updateText(rawText, elementRef = null) {
             if (window.innerWidth < 768) return; 
             if (!newWindow || newWindow.closed) openWindow();
             if (newWindow && !newWindow.closed) {
@@ -596,6 +604,19 @@
                         </div>
                         <input type="range" id="obsFontSize" min="1.5" max="8.0" step="0.2" value="4.0"
                             oninput="applyOBSStyles()" class="w-full accent-blue-600 cursor-pointer">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block mb-1">Window Width (px)</label>
+                            <input type="number" id="obsWindowWidth" value="1920" onchange="applyOBSStyles()"
+                                class="w-full border border-slate-300/80 rounded-xl p-2.5 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-xs shadow-xs">
+                        </div>
+                        <div>
+                            <label class="block mb-1">Window Height (px)</label>
+                            <input type="number" id="obsWindowHeight" value="470" onchange="applyOBSStyles()"
+                                class="w-full border border-slate-300/80 rounded-xl p-2.5 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-xs shadow-xs">
+                        </div>
                     </div>
 
                     <div>
@@ -973,8 +994,6 @@
                 lyricsContainer.appendChild(stanzaDiv);
                 currentProjectableElements.push(stanzaDiv);
             });
-
-            // renderAccordionCategories();
         }
 
         function songSearch(input) {
@@ -1161,6 +1180,79 @@
             currentFontSize = Math.max(14, Math.min(36, currentFontSize + delta));
             document.getElementById('fixed_song_meta').style.fontSize = currentFontSize + 'px';
             document.getElementById('full_song_lyrics').style.fontSize = currentFontSize + 'px';
+        }
+
+        function openWindow() {
+            if (window.innerWidth < 768) return; 
+            if (newWindow && !newWindow.closed) return;
+            var w = obsConfig.windowWidth || 1920;
+            var h = obsConfig.windowHeight || 470;
+            newWindow = window.open('', '_blank', `width=${w},height=${h},resizable=no`);
+            if (newWindow) {
+                newWindow.document.write(`
+          <html>
+            <head>
+              <title>OBS Song Lyric Display</title>
+              <link rel="preconnect" href="https://fonts.googleapis.com">
+              <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+              <link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@400;600;700&family=Gidugu&family=Mandali&family=Noto+Sans+Telugu:wght@700&family=NTR&family=Peddana&family=Ramabhadra&family=Sirivennela&family=Suranna&family=Tenali+Ramakrishna&display=swap" rel="stylesheet">
+              <style> 
+                body { 
+                  display: flex; 
+                  justify-content: center; 
+                  align-items: center; 
+                  background-color: ${obsConfig.bgColor};
+                  background-size: cover;
+                  background-position: center;
+                  background-repeat: no-repeat;
+                  margin: 0;
+                  height: 100vh;
+                  transition: background 0.2s ease;
+                } 
+                #text { 
+                  width: 90%;
+                  margin: 0; 
+                  padding: 20px;
+                  line-height: 1.35;
+                  font-weight: 700;
+                  transition: all 0.15s ease-in-out;
+                }
+              </style>
+            </head>
+            <body>
+              <p id="text"></p>
+            </body>
+          </html>
+        `);
+                startOBSStatusMonitor();
+                applyOBSStyles();
+            } else {
+                alert('The browser blocked opening the OBS projection window. Please allow popups.');
+            }
+        }
+
+        function updateText(rawText, elementRef = null) {
+            if (window.innerWidth < 768) return; 
+            if (!newWindow || newWindow.closed) openWindow();
+            if (newWindow && !newWindow.closed) {
+                let processedText = processPipesInText(rawText);
+                let cleanText = processedText.replace(/<br\s*[\/]?>/gi, "<br/>");
+                var textElem = newWindow.document.getElementById('text');
+                textElem.innerHTML = cleanText;
+                applyOBSStyles();
+                
+                // Force window focus and repaint to ensure OBS captures updates instantly without manual window activation
+                try {
+                    newWindow.focus();
+                    window.focus();
+                } catch (e) {}
+            }
+
+            document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
+            if (elementRef) {
+                elementRef.classList.add('active-projection');
+                currentActiveLyricIndex = currentProjectableElements.indexOf(elementRef);
+            }
         }
     </script>
 </body>
