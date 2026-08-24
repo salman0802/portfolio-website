@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>సీయోను గీతములు - Songs of Zion (v3 Ultimate Edition)</title>
+    <title>సీయోను గీతములు - Songs of Zion (v3 Multi-Church Sync)</title>
 
     <!-- Google Fonts & Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@400;600;700&family=Gidugu&family=Inter:wght@300;400;500;600;700&family=Mandali&family=Noto+Sans+Telugu:wght@400;600;700&family=NTR&family=Peddana&family=Ramabhadra&family=Sirivennela&family=Suranna&family=Tenali+Ramakrishna&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@400;600;700&family=Gidugu&family=Inter:wght@300;400;500;600;700&family=Mandali&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -22,17 +22,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        telugu: ['Mandali', 'Noto Sans Telugu', 'Anek Telugu', 'sans-serif'],
-                    },
-                    colors: { brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 900: '#0f172a' } }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], telugu: ['Mandali', 'Noto Sans Telugu', 'Anek Telugu', 'sans-serif'], }, colors: { brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 900: '#0f172a' } } } } }
     </script>
 
     <style>
@@ -45,25 +35,19 @@
         .glass-header { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(147, 197, 253, 0.2); box-shadow: 0 10px 30px -10px rgba(30, 58, 138, 0.5); }
         .glass-modal { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); border: 1px solid rgba(147, 197, 253, 0.4); }
         
-        /* Default Desktop Lyrics Styling */
         .lyric-line { transition: all 0.2s ease; cursor: pointer; }
         body:not(.obs-dock-theme) .lyric-line:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15); }
         body:not(.obs-dock-theme) .lyric-line.active-projection { border-color: #2563eb !important; background-color: rgba(239, 246, 255, 0.95) !important; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3); }
-        
         .ql-editor { font-family: 'Mandali', 'Noto Sans Telugu', sans-serif; font-size: 15px; min-height: 80px; }
 
         /* --- OBS NATIVE DOCK THEME OVERRIDES --- */
         body.obs-dock-theme { background: #2b2b2b !important; color: #cccccc !important; margin: 0; padding: 0; }
         .obs-dock-theme #mainLayoutContainer { padding: 0 !important; gap: 0 !important; border: none !important; }
         .obs-dock-theme #mainWorkspaceCard { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; border-radius: 0 !important; display: flex; flex-direction: column; height: 100%; }
-        
-        /* OBS Lyrics List */
         .obs-dock-theme .lyric-line { background: #333333 !important; border: 1px solid #222 !important; border-radius: 4px !important; color: #eee !important; margin-bottom: 4px !important; padding: 6px 8px !important; font-size: 14px !important; box-shadow: none !important; }
         .obs-dock-theme .lyric-line:hover { background: #444444 !important; transform: none !important; }
         .obs-dock-theme .lyric-line.active-projection { background: #2484f2 !important; border-color: #2484f2 !important; color: #fff !important; }
         .obs-dock-theme .lyric-line span.font-sans { background: #1e1e1e !important; color: #999 !important; border: 1px solid #111; padding: 2px 6px !important; font-size: 10px !important; }
-        
-        /* OBS Forms & Buttons */
         .obs-dock-theme input:not([type="range"]):not([type="color"]):not([type="checkbox"]), .obs-dock-theme select { background: #1e1e1e !important; border: 1px solid #111 !important; color: #fff !important; border-radius: 4px !important; padding: 4px 8px !important; outline: none; }
         .obs-dock-theme input:focus, .obs-dock-theme select:focus { border-color: #2484f2 !important; }
         .obs-dock-theme button { background: #3c3c3c !important; border: 1px solid #111 !important; color: #eee !important; border-radius: 4px !important; transition: none; padding: 4px 8px; cursor: pointer; }
@@ -71,25 +55,18 @@
         .obs-dock-theme button.primary-btn { background: #2484f2 !important; border-color: #1a6ac4 !important; color: #fff !important; }
         .obs-dock-theme button.primary-btn:hover { background: #1a6ac4 !important; }
         .obs-dock-theme button.danger-btn { background: #d97706 !important; border-color: #b45309 !important; color: #fff !important; }
-        
-        /* OBS Color Picker Reset */
         .obs-dock-theme input[type="color"] { -webkit-appearance: none; border: none; padding: 0; border-radius: 4px; overflow: hidden; }
         .obs-dock-theme input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
         .obs-dock-theme input[type="color"]::-webkit-color-swatch { border: 1px solid #111; border-radius: 4px; }
-        
-        /* OBS Scrollbars */
         .obs-dock-theme ::-webkit-scrollbar { width: 12px; height: 12px; }
         .obs-dock-theme ::-webkit-scrollbar-track { background: #2b2b2b !important; }
         .obs-dock-theme ::-webkit-scrollbar-thumb { background: #444 !important; border-radius: 0px !important; border: 2px solid #2b2b2b; }
         .obs-dock-theme ::-webkit-scrollbar-thumb:hover { background: #555 !important; }
-        
-        /* Dock Layout Specifics */
         .obs-dock-theme #dockSuggestions { background: #333 !important; border: 1px solid #111 !important; }
         .obs-dock-theme #dockSuggestionsList li { border-bottom: 1px solid #222; }
         .obs-dock-theme #dockSuggestionsList li:hover { background: #444 !important; color: #fff; }
     </style>
 
-    <!-- If you have an external songs.js, keep it here. Otherwise data is loaded from local storage -->
     <script src="./songs.js"></script>
 
     <script>
@@ -106,28 +83,24 @@
             projectId: "solomoniam",
             storageBucket: "solomoniam.firebasestorage.app",
             messagingSenderId: "519439776711",
-            appId: "1:519439776711:web:38fa27401ed4ff2507b7e2",
-            measurementId: "G-5JSTHGELN3"
+            appId: "1:519439776711:web:38fa27401ed4ff2507b7e2"
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         let firestoreUnsubscribe = null;
         
-        let currentSessionId = urlParams.get('room') || "ZION-MAIN-ROOM";
+        // Multi-Tenant Room Identification
+        let currentSessionId = urlParams.get('room') || localStorage.getItem('zion_room_code') || "ZION-MAIN-ROOM";
 
-        // WebSocket & Application State
         let ws = null;
         let obsConnected = false;
         let activeSong = null;
         let currentFontSize = 22;
-        
-        // Quill Editors
         let chorusQuill = null;
         let bridgeQuill = null;
         let stanzaQuills = [];
         const quillToolbarOptions = [['bold', 'italic', 'underline'], [{'color': []}], [{'align': []}], ['clean']];
 
-        // OBS Canvas Styling Default
         let obsConfig = {
             fontSize: "4.0vw", fontFamily: "'Mandali', sans-serif", textAlign: "center",
             textColor: "#ffffff", textShadow: true, bgColor: "#008000", bgImage: "",
@@ -136,18 +109,12 @@
 
         // --- 2. INITIALIZATION ---
         window.addEventListener('DOMContentLoaded', () => {
-            loadLocalDatabase();
+            document.getElementById('roomCodeInput').value = currentSessionId;
+            document.getElementById('dockRoomCodeInput').value = currentSessionId;
 
             if (isDisplayMode) {
-                document.body.className = ""; 
-                document.body.style.margin = "0";
-                document.body.style.overflow = "hidden";
-                
-                document.body.innerHTML = `
-                    <div id="obsDisplayContainer" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; background-color: #008000; overflow: hidden; background-size: cover; background-position: center;">
-                        <p id="obsDisplayText" style="width: 90%; margin: 0; padding: 20px; text-align: center; font-weight: 700; line-height: 1.35; transition: all 0.15s ease-in-out;"></p>
-                    </div>
-                `;
+                document.body.className = ""; document.body.style.margin = "0"; document.body.style.overflow = "hidden";
+                document.body.innerHTML = `<div id="obsDisplayContainer" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; background-color: #008000; overflow: hidden; background-size: cover; background-position: center;"><p id="obsDisplayText" style="width: 90%; margin: 0; padding: 20px; text-align: center; font-weight: 700; line-height: 1.35; transition: all 0.15s ease-in-out;"></p></div>`;
                 applyOBSStylesToDisplay();
                 initFirebaseSync();
                 return;
@@ -155,10 +122,7 @@
 
             if (isDockMode) {
                 document.body.className = "obs-dock-theme h-screen overflow-hidden flex flex-col font-sans";
-                document.getElementById('desktopHeader').classList.add('hidden');
-                document.getElementById('desktopSidebar').classList.add('hidden');
-                document.getElementById('desktopSongHeader').classList.add('hidden');
-                document.getElementById('livePreviewBoxOuter').classList.add('hidden'); 
+                ['desktopHeader', 'desktopSidebar', 'desktopSongHeader', 'livePreviewBoxOuter'].forEach(id => document.getElementById(id).classList.add('hidden'));
                 document.getElementById('obsDockHeader').classList.remove('hidden');
             } else {
                 document.body.className = "bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 font-sans h-screen overflow-hidden flex flex-col";
@@ -166,68 +130,103 @@
             }
 
             initQuillEditors();
-            renderAccordionCategories();
+            loadRoomDatabase(currentSessionId);
             initFirebaseSync();
 
-            if (songs.length > 0) loadSong(songs[0].SongNumber);
-
-            // Auto-open Add modal if launched from external dock button
-            if (urlParams.get('action') === 'add' && !isDockMode && !isDisplayMode) {
-                setTimeout(openAddSongModal, 300);
-            }
+            if (urlParams.get('action') === 'add' && !isDockMode && !isDisplayMode) { setTimeout(openAddSongModal, 300); }
         });
 
-        // --- 3. MASTER PROJECTION LOGIC ---
+        // --- 3. MULTI-CHURCH DATABASE LOADING ---
+        async function loadRoomDatabase(roomCode) {
+            try {
+                let doc = await db.collection("song_databases").doc(roomCode).get();
+                if (doc.exists && doc.data().songs) {
+                    songs = doc.data().songs;
+                    localStorage.setItem('zion_songs_' + roomCode, JSON.stringify(songs));
+                } else {
+                    // Fallback to local device storage, or initialize default
+                    let local = localStorage.getItem('zion_songs_' + roomCode) || localStorage.getItem('zion_songs_db');
+                    if (local) {
+                        songs = JSON.parse(local);
+                    } else {
+                        songs = [{ "id": 1, "SongNumber": 37, "title": "Sainyamula Yehovaa || సైన్యముల యెహోవా", "categoryId": "cat2", "Song": { "Chorus": "పల్లవి : సైన్యముల యెహోవా - మా బలము నీవేనయ్యా", "1": "సైన్యముల కధిపతివగు యెహోవా (2)<br/>నీ నివాసములు - ఎంతో రమ్యములు (2)" } }];
+                    }
+                    // Seed this room's database in Firebase for other devices
+                    db.collection("song_databases").doc(roomCode).set({ songs: songs });
+                }
+                renderAccordionCategories();
+                if (songs.length > 0) loadSong(songs[0].SongNumber);
+            } catch (e) {
+                console.error("Failed to sync database. Using offline cache.");
+                let local = localStorage.getItem('zion_songs_' + roomCode);
+                if (local) { songs = JSON.parse(local); renderAccordionCategories(); if(songs.length > 0) loadSong(songs[0].SongNumber); }
+            }
+        }
+
+        // --- 4. OMNI-DIRECTIONAL SYNC LOGIC ---
         function processPipesInText(text) {
             if (!text) return '';
             if (obsConfig.hidePipesText) return text.replace(/<ch>.*?<\/ch>/g, '').replace(/\|\|[\s\S]*?\|\|/g, '').trim();
             return text.replace(/<ch>(.*?)<\/ch>/gi, "$1");
         }
 
-        function triggerProjection(rawText, elementRef = null) {
+        function triggerProjection(rawText, songNum, stanzaKey) {
             let processedText = processPipesInText(rawText);
             let htmlText = processedText.replace(/<br\s*[\/]?>/gi, "<br/>");
             let plainText = htmlText.replace(/<[^>]+>/g, '\n').replace(/\n\n+/g, '\n').trim();
             
-            sendToOBSWebSocket(plainText);
+            // 1. Immediately push to Local OBS WS if this specific device is connected
+            if (obsConnected) sendToOBSWebSocket(plainText);
 
+            // 2. Broadcast State to Firebase (Syncs Mobile, Desktop, Dock, and Display Canvas)
             db.collection("sessions").doc(currentSessionId).set({
                 activeTextPlain: plainText,
                 activeTextHtml: htmlText,
+                activeSongNum: songNum,
+                activeStanzaKey: stanzaKey,
                 obsConfig: obsConfig,
                 isClear: false,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
 
-            document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
-            if (elementRef) elementRef.classList.add('active-projection');
-            
-            let preview = document.getElementById('livePreviewBox');
-            if (preview && !isDockMode) preview.innerHTML = htmlText;
+            updateLocalUI(htmlText, songNum, stanzaKey, false);
         }
 
         function clearScreenMaster() {
-            sendToOBSWebSocket("");
+            if (obsConnected) sendToOBSWebSocket("");
             db.collection("sessions").doc(currentSessionId).set({
                 isClear: true,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
-
-            document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
-            let preview = document.getElementById('livePreviewBox');
-            if (preview && !isDockMode) preview.innerHTML = '<span class="text-slate-400 italic">Screen Cleared</span>';
+            updateLocalUI("", null, null, true);
         }
 
-        // --- 4. FIREBASE LISTENER ---
-        function initFirebaseSync() {
-            var roomInput = document.getElementById('roomCodeInput');
-            var dockRoomInput = document.getElementById('dockRoomCodeInput');
-            
-            if (!isDisplayMode) {
-                if (roomInput && !isDockMode) currentSessionId = roomInput.value || currentSessionId;
-                if (isDockMode && dockRoomInput) currentSessionId = dockRoomInput.value || currentSessionId;
+        // Handles Visual UI Syncing Locally based on remote commands
+        function updateLocalUI(htmlText, songNum, stanzaKey, isClear) {
+            if (isClear) {
+                document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
+                let preview = document.getElementById('livePreviewBox');
+                if (preview && !isDockMode) preview.innerHTML = '<span class="text-slate-400 italic">Screen Cleared</span>';
+            } else {
+                // If a remote user changed the song, auto-switch to it!
+                if (!activeSong || activeSong.SongNumber !== songNum) {
+                    loadSong(songNum, true); 
+                }
+                document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
+                let targetId = `lyric_line_${songNum}_${stanzaKey.replace(/\s+/g, '_')}`;
+                let activeEl = document.getElementById(targetId);
+                if (activeEl) {
+                    activeEl.classList.add('active-projection');
+                    activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+                let preview = document.getElementById('livePreviewBox');
+                if (preview && !isDockMode) preview.innerHTML = htmlText;
             }
+        }
 
+        // --- 5. FIREBASE LISTENER ---
+        function initFirebaseSync() {
             if (firestoreUnsubscribe) firestoreUnsubscribe();
 
             firestoreUnsubscribe = db.collection("sessions").doc(currentSessionId).onSnapshot((doc) => {
@@ -237,7 +236,7 @@
                     if (data.obsConfig) {
                         obsConfig = data.obsConfig;
                         if (isDisplayMode) applyOBSStylesToDisplay();
-                        else syncConfigToUIInputs();
+                        else syncConfigToUIInputs(); 
                     }
 
                     if (isDisplayMode) {
@@ -247,13 +246,11 @@
                         return; 
                     }
 
-                    let preview = document.getElementById('livePreviewBox');
                     if (data.isClear) {
-                        document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
-                        if (preview && !isDockMode) preview.innerHTML = '<span class="text-slate-400 italic">Screen Cleared</span>';
+                        updateLocalUI("", null, null, true);
                         if (obsConnected) sendToOBSWebSocket(""); 
                     } else if (data.activeTextHtml && data.activeTextPlain) {
-                        if (preview && !isDockMode) preview.innerHTML = data.activeTextHtml;
+                        updateLocalUI(data.activeTextHtml, data.activeSongNum, data.activeStanzaKey, false);
                         if (obsConnected) sendToOBSWebSocket(data.activeTextPlain); 
                     }
                 }
@@ -262,15 +259,17 @@
 
         function joinRoom() {
             let roomInput = isDockMode ? document.getElementById('dockRoomCodeInput') : document.getElementById('roomCodeInput');
-            let newRoom = roomInput.value.trim();
-            if (newRoom) {
+            let newRoom = roomInput.value.trim().toUpperCase();
+            if (newRoom && newRoom !== currentSessionId) {
                 currentSessionId = newRoom;
-                initFirebaseSync();
-                alert(`Joined Sync Room: ${newRoom}`);
+                localStorage.setItem('zion_room_code', currentSessionId);
+                loadRoomDatabase(currentSessionId); // Load the new church's songs!
+                initFirebaseSync(); // Listen to the new church's projection!
+                alert(`Successfully joined Sync Room: ${newRoom}`);
             }
         }
 
-        // --- 5. OBS NATIVE WEBSOCKET ---
+        // --- 6. OBS NATIVE WEBSOCKET ---
         async function connectOBS() {
             let url = (isDockMode ? document.getElementById('dockObsUrl') : document.getElementById('obsUrl')).value || 'ws://127.0.0.1:4455';
             let password = (isDockMode ? document.getElementById('dockObsPassword') : document.getElementById('obsPassword')).value || '';
@@ -279,46 +278,28 @@
             try {
                 if (ws) ws.close();
                 ws = new WebSocket(url);
-
                 ws.onopen = () => console.log("Connected to OBS WebSocket");
-
                 ws.onmessage = async (event) => {
                     let msg = JSON.parse(event.data);
                     if (msg.op === 0) { 
                         let auth = null;
                         if (msg.d.authentication && password) {
-                            async function sha256(message) {
-                                const msgBuffer = new TextEncoder().encode(message);
-                                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-                                return btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(hashBuffer))));
-                            }
+                            async function sha256(m) { const msgB = new TextEncoder().encode(m); const hashB = await crypto.subtle.digest('SHA-256', msgB); return btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(hashB)))); }
                             const secret = await sha256(password + msg.d.authentication.salt);
                             auth = await sha256(secret + msg.d.authentication.challenge);
                         }
                         ws.send(JSON.stringify({ op: 1, d: { rpcVersion: 1, authentication: auth } }));
                     } else if (msg.op === 2) { 
                         obsConnected = true;
-                        if (!isDockMode && badges[0]) {
-                            badges[0].className = "px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold flex items-center gap-1.5 shadow-sm shrink-0";
-                            badges[0].innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>OBS WS Connected`;
-                        }
-                        if (isDockMode && badges[1]) {
-                            badges[1].style.backgroundColor = "#4ade80"; 
-                            badges[1].title = "Connected";
-                        }
+                        if (!isDockMode && badges[0]) { badges[0].className = "px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold flex items-center gap-1.5 shadow-sm shrink-0"; badges[0].innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>OBS WS Connected`; }
+                        if (isDockMode && badges[1]) { badges[1].style.backgroundColor = "#4ade80"; badges[1].title = "Connected"; }
                     }
                 };
                 ws.onerror = () => alert("Failed to connect to OBS WebSocket.");
                 ws.onclose = () => {
                     obsConnected = false;
-                    if (!isDockMode && badges[0]) {
-                        badges[0].className = "px-2.5 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-sm shrink-0";
-                        badges[0].innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS WS Inactive`;
-                    }
-                    if (isDockMode && badges[1]) {
-                        badges[1].style.backgroundColor = "#ef4444"; 
-                        badges[1].title = "Disconnected";
-                    }
+                    if (!isDockMode && badges[0]) { badges[0].className = "px-2.5 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-sm shrink-0"; badges[0].innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS WS Inactive`; }
+                    if (isDockMode && badges[1]) { badges[1].style.backgroundColor = "#ef4444"; badges[1].title = "Disconnected"; }
                 };
             } catch (error) { alert("Connection failed."); }
         }
@@ -326,27 +307,17 @@
         function sendToOBSWebSocket(plainText) {
             if (obsConnected && ws && ws.readyState === WebSocket.OPEN) {
                 let sourceName = (isDockMode ? document.getElementById('dockObsSourceName') : document.getElementById('obsSourceName')).value || 'Lyrics';
-                ws.send(JSON.stringify({
-                    op: 6,
-                    d: { requestType: "SetInputSettings", requestId: "req_" + Date.now(), requestData: { inputName: sourceName, inputSettings: { text: plainText } } }
-                }));
+                ws.send(JSON.stringify({ op: 6, d: { requestType: "SetInputSettings", requestId: "req_" + Date.now(), requestData: { inputName: sourceName, inputSettings: { text: plainText } } } }));
             }
         }
 
-        // --- 6. OBS CANVAS (DISPLAY MODE) STYLING ---
+        // --- 7. UI LOGIC (Load, Search, Dock Panels) ---
         function applyOBSStylesToDisplay() {
             var container = document.getElementById('obsDisplayContainer');
             var textElem = document.getElementById('obsDisplayText');
             if (!container || !textElem) return;
-
-            if (obsConfig.bgImage) {
-                container.style.backgroundImage = `url('${obsConfig.bgImage}')`;
-                container.style.backgroundColor = 'transparent';
-            } else {
-                container.style.backgroundImage = 'none';
-                container.style.backgroundColor = obsConfig.bgColor || '#008000';
-            }
-
+            container.style.backgroundImage = obsConfig.bgImage ? `url('${obsConfig.bgImage}')` : 'none';
+            container.style.backgroundColor = obsConfig.bgImage ? 'transparent' : (obsConfig.bgColor || '#008000');
             textElem.style.fontSize = obsConfig.fontSize || '4.0vw';
             textElem.style.fontFamily = obsConfig.fontFamily || "'Mandali', sans-serif";
             textElem.style.textAlign = obsConfig.textAlign || 'center';
@@ -357,58 +328,22 @@
 
         function syncConfigToUIInputs() {
             let numSize = parseFloat(obsConfig.fontSize) || 4.0;
-            if(document.getElementById('obsFontSize')) {
-                document.getElementById('obsFontSize').value = numSize;
-                document.getElementById('fontSizeVal').textContent = obsConfig.fontSize;
-                document.getElementById('obsFontFamily').value = obsConfig.fontFamily;
-                document.getElementById('obsTextColor').value = obsConfig.textColor;
-                document.getElementById('obsBgColor').value = obsConfig.bgColor;
-                document.getElementById('obsTextShadow').checked = obsConfig.textShadow;
-                document.getElementById('obsHidePipesText').checked = obsConfig.hidePipesText;
-            }
-            if(document.getElementById('dockObsFontSize')) {
-                document.getElementById('dockObsFontSize').value = numSize;
-                document.getElementById('dockObsFontFamily').value = obsConfig.fontFamily;
-                document.getElementById('dockObsTextAlign').value = obsConfig.textAlign;
-                document.getElementById('dockObsTextColor').value = obsConfig.textColor;
-                document.getElementById('dockObsBgColor').value = obsConfig.bgColor;
-                document.getElementById('dockObsTextShadow').checked = obsConfig.textShadow;
-                document.getElementById('dockObsHidePipes').checked = obsConfig.hidePipesText;
-            }
+            if(document.getElementById('obsFontSize')) { document.getElementById('obsFontSize').value = numSize; document.getElementById('fontSizeVal').textContent = obsConfig.fontSize; document.getElementById('obsFontFamily').value = obsConfig.fontFamily; document.getElementById('obsTextColor').value = obsConfig.textColor; document.getElementById('obsBgColor').value = obsConfig.bgColor; document.getElementById('obsTextShadow').checked = obsConfig.textShadow; document.getElementById('obsHidePipesText').checked = obsConfig.hidePipesText; }
+            if(document.getElementById('dockObsFontSize')) { document.getElementById('dockObsFontSize').value = numSize; document.getElementById('dockObsFontFamily').value = obsConfig.fontFamily; document.getElementById('dockObsTextAlign').value = obsConfig.textAlign; document.getElementById('dockObsTextColor').value = obsConfig.textColor; document.getElementById('dockObsBgColor').value = obsConfig.bgColor; document.getElementById('dockObsTextShadow').checked = obsConfig.textShadow; document.getElementById('dockObsHidePipes').checked = obsConfig.hidePipesText; }
         }
 
         function applyDesktopStylesFromModal() {
-            obsConfig.fontSize = document.getElementById('obsFontSize').value + 'vw';
-            obsConfig.fontFamily = document.getElementById('obsFontFamily').value;
-            obsConfig.textColor = document.getElementById('obsTextColor').value;
-            obsConfig.textShadow = document.getElementById('obsTextShadow').checked;
-            obsConfig.bgColor = document.getElementById('obsBgColor').value;
-            obsConfig.hidePipesText = document.getElementById('obsHidePipesText').checked;
+            obsConfig.fontSize = document.getElementById('obsFontSize').value + 'vw'; obsConfig.fontFamily = document.getElementById('obsFontFamily').value; obsConfig.textColor = document.getElementById('obsTextColor').value; obsConfig.textShadow = document.getElementById('obsTextShadow').checked; obsConfig.bgColor = document.getElementById('obsBgColor').value; obsConfig.hidePipesText = document.getElementById('obsHidePipesText').checked;
             db.collection("sessions").doc(currentSessionId).set({ obsConfig: obsConfig }, { merge: true });
         }
 
         function applyDockStyles() {
-            obsConfig.fontSize = document.getElementById('dockObsFontSize').value + 'vw';
-            obsConfig.fontFamily = document.getElementById('dockObsFontFamily').value;
-            obsConfig.textAlign = document.getElementById('dockObsTextAlign').value;
-            obsConfig.textColor = document.getElementById('dockObsTextColor').value;
-            obsConfig.bgColor = document.getElementById('dockObsBgColor').value;
-            obsConfig.textShadow = document.getElementById('dockObsTextShadow').checked;
-            obsConfig.hidePipesText = document.getElementById('dockObsHidePipes').checked;
+            obsConfig.fontSize = document.getElementById('dockObsFontSize').value + 'vw'; obsConfig.fontFamily = document.getElementById('dockObsFontFamily').value; obsConfig.textAlign = document.getElementById('dockObsTextAlign').value; obsConfig.textColor = document.getElementById('dockObsTextColor').value; obsConfig.bgColor = document.getElementById('dockObsBgColor').value; obsConfig.textShadow = document.getElementById('dockObsTextShadow').checked; obsConfig.hidePipesText = document.getElementById('dockObsHidePipes').checked;
             db.collection("sessions").doc(currentSessionId).set({ obsConfig: obsConfig }, { merge: true });
         }
 
-        // --- 7. UI LOGIC (Load, Search, Dock Panels) ---
-        function toggleDockPanel(panelId) {
-            ['dockSettingsPanel', 'dockDisplayPanel'].forEach(id => {
-                let el = document.getElementById(id);
-                if (!el) return;
-                if (id === panelId) el.classList.toggle('hidden');
-                else el.classList.add('hidden');
-            });
-        }
+        function toggleDockPanel(panelId) { ['dockSettingsPanel', 'dockDisplayPanel'].forEach(id => { let el = document.getElementById(id); if (el) { if (id === panelId) el.classList.toggle('hidden'); else el.classList.add('hidden'); } }); }
 
-        // Opens the Desktop application in the Default Web Browser
         function openAddSongExternal() {
             let externalUrl = new URL(window.location.href);
             externalUrl.searchParams.delete('mode');
@@ -416,106 +351,64 @@
             window.open(externalUrl.toString(), '_blank');
         }
 
-        function loadLocalDatabase() {
-            if (songs.length === 0) {
-                songs = [{
-                    "id": 1, "SongNumber": 37, "title": "Sainyamula Yehovaa || సైన్యముల యెహోవా", "categoryId": "cat2",
-                    "Song": {
-                        "Chorus": "పల్లవి : సైన్యముల యెహోవా - మా బలము నీవేనయ్యా",
-                        "1": "సైన్యముల కధిపతివగు యెహోవా (2)<br/>నీ నివాసములు - ఎంతో రమ్యములు (2)",
-                        "2": "యెహోవా మందిరము చూడవలెనని<br/>నా ప్రాణమెంతో ఆశతో సొమ్మసిల్లెను"
-                    }
-                }];
-            }
-        }
-
         function renderAccordionCategories() {
             ['song_categories', 'song_categories_mobile'].forEach(containerId => {
                 var container = document.getElementById(containerId);
                 if (!container) return;
                 container.innerHTML = '';
-                
                 songs.sort((a, b) => a.SongNumber - b.SongNumber);
                 categoryList.forEach(cat => {
                     var categorySongs = songs.filter(s => (s.categoryId === cat.id || (s.SongNumber >= cat.range[0] && s.SongNumber <= cat.range[1])));
-                    var catBox = document.createElement('div');
-                    catBox.className = 'border-b border-slate-100/80';
-
-                    var headerBtn = document.createElement('button');
-                    headerBtn.type = 'button';
-                    headerBtn.className = 'w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-700 hover:bg-white/80 hover:text-blue-700 flex justify-between items-center transition';
+                    var catBox = document.createElement('div'); catBox.className = 'border-b border-slate-100/80';
+                    var headerBtn = document.createElement('button'); headerBtn.type = 'button'; headerBtn.className = 'w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-700 hover:bg-white/80 hover:text-blue-700 flex justify-between items-center transition';
                     headerBtn.innerHTML = `<span class="font-telugu">${cat.name}</span><div class="flex items-center gap-2"><span class="text-[10px] font-bold bg-slate-200/50 text-slate-600 px-2 py-0.5 rounded-full">${categorySongs.length}</span><i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></div>`;
+                    var songListDiv = document.createElement('div'); songListDiv.className = 'song-list-pane bg-slate-50/40 backdrop-blur-sm divide-y divide-slate-100/60 hidden';
 
-                    var songListDiv = document.createElement('div');
-                    songListDiv.className = 'song-list-pane bg-slate-50/40 backdrop-blur-sm divide-y divide-slate-100/60 hidden';
+                    if (categorySongs.length === 0) songListDiv.innerHTML = `<div class="px-4 py-2.5 text-xs text-slate-400 italic">No songs</div>`;
+                    else categorySongs.forEach(s => {
+                        var songItem = document.createElement('div'); songItem.className = `px-4 py-2.5 cursor-pointer text-xs flex items-center justify-between transition hover:bg-white/90 text-slate-700`;
+                        songItem.innerHTML = `<span class="truncate font-telugu"><span class="font-bold text-blue-600 mr-1.5 font-sans">#${s.SongNumber}</span> ${s.title}</span>`;
+                        songItem.onclick = (e) => { e.stopPropagation(); loadSong(s.SongNumber); };
+                        songListDiv.appendChild(songItem);
+                    });
 
-                    if (categorySongs.length === 0) {
-                        songListDiv.innerHTML = `<div class="px-4 py-2.5 text-xs text-slate-400 italic">No songs</div>`;
-                    } else {
-                        categorySongs.forEach(s => {
-                            var songItem = document.createElement('div');
-                            songItem.className = `px-4 py-2.5 cursor-pointer text-xs flex items-center justify-between transition hover:bg-white/90 text-slate-700`;
-                            songItem.innerHTML = `<span class="truncate font-telugu"><span class="font-bold text-blue-600 mr-1.5 font-sans">#${s.SongNumber}</span> ${s.title}</span>`;
-                            songItem.onclick = (e) => { e.stopPropagation(); loadSong(s.SongNumber); };
-                            songListDiv.appendChild(songItem);
-                        });
-                    }
-
-                    headerBtn.onclick = (e) => {
-                        e.preventDefault();
-                        var isHidden = songListDiv.classList.contains('hidden');
-                        container.querySelectorAll('.song-list-pane').forEach(p => p.classList.add('hidden'));
-                        container.querySelectorAll('i.fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)');
-                        if (isHidden) { songListDiv.classList.remove('hidden'); headerBtn.querySelector('i').style.transform = 'rotate(180deg)'; }
-                    };
+                    headerBtn.onclick = (e) => { e.preventDefault(); var isHidden = songListDiv.classList.contains('hidden'); container.querySelectorAll('.song-list-pane').forEach(p => p.classList.add('hidden')); container.querySelectorAll('i.fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)'); if (isHidden) { songListDiv.classList.remove('hidden'); headerBtn.querySelector('i').style.transform = 'rotate(180deg)'; } };
                     catBox.appendChild(headerBtn); catBox.appendChild(songListDiv); container.appendChild(catBox);
                 });
             });
-            let sel = document.getElementById('inputCategory');
-            if(sel) { sel.innerHTML = ''; categoryList.forEach(c => sel.appendChild(new Option(c.name, c.id))); }
+            let sel = document.getElementById('inputCategory'); if(sel) { sel.innerHTML = ''; categoryList.forEach(c => sel.appendChild(new Option(c.name, c.id))); }
         }
 
-        function loadSong(songNum) {
+        function loadSong(songNum, isSilentLoad = false) {
             activeSong = songs.find(s => s.SongNumber == songNum);
             if (!activeSong) return;
 
-            if (isDockMode) {
-                document.getElementById('dockSongTitle').innerHTML = `#${activeSong.SongNumber} - ${activeSong.title.split('||')[1] || activeSong.title}`;
-            } else {
+            if (isDockMode) document.getElementById('dockSongTitle').innerHTML = `#${activeSong.SongNumber} - ${activeSong.title.split('||')[1] || activeSong.title}`;
+            else {
                 document.getElementById('displaySongNum').textContent = activeSong.SongNumber;
                 let tParts = activeSong.title.split('||');
-                document.getElementById('displayTitle').innerHTML = tParts.length === 2 ? 
-                    `<div class="space-y-0.5"><h2 class="text-lg sm:text-2xl font-extrabold text-slate-700 font-telugu leading-snug">${tParts[1].trim()}<p class="text-xs font-bold uppercase text-blue-600 font-sans">${tParts[0].trim()}</p></h2></div>` 
-                    : `<h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 font-telugu leading-snug">${activeSong.title}</h2>`;
+                document.getElementById('displayTitle').innerHTML = tParts.length === 2 ? `<div class="space-y-0.5"><h2 class="text-lg sm:text-2xl font-extrabold text-slate-700 font-telugu leading-snug">${tParts[1].trim()}<p class="text-xs font-bold uppercase text-blue-600 font-sans">${tParts[0].trim()}</p></h2></div>` : `<h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 font-telugu leading-snug">${activeSong.title}</h2>`;
             }
 
-            var fMeta = document.getElementById('fixed_song_meta');
-            var fLyrics = document.getElementById('full_song_lyrics');
-            
-            if (!isDockMode) { 
-                fMeta.style.fontSize = currentFontSize + 'px'; 
-                fLyrics.style.fontSize = currentFontSize + 'px'; 
-            }
-            
-            fMeta.innerHTML = ''; 
-            fLyrics.innerHTML = '';
+            var fMeta = document.getElementById('fixed_song_meta'); var fLyrics = document.getElementById('full_song_lyrics');
+            if (!isDockMode) { fMeta.style.fontSize = currentFontSize + 'px'; fLyrics.style.fontSize = currentFontSize + 'px'; }
+            fMeta.innerHTML = ''; fLyrics.innerHTML = '';
             
             var songObj = activeSong.Song;
 
             function createLyricBlock(key, content, isFixed) {
                 var div = document.createElement('div');
+                div.id = `lyric_line_${songNum}_${key.replace(/\s+/g, '_')}`; // Added specific ID for remote highlighting!
+                
                 if (isDockMode) {
                     div.className = "lyric-line font-telugu";
                     div.innerHTML = `<span class="font-sans mr-2">${key}</span>${content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right ml-4 opacity-50">$1</span>')}`;
                 } else {
-                    div.className = isFixed 
-                        ? `p-2.5 rounded-r-xl font-medium shadow-sm lyric-line font-telugu ${key==='Chorus'?'bg-amber-50/80 border-l-4 border-amber-500 text-amber-900':'bg-purple-50/80 border-l-4 border-purple-500 text-purple-900'}`
-                        : `p-3 sm:p-4 bg-white/70 hover:bg-blue-50/50 border border-slate-200/70 rounded-2xl transition lyric-line flex gap-3 items-center backdrop-blur-sm shadow-xs`;
-                    
+                    div.className = isFixed ? `p-2.5 rounded-r-xl font-medium shadow-sm lyric-line font-telugu ${key==='Chorus'?'bg-amber-50/80 border-l-4 border-amber-500 text-amber-900':'bg-purple-50/80 border-l-4 border-purple-500 text-purple-900'}` : `p-3 sm:p-4 bg-white/70 hover:bg-blue-50/50 border border-slate-200/70 rounded-2xl transition lyric-line flex gap-3 items-center backdrop-blur-sm shadow-xs`;
                     if (isFixed) div.innerHTML = content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right text-500 ml-4 pr-2">$1</span>');
                     else div.innerHTML = `<span class="text-xs font-bold bg-slate-200/80 text-slate-700 px-2.5 py-1 rounded-lg shrink-0 font-sans">${key}</span><div class="flex-1 font-telugu">${content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right ml-4 pr-2">$1</span>')}</div>`;
                 }
-                div.onclick = () => triggerProjection(content, div);
+                div.onclick = () => triggerProjection(content, songNum, key);
                 (isFixed ? fMeta : fLyrics).appendChild(div);
             }
 
@@ -523,8 +416,7 @@
             if (songObj.Bridge) createLyricBlock('Bridge', songObj.Bridge, true);
             Object.keys(songObj).forEach(key => { if (key !== 'Chorus' && key !== 'Bridge' && key !== 'Verse') createLyricBlock(key, songObj[key], false); });
             
-            var drawer = document.getElementById('mobileCategoryDrawer');
-            if (drawer) drawer.classList.add('hidden');
+            var drawer = document.getElementById('mobileCategoryDrawer'); if (drawer) drawer.classList.add('hidden');
         }
 
         function handleSearch(input, suggId, listId, clearBtnId) {
@@ -561,11 +453,7 @@
 
         function toggleModal(id, show) { document.getElementById(id).classList.toggle('hidden', !show); }
         function toggleMobileDrawer() { document.getElementById('mobileCategoryDrawer').classList.toggle('hidden'); }
-        function changeFontSize(delta) { 
-            currentFontSize = Math.max(14, Math.min(36, currentFontSize + delta)); 
-            document.getElementById('fixed_song_meta').style.fontSize = currentFontSize + 'px';
-            document.getElementById('full_song_lyrics').style.fontSize = currentFontSize + 'px';
-        }
+        function changeFontSize(delta) { currentFontSize = Math.max(14, Math.min(36, currentFontSize + delta)); document.getElementById('fixed_song_meta').style.fontSize = currentFontSize + 'px'; document.getElementById('full_song_lyrics').style.fontSize = currentFontSize + 'px'; }
 
         // --- 8. EDITOR LOGIC (Quill) ---
         function initQuillEditors() {
@@ -576,70 +464,48 @@
         function setQHtml(q, h) { if(!q)return; if(!h){q.setText('');return;} q.root.innerHTML = h.split('<br/>').map(l=>`<p>${l}</p>`).join(''); }
 
         function openAddSongModal() {
-            document.getElementById('editSongId').value = '';
-            document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-file-circle-plus text-blue-600"></i> Add New Song`;
+            document.getElementById('editSongId').value = ''; document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-file-circle-plus text-blue-600"></i> Add New Song`;
             let nextNum = songs.length ? (Math.max(...songs.map(s => s.SongNumber)) + 1) : 1;
-            document.getElementById('inputSongNum').value = nextNum;
-            document.getElementById('inputTitle').value = '';
-            setQHtml(chorusQuill, ''); setQHtml(bridgeQuill, '');
-            document.getElementById('stanzasContainer').innerHTML = ''; stanzaQuills = [];
-            addStanzaRow();
-            document.getElementById('deleteSongBtn').classList.add('hidden');
-            toggleModal('songModal', true);
+            document.getElementById('inputSongNum').value = nextNum; document.getElementById('inputTitle').value = '';
+            setQHtml(chorusQuill, ''); setQHtml(bridgeQuill, ''); document.getElementById('stanzasContainer').innerHTML = ''; stanzaQuills = [];
+            addStanzaRow(); document.getElementById('deleteSongBtn').classList.add('hidden'); toggleModal('songModal', true);
         }
 
         function openEditCurrentSong() {
             if (!activeSong) return;
-            document.getElementById('editSongId').value = activeSong.id || Date.now();
-            document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit #${activeSong.SongNumber}`;
-            document.getElementById('inputSongNum').value = activeSong.SongNumber;
-            document.getElementById('inputTitle').value = activeSong.title;
-            setQHtml(chorusQuill, activeSong.Song.Chorus || '');
-            setQHtml(bridgeQuill, activeSong.Song.Bridge || '');
+            document.getElementById('editSongId').value = activeSong.id || Date.now(); document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit #${activeSong.SongNumber}`;
+            document.getElementById('inputSongNum').value = activeSong.SongNumber; document.getElementById('inputTitle').value = activeSong.title;
+            setQHtml(chorusQuill, activeSong.Song.Chorus || ''); setQHtml(bridgeQuill, activeSong.Song.Bridge || '');
             document.getElementById('stanzasContainer').innerHTML = ''; stanzaQuills = [];
             Object.keys(activeSong.Song).forEach(k => { if(k!=='Chorus' && k!=='Bridge' && k!=='Verse') addStanzaRow(activeSong.Song[k]); });
-            document.getElementById('deleteSongBtn').classList.remove('hidden');
-            toggleModal('songModal', true);
+            document.getElementById('deleteSongBtn').classList.remove('hidden'); toggleModal('songModal', true);
         }
 
         function addStanzaRow(txt = '') {
-            let container = document.getElementById('stanzasContainer');
-            let editorId = 'stz_' + Date.now();
-            let card = document.createElement('div');
+            let container = document.getElementById('stanzasContainer'); let editorId = 'stz_' + Date.now(); let card = document.createElement('div');
             card.className = 'stanza-card bg-slate-50/80 p-3 rounded-2xl border border-slate-200/80 space-y-2';
             card.innerHTML = `<div class="flex items-center justify-between text-xs font-bold text-slate-500"><span class="stanza-label">Stanza</span><div><button onclick="this.closest('.stanza-card').remove()" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button></div></div><div id="${editorId}"></div>`;
-            container.appendChild(card);
-            let q = new Quill('#'+editorId, { theme: 'snow', modules: { toolbar: quillToolbarOptions }});
-            setQHtml(q, txt);
+            container.appendChild(card); let q = new Quill('#'+editorId, { theme: 'snow', modules: { toolbar: quillToolbarOptions }}); setQHtml(q, txt);
             stanzaQuills.push({ id: editorId, instance: q, card: card });
         }
 
         function saveSongForm() {
-            let id = document.getElementById('editSongId').value;
-            let num = parseInt(document.getElementById('inputSongNum').value);
-            let title = document.getElementById('inputTitle').value.trim();
+            let id = document.getElementById('editSongId').value; let num = parseInt(document.getElementById('inputSongNum').value); let title = document.getElementById('inputTitle').value.trim();
             if (!num || !title) return alert("Number and Title required.");
 
-            let songObj = {};
-            let c = getQHtml(chorusQuill); if(c) songObj.Chorus = c;
-            let b = getQHtml(bridgeQuill); if(b) songObj.Bridge = b;
+            let songObj = {}; let c = getQHtml(chorusQuill); if(c) songObj.Chorus = c; let b = getQHtml(bridgeQuill); if(b) songObj.Bridge = b;
             
             let i = 1;
-            document.querySelectorAll('.stanza-card').forEach(card => {
-                let sq = stanzaQuills.find(q => q.card === card);
-                if(sq) { let t = getQHtml(sq.instance); if(t) { songObj[i.toString()] = t; i++; } }
-            });
+            document.querySelectorAll('.stanza-card').forEach(card => { let sq = stanzaQuills.find(q => q.card === card); if(sq) { let t = getQHtml(sq.instance); if(t) { songObj[i.toString()] = t; i++; } } });
 
             let existingIdx = songs.findIndex(s => s.id == id || s.SongNumber == num);
-            if (existingIdx >= 0) {
-                songs[existingIdx].SongNumber = num;
-                songs[existingIdx].title = title;
-                songs[existingIdx].Song = songObj;
-            } else {
-                songs.push({ id: Date.now(), SongNumber: num, title: title, categoryId: document.getElementById('inputCategory').value, Song: songObj });
-            }
+            if (existingIdx >= 0) { songs[existingIdx].SongNumber = num; songs[existingIdx].title = title; songs[existingIdx].Song = songObj; } 
+            else { songs.push({ id: Date.now(), SongNumber: num, title: title, categoryId: document.getElementById('inputCategory').value, Song: songObj }); }
             
-            localStorage.setItem('zion_songs_db', JSON.stringify(songs));
+            // Save to Firebase for this Room (Multi-tenant) & Local cache
+            db.collection("song_databases").doc(currentSessionId).set({ songs: songs });
+            localStorage.setItem('zion_songs_' + currentSessionId, JSON.stringify(songs));
+            
             renderAccordionCategories(); toggleModal('songModal', false); loadSong(num);
         }
 
@@ -654,7 +520,7 @@
                 <div class="bg-gradient-to-tr from-blue-600 to-indigo-400 p-2 rounded-xl shadow-lg border border-blue-400/30"><i class="fa-solid fa-music text-lg"></i></div>
                 <div>
                     <h1 class="text-base font-bold leading-none font-telugu tracking-wide">సీయోను గీతములు</h1>
-                    <p class="text-[10px] text-blue-200/80 mt-1">v3 Ultimate Connect</p>
+                    <p class="text-[10px] text-blue-200/80 mt-1">v3 Cloud Sync</p>
                 </div>
                 <button onclick="toggleMobileDrawer()" class="md:hidden ml-2 bg-blue-600/40 px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-400/30"><i class="fa-solid fa-bars"></i></button>
             </div>
@@ -672,8 +538,8 @@
             <!-- Toolbar -->
             <div class="flex items-center gap-2">
                 <button onclick="clearScreenMaster()" class="hidden md:flex bg-white/10 hover:bg-white/20 text-amber-300 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-eraser"></i> Clear</button>
-                <button onclick="toggleModal('connModal', true)" class="hidden lg:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-tower-broadcast text-emerald-400"></i> Sync & OBS</button>
-                <button onclick="toggleModal('obsSettingsModal', true)" class="hidden md:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-display text-blue-400"></i> Display Setup</button>
+                <button onclick="toggleModal('connModal', true)" class="hidden lg:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-tower-broadcast text-emerald-400"></i> Room & OBS</button>
+                <button onclick="toggleModal('obsSettingsModal', true)" class="hidden md:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-display text-blue-400"></i> Canvas Settings</button>
                 <button onclick="openAddSongModal()" class="bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg"><i class="fa-solid fa-plus"></i> Add</button>
             </div>
         </div>
@@ -707,13 +573,10 @@
                 
                 <!-- NATIVE OBS DOCK HEADER (Only visible in ?mode=dock) -->
                 <div id="obsDockHeader" class="hidden flex-col gap-1 p-2 bg-[#2b2b2b] border-b border-[#111] shrink-0">
-                    <!-- Search Row -->
                     <div class="flex gap-1">
-                        <!-- Proper Relative Wrapper for Suggestion Dropdown Alignment -->
                         <div class="relative flex-1 flex flex-col">
                             <input type="text" id="dockSearch" onkeyup="dockSearch(this)" placeholder="Search song..." autocomplete="off" class="w-full pl-2 pr-6 py-1 text-xs font-sans">
                             <button id="dockClearSearch" onclick="clearInp('dockSearch','dockSuggestions','dockClearSearch')" class="absolute right-1 top-1 text-[#888] hover:text-white hidden"><i class="fa-solid fa-xmark"></i></button>
-                            <!-- Suggestions Box now tied to input directly -->
                             <div id="dockSuggestions" class="absolute left-0 right-0 top-full mt-1 hidden z-50 max-h-48 overflow-auto shadow-xl border border-[#111]">
                                 <ul id="dockSuggestionsList" class="text-xs divide-y divide-[#222]"></ul>
                             </div>
@@ -721,11 +584,9 @@
                         <button onclick="clearScreenMaster()" class="px-2 py-1 text-xs whitespace-nowrap danger-btn" title="Clear Screen"><i class="fa-solid fa-eraser"></i> Clear</button>
                     </div>
                     
-                    <!-- Current Song Title & Settings Toggle -->
                     <div class="flex justify-between items-center mt-1 px-1">
                         <div class="text-[13px] font-bold text-[#aaa] font-telugu truncate flex-1" id="dockSongTitle">No Song Selected</div>
                         <div class="flex gap-1 shrink-0">
-                            <!-- Adds New Song in Default Desktop Browser -->
                             <button onclick="openAddSongExternal()" class="text-[#888] hover:text-white px-2 py-0.5" title="Add New Song (Opens Web Browser)"><i class="fa-solid fa-plus text-xs"></i></button>
                             <button onclick="toggleDockPanel('dockDisplayPanel')" class="text-[#888] hover:text-white px-2 py-0.5" title="Display Canvas Settings"><i class="fa-solid fa-palette text-xs"></i></button>
                             <button onclick="toggleDockPanel('dockSettingsPanel')" class="text-[#888] hover:text-white px-2 py-0.5" title="Connection Settings"><i class="fa-solid fa-gear text-xs"></i></button>
@@ -742,9 +603,9 @@
                             <button onclick="connectOBS()" class="text-[10px] py-1 px-2 primary-btn font-bold">Connect</button>
                          </div>
                          
-                         <div class="text-[10px] text-[#888] mt-1 uppercase font-bold tracking-wide">Mobile Remote Sync Room</div>
+                         <div class="text-[10px] text-[#888] mt-1 uppercase font-bold tracking-wide">Church Sync Room</div>
                          <div class="flex gap-1">
-                             <input type="text" id="dockRoomCodeInput" value="ZION-MAIN-ROOM" class="flex-1 text-[10px] p-1 font-mono font-bold">
+                             <input type="text" id="dockRoomCodeInput" class="flex-1 text-[10px] p-1 font-mono font-bold">
                              <button onclick="joinRoom()" class="px-2 py-1 text-[10px] primary-btn font-bold">Join</button>
                          </div>
                     </div>
@@ -752,40 +613,13 @@
                     <!-- Collapsible Display Canvas Settings Panel -->
                     <div id="dockDisplayPanel" class="hidden flex flex-col gap-2 mt-2 p-2 bg-[#1e1e1e] border border-[#111] rounded text-[11px]">
                          <div class="text-[10px] text-[#888] uppercase font-bold tracking-wide border-b border-[#333] pb-1">Canvas Display Setup</div>
-
+                         <div class="flex items-center gap-2"><label class="w-10 text-[#aaa]">Size</label><input type="range" id="dockObsFontSize" min="1.5" max="8.0" step="0.2" value="4.0" oninput="applyDockStyles()" class="flex-1 h-1 bg-[#333] rounded-lg appearance-none cursor-pointer"></div>
+                         <div class="flex items-center gap-2"><label class="w-10 text-[#aaa]">Font</label><select id="dockObsFontFamily" onchange="applyDockStyles()" class="flex-1 bg-[#2b2b2b] border border-[#111] text-white rounded p-1 outline-none text-[10px]"><option value="'Mandali', sans-serif">Mandali</option><option value="'Gidugu', sans-serif">Gidugu</option></select></div>
+                         <div class="flex items-center gap-2"><label class="w-10 text-[#aaa]">Align</label><select id="dockObsTextAlign" onchange="applyDockStyles()" class="flex-1 bg-[#2b2b2b] border border-[#111] text-white rounded p-1 outline-none text-[10px]"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></div>
                          <div class="flex items-center gap-2">
-                             <label class="w-10 text-[#aaa]">Size</label>
-                             <input type="range" id="dockObsFontSize" min="1.5" max="8.0" step="0.2" value="4.0" oninput="applyDockStyles()" class="flex-1 h-1 bg-[#333] rounded-lg appearance-none cursor-pointer">
+                             <div class="flex items-center gap-1.5 flex-1 border border-[#333] p-1 rounded bg-[#2b2b2b]"><label class="text-[#aaa] w-8">Text</label><input type="color" id="dockObsTextColor" value="#ffffff" onchange="applyDockStyles()" class="w-full h-4 border-0 bg-transparent cursor-pointer"></div>
+                             <div class="flex items-center gap-1.5 flex-1 border border-[#333] p-1 rounded bg-[#2b2b2b]"><label class="text-[#aaa] w-8">Bg</label><input type="color" id="dockObsBgColor" value="#008000" onchange="applyDockStyles()" class="w-full h-4 border-0 bg-transparent cursor-pointer"></div>
                          </div>
-                         
-                         <div class="flex items-center gap-2">
-                             <label class="w-10 text-[#aaa]">Font</label>
-                             <select id="dockObsFontFamily" onchange="applyDockStyles()" class="flex-1 bg-[#2b2b2b] border border-[#111] text-white rounded p-1 outline-none text-[10px]">
-                                 <option value="'Mandali', sans-serif">Mandali</option>
-                                 <option value="'Gidugu', sans-serif">Gidugu</option>
-                             </select>
-                         </div>
-
-                         <div class="flex items-center gap-2">
-                             <label class="w-10 text-[#aaa]">Align</label>
-                             <select id="dockObsTextAlign" onchange="applyDockStyles()" class="flex-1 bg-[#2b2b2b] border border-[#111] text-white rounded p-1 outline-none text-[10px]">
-                                 <option value="center">Center</option>
-                                 <option value="left">Left</option>
-                                 <option value="right">Right</option>
-                             </select>
-                         </div>
-
-                         <div class="flex items-center gap-2">
-                             <div class="flex items-center gap-1.5 flex-1 border border-[#333] p-1 rounded bg-[#2b2b2b]">
-                                 <label class="text-[#aaa] w-8">Text</label>
-                                 <input type="color" id="dockObsTextColor" value="#ffffff" onchange="applyDockStyles()" class="w-full h-4 border-0 bg-transparent cursor-pointer">
-                             </div>
-                             <div class="flex items-center gap-1.5 flex-1 border border-[#333] p-1 rounded bg-[#2b2b2b]">
-                                 <label class="text-[#aaa] w-8">Bg</label>
-                                 <input type="color" id="dockObsBgColor" value="#008000" onchange="applyDockStyles()" class="w-full h-4 border-0 bg-transparent cursor-pointer">
-                             </div>
-                         </div>
-
                          <div class="flex gap-4 items-center border-t border-[#333] pt-1.5 mt-0.5">
                              <label class="flex items-center gap-1.5 cursor-pointer text-[#aaa] hover:text-white"><input type="checkbox" id="dockObsTextShadow" checked onchange="applyDockStyles()"> Shadow</label>
                              <label class="flex items-center gap-1.5 cursor-pointer text-[#aaa] hover:text-white"><input type="checkbox" id="dockObsHidePipes" onchange="applyDockStyles()"> Hide Pipes</label>
@@ -807,7 +641,6 @@
                 </div>
 
                 <!-- LYRICS VIEW -->
-                <!-- The structure here is fixed to correctly separate metadata from main lyrics -->
                 <div class="flex-1 flex flex-col overflow-y-auto pr-2 min-h-0" id="dock_lyrics_wrapper">
                     <div id="fixed_song_meta" class="space-y-1 mb-1 shrink-0"></div>
                     <div id="full_song_lyrics" class="space-y-1 flex-1"></div>
@@ -829,9 +662,9 @@
             <div class="px-5 py-3 border-b bg-blue-50 flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-tower-broadcast text-blue-600 mr-2"></i>Sync & OBS Connection</h3><button onclick="toggleModal('connModal',false)"><i class="fa-solid fa-xmark"></i></button></div>
             <div class="p-5 space-y-4">
                 <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100">
-                    <label class="block text-xs font-bold mb-1 text-slate-600">Cloud Sync Room (Mobile Remote)</label>
+                    <label class="block text-xs font-bold mb-1 text-slate-600">Church Sync Room (Multi-Tenant)</label>
                     <div class="flex gap-2">
-                        <input type="text" id="roomCodeInput" value="ZION-MAIN-ROOM" class="flex-1 border rounded-lg px-3 py-2 text-sm font-mono font-bold outline-none focus:border-blue-500">
+                        <input type="text" id="roomCodeInput" class="flex-1 border rounded-lg px-3 py-2 text-sm font-mono font-bold outline-none focus:border-blue-500">
                         <button onclick="joinRoom()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 rounded-lg text-xs font-bold">Join Room</button>
                     </div>
                 </div>
