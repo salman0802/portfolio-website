@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="te">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>సీయోను గీతములు - Songs of Zion (v3 Ultimate Edition)</title>
+
+    <!-- Google Fonts & Tailwind -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@400;600;700&family=Gidugu&family=Inter:wght@300;400;500;600;700&family=Mandali&family=Noto+Sans+Telugu:wght@400;600;700&family=NTR&family=Peddana&family=Ramabhadra&family=Sirivennela&family=Suranna&family=Tenali+Ramakrishna&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Quill Editor -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        telugu: ['Mandali', 'Noto Sans Telugu', 'Anek Telugu', 'sans-serif'],
+                    },
+                    colors: { brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 900: '#0f172a' } }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .font-telugu { font-family: 'Mandali', 'Noto Sans Telugu', 'Anek Telugu', sans-serif !important; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.05); }
+        ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+        .glass-card { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(24px); border: 1px solid rgba(147, 197, 253, 0.3); box-shadow: 0 16px 48px 0 rgba(30, 64, 175, 0.12); }
+        .glass-header { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(147, 197, 253, 0.2); box-shadow: 0 10px 30px -10px rgba(30, 58, 138, 0.5); }
+        .glass-modal { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); border: 1px solid rgba(147, 197, 253, 0.4); }
+        
+        /* Default Desktop Lyrics Styling */
+        .lyric-line { transition: all 0.2s ease; cursor: pointer; }
+        body:not(.obs-dock-theme) .lyric-line:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15); }
+        body:not(.obs-dock-theme) .lyric-line.active-projection { border-color: #2563eb !important; background-color: rgba(239, 246, 255, 0.95) !important; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3); }
+        
+        .ql-editor { font-family: 'Mandali', 'Noto Sans Telugu', sans-serif; font-size: 15px; min-height: 80px; }
+
+        /* --- OBS NATIVE DOCK THEME OVERRIDES --- */
+        body.obs-dock-theme { background: #2b2b2b !important; color: #cccccc !important; margin: 0; padding: 0; }
+        .obs-dock-theme #mainLayoutContainer { padding: 0 !important; gap: 0 !important; border: none !important; }
+        .obs-dock-theme #mainWorkspaceCard { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; border-radius: 0 !important; display: flex; flex-direction: column; height: 100%; }
+        
+        /* OBS Lyrics List */
+        .obs-dock-theme .lyric-line { background: #333333 !important; border: 1px solid #222 !important; border-radius: 4px !important; color: #eee !important; margin-bottom: 4px !important; padding: 6px 8px !important; font-size: 14px !important; box-shadow: none !important; }
+        .obs-dock-theme .lyric-line:hover { background: #444444 !important; transform: none !important; }
+        .obs-dock-theme .lyric-line.active-projection { background: #2484f2 !important; border-color: #2484f2 !important; color: #fff !important; }
+        .obs-dock-theme .lyric-line span.font-sans { background: #1e1e1e !important; color: #999 !important; border: 1px solid #111; padding: 2px 6px !important; font-size: 10px !important; }
+        
+        /* OBS Forms & Buttons */
+        .obs-dock-theme input:not([type="range"]):not([type="color"]):not([type="checkbox"]), .obs-dock-theme select { background: #1e1e1e !important; border: 1px solid #111 !important; color: #fff !important; border-radius: 4px !important; padding: 4px 8px !important; outline: none; }
+        .obs-dock-theme input:focus, .obs-dock-theme select:focus { border-color: #2484f2 !important; }
+        .obs-dock-theme button { background: #3c3c3c !important; border: 1px solid #111 !important; color: #eee !important; border-radius: 4px !important; transition: none; padding: 4px 8px; cursor: pointer; }
+        .obs-dock-theme button:hover { background: #4d4d4d !important; }
+        .obs-dock-theme button.primary-btn { background: #2484f2 !important; border-color: #1a6ac4 !important; color: #fff !important; }
+        .obs-dock-theme button.primary-btn:hover { background: #1a6ac4 !important; }
+        .obs-dock-theme button.danger-btn { background: #d97706 !important; border-color: #b45309 !important; color: #fff !important; }
+        
+        /* OBS Color Picker Reset */
+        .obs-dock-theme input[type="color"] { -webkit-appearance: none; border: none; padding: 0; border-radius: 4px; overflow: hidden; }
+        .obs-dock-theme input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        .obs-dock-theme input[type="color"]::-webkit-color-swatch { border: 1px solid #111; border-radius: 4px; }
+        
+        /* OBS Scrollbars */
+        .obs-dock-theme ::-webkit-scrollbar { width: 12px; height: 12px; }
+        .obs-dock-theme ::-webkit-scrollbar-track { background: #2b2b2b !important; }
+        .obs-dock-theme ::-webkit-scrollbar-thumb { background: #444 !important; border-radius: 0px !important; border: 2px solid #2b2b2b; }
+        .obs-dock-theme ::-webkit-scrollbar-thumb:hover { background: #555 !important; }
+        
+        /* Dock Layout Specifics */
+        .obs-dock-theme #dockSuggestions { background: #333 !important; border: 1px solid #111 !important; }
+        .obs-dock-theme #dockSuggestionsList li { border-bottom: 1px solid #222; }
+        .obs-dock-theme #dockSuggestionsList li:hover { background: #444 !important; color: #fff; }
+    </style>
+
+    <!-- If you have an external songs.js, keep it here. Otherwise data is loaded from local storage -->
+    <script src="./songs.js"></script>
+
+    <script>
+        // --- 1. CONFIGURATIONS & STATE ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const isDisplayMode = urlParams.get('mode') === 'display';
+        const isDockMode = urlParams.get('mode') === 'dock';
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyArXW7W5XCxwEqUF46RwZv865nnq0-uYO0",
+            authDomain: "solomoniam.firebaseapp.com",
+            databaseURL: "https://solomoniam.firebaseio.com",
+            projectId: "solomoniam",
+            storageBucket: "solomoniam.firebasestorage.app",
+            messagingSenderId: "519439776711",
+            appId: "1:519439776711:web:38fa27401ed4ff2507b7e2",
+            measurementId: "G-5JSTHGELN3"
+        };
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        let firestoreUnsubscribe = null;
+        
+        let currentSessionId = urlParams.get('room') || "ZION-MAIN-ROOM";
+
+        // WebSocket & Application State
+        let ws = null;
+        let obsConnected = false;
+        let activeSong = null;
+        let currentFontSize = 22;
+        
+        // Quill Editors
+        let chorusQuill = null;
+        let bridgeQuill = null;
+        let stanzaQuills = [];
+        const quillToolbarOptions = [['bold', 'italic', 'underline'], [{'color': []}], [{'align': []}], ['clean']];
+
+        // OBS Canvas Styling Default
+        let obsConfig = {
+            fontSize: "4.0vw", fontFamily: "'Mandali', sans-serif", textAlign: "center",
+            textColor: "#ffffff", textShadow: true, bgColor: "#008000", bgImage: "",
+            textStrokeColor: "#000000", textStrokeWidth: 0, hidePipesText: false
+        };
+
+        // --- 2. INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            loadLocalDatabase();
+
+            if (isDisplayMode) {
+                document.body.className = ""; 
+                document.body.style.margin = "0";
+                document.body.style.overflow = "hidden";
+                
+                document.body.innerHTML = `
+                    <div id="obsDisplayContainer" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; background-color: #008000; overflow: hidden; background-size: cover; background-position: center;">
+                        <p id="obsDisplayText" style="width: 90%; margin: 0; padding: 20px; text-align: center; font-weight: 700; line-height: 1.35; transition: all 0.15s ease-in-out;"></p>
+                    </div>
+                `;
+                applyOBSStylesToDisplay();
+                initFirebaseSync();
+                return;
+            }
+
+            if (isDockMode) {
+                document.body.className = "obs-dock-theme h-screen overflow-hidden flex flex-col font-sans";
+                document.getElementById('desktopHeader').classList.add('hidden');
+                document.getElementById('desktopSidebar').classList.add('hidden');
+                document.getElementById('desktopSongHeader').classList.add('hidden');
+                document.getElementById('livePreviewBoxOuter').classList.add('hidden'); 
+                document.getElementById('obsDockHeader').classList.remove('hidden');
+            } else {
+                document.body.className = "bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 font-sans h-screen overflow-hidden flex flex-col";
+                document.getElementById('desktopHeader').classList.remove('hidden');
+            }
+
+            initQuillEditors();
+            renderAccordionCategories();
+            initFirebaseSync();
+
+            if (songs.length > 0) loadSong(songs[0].SongNumber);
+
+            // Auto-open Add modal if launched from external dock button
+            if (urlParams.get('action') === 'add' && !isDockMode && !isDisplayMode) {
+                setTimeout(openAddSongModal, 300);
+            }
+        });
+
+        // --- 3. MASTER PROJECTION LOGIC ---
+        function processPipesInText(text) {
+            if (!text) return '';
+            if (obsConfig.hidePipesText) return text.replace(/<ch>.*?<\/ch>/g, '').replace(/\|\|[\s\S]*?\|\|/g, '').trim();
+            return text.replace(/<ch>(.*?)<\/ch>/gi, "$1");
+        }
+
+        function triggerProjection(rawText, elementRef = null) {
+            let processedText = processPipesInText(rawText);
+            let htmlText = processedText.replace(/<br\s*[\/]?>/gi, "<br/>");
+            let plainText = htmlText.replace(/<[^>]+>/g, '\n').replace(/\n\n+/g, '\n').trim();
+            
+            sendToOBSWebSocket(plainText);
+
+            db.collection("sessions").doc(currentSessionId).set({
+                activeTextPlain: plainText,
+                activeTextHtml: htmlText,
+                obsConfig: obsConfig,
+                isClear: false,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+
+            document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
+            if (elementRef) elementRef.classList.add('active-projection');
+            
+            let preview = document.getElementById('livePreviewBox');
+            if (preview && !isDockMode) preview.innerHTML = htmlText;
+        }
+
+        function clearScreenMaster() {
+            sendToOBSWebSocket("");
+            db.collection("sessions").doc(currentSessionId).set({
+                isClear: true,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+
+            document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
+            let preview = document.getElementById('livePreviewBox');
+            if (preview && !isDockMode) preview.innerHTML = '<span class="text-slate-400 italic">Screen Cleared</span>';
+        }
+
+        // --- 4. FIREBASE LISTENER ---
+        function initFirebaseSync() {
+            var roomInput = document.getElementById('roomCodeInput');
+            var dockRoomInput = document.getElementById('dockRoomCodeInput');
+            
+            if (!isDisplayMode) {
+                if (roomInput && !isDockMode) currentSessionId = roomInput.value || currentSessionId;
+                if (isDockMode && dockRoomInput) currentSessionId = dockRoomInput.value || currentSessionId;
+            }
+
+            if (firestoreUnsubscribe) firestoreUnsubscribe();
+
+            firestoreUnsubscribe = db.collection("sessions").doc(currentSessionId).onSnapshot((doc) => {
+                if (doc.exists) {
+                    var data = doc.data();
+                    
+                    if (data.obsConfig) {
+                        obsConfig = data.obsConfig;
+                        if (isDisplayMode) applyOBSStylesToDisplay();
+                        else syncConfigToUIInputs();
+                    }
+
+                    if (isDisplayMode) {
+                        let textElem = document.getElementById('obsDisplayText');
+                        if (data.isClear) textElem.innerHTML = '';
+                        else if (data.activeTextHtml) textElem.innerHTML = data.activeTextHtml;
+                        return; 
+                    }
+
+                    let preview = document.getElementById('livePreviewBox');
+                    if (data.isClear) {
+                        document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
+                        if (preview && !isDockMode) preview.innerHTML = '<span class="text-slate-400 italic">Screen Cleared</span>';
+                        if (obsConnected) sendToOBSWebSocket(""); 
+                    } else if (data.activeTextHtml && data.activeTextPlain) {
+                        if (preview && !isDockMode) preview.innerHTML = data.activeTextHtml;
+                        if (obsConnected) sendToOBSWebSocket(data.activeTextPlain); 
+                    }
+                }
+            });
+        }
+
+        function joinRoom() {
+            let roomInput = isDockMode ? document.getElementById('dockRoomCodeInput') : document.getElementById('roomCodeInput');
+            let newRoom = roomInput.value.trim();
+            if (newRoom) {
+                currentSessionId = newRoom;
+                initFirebaseSync();
+                alert(`Joined Sync Room: ${newRoom}`);
+            }
+        }
+
+        // --- 5. OBS NATIVE WEBSOCKET ---
+        async function connectOBS() {
+            let url = (isDockMode ? document.getElementById('dockObsUrl') : document.getElementById('obsUrl')).value || 'ws://127.0.0.1:4455';
+            let password = (isDockMode ? document.getElementById('dockObsPassword') : document.getElementById('obsPassword')).value || '';
+            let badges = [document.getElementById('obsStatusBadge'), document.getElementById('dockObsStatusBadge')];
+
+            try {
+                if (ws) ws.close();
+                ws = new WebSocket(url);
+
+                ws.onopen = () => console.log("Connected to OBS WebSocket");
+
+                ws.onmessage = async (event) => {
+                    let msg = JSON.parse(event.data);
+                    if (msg.op === 0) { 
+                        let auth = null;
+                        if (msg.d.authentication && password) {
+                            async function sha256(message) {
+                                const msgBuffer = new TextEncoder().encode(message);
+                                const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                                return btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(hashBuffer))));
+                            }
+                            const secret = await sha256(password + msg.d.authentication.salt);
+                            auth = await sha256(secret + msg.d.authentication.challenge);
+                        }
+                        ws.send(JSON.stringify({ op: 1, d: { rpcVersion: 1, authentication: auth } }));
+                    } else if (msg.op === 2) { 
+                        obsConnected = true;
+                        if (!isDockMode && badges[0]) {
+                            badges[0].className = "px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold flex items-center gap-1.5 shadow-sm shrink-0";
+                            badges[0].innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>OBS WS Connected`;
+                        }
+                        if (isDockMode && badges[1]) {
+                            badges[1].style.backgroundColor = "#4ade80"; 
+                            badges[1].title = "Connected";
+                        }
+                    }
+                };
+                ws.onerror = () => alert("Failed to connect to OBS WebSocket.");
+                ws.onclose = () => {
+                    obsConnected = false;
+                    if (!isDockMode && badges[0]) {
+                        badges[0].className = "px-2.5 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-sm shrink-0";
+                        badges[0].innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS WS Inactive`;
+                    }
+                    if (isDockMode && badges[1]) {
+                        badges[1].style.backgroundColor = "#ef4444"; 
+                        badges[1].title = "Disconnected";
+                    }
+                };
+            } catch (error) { alert("Connection failed."); }
+        }
+
+        function sendToOBSWebSocket(plainText) {
+            if (obsConnected && ws && ws.readyState === WebSocket.OPEN) {
+                let sourceName = (isDockMode ? document.getElementById('dockObsSourceName') : document.getElementById('obsSourceName')).value || 'Lyrics';
+                ws.send(JSON.stringify({
+                    op: 6,
+                    d: { requestType: "SetInputSettings", requestId: "req_" + Date.now(), requestData: { inputName: sourceName, inputSettings: { text: plainText } } }
+                }));
+            }
+        }
+
+        // --- 6. OBS CANVAS (DISPLAY MODE) STYLING ---
+        function applyOBSStylesToDisplay() {
+            var container = document.getElementById('obsDisplayContainer');
+            var textElem = document.getElementById('obsDisplayText');
+            if (!container || !textElem) return;
+
+            if (obsConfig.bgImage) {
+                container.style.backgroundImage = `url('${obsConfig.bgImage}')`;
+                container.style.backgroundColor = 'transparent';
+            } else {
+                container.style.backgroundImage = 'none';
+                container.style.backgroundColor = obsConfig.bgColor || '#008000';
+            }
+
+            textElem.style.fontSize = obsConfig.fontSize || '4.0vw';
+            textElem.style.fontFamily = obsConfig.fontFamily || "'Mandali', sans-serif";
+            textElem.style.textAlign = obsConfig.textAlign || 'center';
+            textElem.style.color = obsConfig.textColor || '#ffffff';
+            textElem.style.textShadow = obsConfig.textShadow ? "2px 2px 8px rgba(0,0,0,0.8), -2px -2px 8px rgba(0,0,0,0.8)" : "none";
+            textElem.style.webkitTextStroke = obsConfig.textStrokeWidth > 0 ? `${obsConfig.textStrokeWidth}px ${obsConfig.textStrokeColor}` : "0px transparent";
+        }
+
+        function syncConfigToUIInputs() {
+            let numSize = parseFloat(obsConfig.fontSize) || 4.0;
+            if(document.getElementById('obsFontSize')) {
+                document.getElementById('obsFontSize').value = numSize;
+                document.getElementById('fontSizeVal').textContent = obsConfig.fontSize;
+                document.getElementById('obsFontFamily').value = obsConfig.fontFamily;
+                document.getElementById('obsTextColor').value = obsConfig.textColor;
+                document.getElementById('obsBgColor').value = obsConfig.bgColor;
+                document.getElementById('obsTextShadow').checked = obsConfig.textShadow;
+                document.getElementById('obsHidePipesText').checked = obsConfig.hidePipesText;
+            }
+            if(document.getElementById('dockObsFontSize')) {
+                document.getElementById('dockObsFontSize').value = numSize;
+                document.getElementById('dockObsFontFamily').value = obsConfig.fontFamily;
+                document.getElementById('dockObsTextAlign').value = obsConfig.textAlign;
+                document.getElementById('dockObsTextColor').value = obsConfig.textColor;
+                document.getElementById('dockObsBgColor').value = obsConfig.bgColor;
+                document.getElementById('dockObsTextShadow').checked = obsConfig.textShadow;
+                document.getElementById('dockObsHidePipes').checked = obsConfig.hidePipesText;
+            }
+        }
+
+        function applyDesktopStylesFromModal() {
+            obsConfig.fontSize = document.getElementById('obsFontSize').value + 'vw';
+            obsConfig.fontFamily = document.getElementById('obsFontFamily').value;
+            obsConfig.textColor = document.getElementById('obsTextColor').value;
+            obsConfig.textShadow = document.getElementById('obsTextShadow').checked;
+            obsConfig.bgColor = document.getElementById('obsBgColor').value;
+            obsConfig.hidePipesText = document.getElementById('obsHidePipesText').checked;
+            db.collection("sessions").doc(currentSessionId).set({ obsConfig: obsConfig }, { merge: true });
+        }
+
+        function applyDockStyles() {
+            obsConfig.fontSize = document.getElementById('dockObsFontSize').value + 'vw';
+            obsConfig.fontFamily = document.getElementById('dockObsFontFamily').value;
+            obsConfig.textAlign = document.getElementById('dockObsTextAlign').value;
+            obsConfig.textColor = document.getElementById('dockObsTextColor').value;
+            obsConfig.bgColor = document.getElementById('dockObsBgColor').value;
+            obsConfig.textShadow = document.getElementById('dockObsTextShadow').checked;
+            obsConfig.hidePipesText = document.getElementById('dockObsHidePipes').checked;
+            db.collection("sessions").doc(currentSessionId).set({ obsConfig: obsConfig }, { merge: true });
+        }
+
+        // --- 7. UI LOGIC (Load, Search, Dock Panels) ---
+        function toggleDockPanel(panelId) {
+            ['dockSettingsPanel', 'dockDisplayPanel'].forEach(id => {
+                let el = document.getElementById(id);
+                if (!el) return;
+                if (id === panelId) el.classList.toggle('hidden');
+                else el.classList.add('hidden');
+            });
+        }
+
+        // Opens the Desktop application in the Default Web Browser
+        function openAddSongExternal() {
+            let externalUrl = new URL(window.location.href);
+            externalUrl.searchParams.delete('mode');
+            externalUrl.searchParams.set('action', 'add');
+            window.open(externalUrl.toString(), '_blank');
+        }
+
+        function loadLocalDatabase() {
+            if (songs.length === 0) {
+                songs = [{
+                    "id": 1, "SongNumber": 37, "title": "Sainyamula Yehovaa || సైన్యముల యెహోవా", "categoryId": "cat2",
+                    "Song": {
+                        "Chorus": "పల్లవి : సైన్యముల యెహోవా - మా బలము నీవేనయ్యా",
+                        "1": "సైన్యముల కధిపతివగు యెహోవా (2)<br/>నీ నివాసములు - ఎంతో రమ్యములు (2)",
+                        "2": "యెహోవా మందిరము చూడవలెనని<br/>నా ప్రాణమెంతో ఆశతో సొమ్మసిల్లెను"
+                    }
+                }];
+            }
+        }
+
+        function renderAccordionCategories() {
+            ['song_categories', 'song_categories_mobile'].forEach(containerId => {
+                var container = document.getElementById(containerId);
+                if (!container) return;
+                container.innerHTML = '';
+                
+                songs.sort((a, b) => a.SongNumber - b.SongNumber);
+                categoryList.forEach(cat => {
+                    var categorySongs = songs.filter(s => (s.categoryId === cat.id || (s.SongNumber >= cat.range[0] && s.SongNumber <= cat.range[1])));
+                    var catBox = document.createElement('div');
+                    catBox.className = 'border-b border-slate-100/80';
+
+                    var headerBtn = document.createElement('button');
+                    headerBtn.type = 'button';
+                    headerBtn.className = 'w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-700 hover:bg-white/80 hover:text-blue-700 flex justify-between items-center transition';
+                    headerBtn.innerHTML = `<span class="font-telugu">${cat.name}</span><div class="flex items-center gap-2"><span class="text-[10px] font-bold bg-slate-200/50 text-slate-600 px-2 py-0.5 rounded-full">${categorySongs.length}</span><i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></div>`;
+
+                    var songListDiv = document.createElement('div');
+                    songListDiv.className = 'song-list-pane bg-slate-50/40 backdrop-blur-sm divide-y divide-slate-100/60 hidden';
+
+                    if (categorySongs.length === 0) {
+                        songListDiv.innerHTML = `<div class="px-4 py-2.5 text-xs text-slate-400 italic">No songs</div>`;
+                    } else {
+                        categorySongs.forEach(s => {
+                            var songItem = document.createElement('div');
+                            songItem.className = `px-4 py-2.5 cursor-pointer text-xs flex items-center justify-between transition hover:bg-white/90 text-slate-700`;
+                            songItem.innerHTML = `<span class="truncate font-telugu"><span class="font-bold text-blue-600 mr-1.5 font-sans">#${s.SongNumber}</span> ${s.title}</span>`;
+                            songItem.onclick = (e) => { e.stopPropagation(); loadSong(s.SongNumber); };
+                            songListDiv.appendChild(songItem);
+                        });
+                    }
+
+                    headerBtn.onclick = (e) => {
+                        e.preventDefault();
+                        var isHidden = songListDiv.classList.contains('hidden');
+                        container.querySelectorAll('.song-list-pane').forEach(p => p.classList.add('hidden'));
+                        container.querySelectorAll('i.fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)');
+                        if (isHidden) { songListDiv.classList.remove('hidden'); headerBtn.querySelector('i').style.transform = 'rotate(180deg)'; }
+                    };
+                    catBox.appendChild(headerBtn); catBox.appendChild(songListDiv); container.appendChild(catBox);
+                });
+            });
+            let sel = document.getElementById('inputCategory');
+            if(sel) { sel.innerHTML = ''; categoryList.forEach(c => sel.appendChild(new Option(c.name, c.id))); }
+        }
+
+        function loadSong(songNum) {
+            activeSong = songs.find(s => s.SongNumber == songNum);
+            if (!activeSong) return;
+
+            if (isDockMode) {
+                document.getElementById('dockSongTitle').innerHTML = `#${activeSong.SongNumber} - ${activeSong.title.split('||')[1] || activeSong.title}`;
+            } else {
+                document.getElementById('displaySongNum').textContent = activeSong.SongNumber;
+                let tParts = activeSong.title.split('||');
+                document.getElementById('displayTitle').innerHTML = tParts.length === 2 ? 
+                    `<div class="space-y-0.5"><h2 class="text-lg sm:text-2xl font-extrabold text-slate-700 font-telugu leading-snug">${tParts[1].trim()}<p class="text-xs font-bold uppercase text-blue-600 font-sans">${tParts[0].trim()}</p></h2></div>` 
+                    : `<h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 font-telugu leading-snug">${activeSong.title}</h2>`;
+            }
+
+            var fMeta = document.getElementById('fixed_song_meta');
+            var fLyrics = document.getElementById('full_song_lyrics');
+            
+            if (!isDockMode) { 
+                fMeta.style.fontSize = currentFontSize + 'px'; 
+                fLyrics.style.fontSize = currentFontSize + 'px'; 
+            }
+            
+            fMeta.innerHTML = ''; 
+            fLyrics.innerHTML = '';
+            
+            var songObj = activeSong.Song;
+
+            function createLyricBlock(key, content, isFixed) {
+                var div = document.createElement('div');
+                if (isDockMode) {
+                    div.className = "lyric-line font-telugu";
+                    div.innerHTML = `<span class="font-sans mr-2">${key}</span>${content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right ml-4 opacity-50">$1</span>')}`;
+                } else {
+                    div.className = isFixed 
+                        ? `p-2.5 rounded-r-xl font-medium shadow-sm lyric-line font-telugu ${key==='Chorus'?'bg-amber-50/80 border-l-4 border-amber-500 text-amber-900':'bg-purple-50/80 border-l-4 border-purple-500 text-purple-900'}`
+                        : `p-3 sm:p-4 bg-white/70 hover:bg-blue-50/50 border border-slate-200/70 rounded-2xl transition lyric-line flex gap-3 items-center backdrop-blur-sm shadow-xs`;
+                    
+                    if (isFixed) div.innerHTML = content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right text-500 ml-4 pr-2">$1</span>');
+                    else div.innerHTML = `<span class="text-xs font-bold bg-slate-200/80 text-slate-700 px-2.5 py-1 rounded-lg shrink-0 font-sans">${key}</span><div class="flex-1 font-telugu">${content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right ml-4 pr-2">$1</span>')}</div>`;
+                }
+                div.onclick = () => triggerProjection(content, div);
+                (isFixed ? fMeta : fLyrics).appendChild(div);
+            }
+
+            if (songObj.Chorus) createLyricBlock('Chorus', songObj.Chorus, true);
+            if (songObj.Bridge) createLyricBlock('Bridge', songObj.Bridge, true);
+            Object.keys(songObj).forEach(key => { if (key !== 'Chorus' && key !== 'Bridge' && key !== 'Verse') createLyricBlock(key, songObj[key], false); });
+            
+            var drawer = document.getElementById('mobileCategoryDrawer');
+            if (drawer) drawer.classList.add('hidden');
+        }
+
+        function handleSearch(input, suggId, listId, clearBtnId) {
+            let query = input.value.trim().toLowerCase();
+            let sugg = document.getElementById(suggId);
+            let list = document.getElementById(listId);
+            let clearBtn = document.getElementById(clearBtnId);
+
+            if (query.length > 0) clearBtn.classList.remove('hidden');
+            else { clearBtn.classList.add('hidden'); sugg.classList.add('hidden'); return; }
+
+            let filtered = songs.filter(s => s.SongNumber.toString().includes(query) || (s.title && s.title.toLowerCase().includes(query)));
+            list.innerHTML = '';
+            if (filtered.length === 0) list.innerHTML = `<li class="px-3 py-2 text-[#888] italic text-xs">No matching songs</li>`;
+            else {
+                filtered.forEach(s => {
+                    let li = document.createElement('li');
+                    if (isDockMode) {
+                        li.className = "px-3 py-2 cursor-pointer flex justify-between";
+                        li.innerHTML = `<div><span class="font-bold text-[#2484f2] mr-2 font-sans">#${s.SongNumber}</span><span class="font-telugu text-[13px] text-white">${s.title.split('||')[1] || s.title}</span></div>`;
+                    } else {
+                        li.className = "px-4 py-2 hover:bg-blue-50 cursor-pointer flex justify-between";
+                        li.innerHTML = `<div><span class="font-bold text-blue-600 mr-2 font-sans">#${s.SongNumber}</span><span class="font-telugu text-sm">${s.title}</span></div>`;
+                    }
+                    li.onclick = () => { loadSong(s.SongNumber); sugg.classList.add('hidden'); input.value = ''; clearBtn.classList.add('hidden'); };
+                    list.appendChild(li);
+                });
+            }
+            sugg.classList.remove('hidden');
+        }
+        function desktopSearch(inp) { handleSearch(inp, 'suggestions', 'suggestionsList', 'clearSearch'); }
+        function dockSearch(inp) { handleSearch(inp, 'dockSuggestions', 'dockSuggestionsList', 'dockClearSearch'); }
+        function clearInp(inId, suId, cbId) { document.getElementById(inId).value=''; document.getElementById(suId).classList.add('hidden'); document.getElementById(cbId).classList.add('hidden'); }
+
+        function toggleModal(id, show) { document.getElementById(id).classList.toggle('hidden', !show); }
+        function toggleMobileDrawer() { document.getElementById('mobileCategoryDrawer').classList.toggle('hidden'); }
+        function changeFontSize(delta) { 
+            currentFontSize = Math.max(14, Math.min(36, currentFontSize + delta)); 
+            document.getElementById('fixed_song_meta').style.fontSize = currentFontSize + 'px';
+            document.getElementById('full_song_lyrics').style.fontSize = currentFontSize + 'px';
+        }
+
+        // --- 8. EDITOR LOGIC (Quill) ---
+        function initQuillEditors() {
+            if(document.getElementById('inputChorusEditor') && !chorusQuill) chorusQuill = new Quill('#inputChorusEditor', { theme: 'snow', modules: { toolbar: quillToolbarOptions }, placeholder: 'Chorus lyrics...' });
+            if(document.getElementById('inputBridgeEditor') && !bridgeQuill) bridgeQuill = new Quill('#inputBridgeEditor', { theme: 'snow', modules: { toolbar: quillToolbarOptions }, placeholder: 'Bridge lyrics...' });
+        }
+        function getQHtml(q) { if(!q)return ''; let h=q.root.innerHTML; return h==='<p><br></p>'?'':h.replace(/<p>/g,'').replace(/<\/p>/g,'<br/>').replace(/(<br\s*[\/]?>)+$/,''); }
+        function setQHtml(q, h) { if(!q)return; if(!h){q.setText('');return;} q.root.innerHTML = h.split('<br/>').map(l=>`<p>${l}</p>`).join(''); }
+
+        function openAddSongModal() {
+            document.getElementById('editSongId').value = '';
+            document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-file-circle-plus text-blue-600"></i> Add New Song`;
+            let nextNum = songs.length ? (Math.max(...songs.map(s => s.SongNumber)) + 1) : 1;
+            document.getElementById('inputSongNum').value = nextNum;
+            document.getElementById('inputTitle').value = '';
+            setQHtml(chorusQuill, ''); setQHtml(bridgeQuill, '');
+            document.getElementById('stanzasContainer').innerHTML = ''; stanzaQuills = [];
+            addStanzaRow();
+            document.getElementById('deleteSongBtn').classList.add('hidden');
+            toggleModal('songModal', true);
+        }
+
+        function openEditCurrentSong() {
+            if (!activeSong) return;
+            document.getElementById('editSongId').value = activeSong.id || Date.now();
+            document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit #${activeSong.SongNumber}`;
+            document.getElementById('inputSongNum').value = activeSong.SongNumber;
+            document.getElementById('inputTitle').value = activeSong.title;
+            setQHtml(chorusQuill, activeSong.Song.Chorus || '');
+            setQHtml(bridgeQuill, activeSong.Song.Bridge || '');
+            document.getElementById('stanzasContainer').innerHTML = ''; stanzaQuills = [];
+            Object.keys(activeSong.Song).forEach(k => { if(k!=='Chorus' && k!=='Bridge' && k!=='Verse') addStanzaRow(activeSong.Song[k]); });
+            document.getElementById('deleteSongBtn').classList.remove('hidden');
+            toggleModal('songModal', true);
+        }
+
+        function addStanzaRow(txt = '') {
+            let container = document.getElementById('stanzasContainer');
+            let editorId = 'stz_' + Date.now();
+            let card = document.createElement('div');
+            card.className = 'stanza-card bg-slate-50/80 p-3 rounded-2xl border border-slate-200/80 space-y-2';
+            card.innerHTML = `<div class="flex items-center justify-between text-xs font-bold text-slate-500"><span class="stanza-label">Stanza</span><div><button onclick="this.closest('.stanza-card').remove()" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button></div></div><div id="${editorId}"></div>`;
+            container.appendChild(card);
+            let q = new Quill('#'+editorId, { theme: 'snow', modules: { toolbar: quillToolbarOptions }});
+            setQHtml(q, txt);
+            stanzaQuills.push({ id: editorId, instance: q, card: card });
+        }
+
+        function saveSongForm() {
+            let id = document.getElementById('editSongId').value;
+            let num = parseInt(document.getElementById('inputSongNum').value);
+            let title = document.getElementById('inputTitle').value.trim();
+            if (!num || !title) return alert("Number and Title required.");
+
+            let songObj = {};
+            let c = getQHtml(chorusQuill); if(c) songObj.Chorus = c;
+            let b = getQHtml(bridgeQuill); if(b) songObj.Bridge = b;
+            
+            let i = 1;
+            document.querySelectorAll('.stanza-card').forEach(card => {
+                let sq = stanzaQuills.find(q => q.card === card);
+                if(sq) { let t = getQHtml(sq.instance); if(t) { songObj[i.toString()] = t; i++; } }
+            });
+
+            let existingIdx = songs.findIndex(s => s.id == id || s.SongNumber == num);
+            if (existingIdx >= 0) {
+                songs[existingIdx].SongNumber = num;
+                songs[existingIdx].title = title;
+                songs[existingIdx].Song = songObj;
+            } else {
+                songs.push({ id: Date.now(), SongNumber: num, title: title, categoryId: document.getElementById('inputCategory').value, Song: songObj });
+            }
+            
+            localStorage.setItem('zion_songs_db', JSON.stringify(songs));
+            renderAccordionCategories(); toggleModal('songModal', false); loadSong(num);
+        }
+
+    </script>
+</head>
+
+<body>
+    <!-- DESKTOP HEADER (Hidden in Dock Mode) -->
+    <header id="desktopHeader" class="glass-header text-white sticky top-0 z-40 shadow-2xl shrink-0 hidden">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-blue-600 to-indigo-400 p-2 rounded-xl shadow-lg border border-blue-400/30"><i class="fa-solid fa-music text-lg"></i></div>
+                <div>
+                    <h1 class="text-base font-bold leading-none font-telugu tracking-wide">సీయోను గీతములు</h1>
+                    <p class="text-[10px] text-blue-200/80 mt-1">v3 Ultimate Connect</p>
+                </div>
+                <button onclick="toggleMobileDrawer()" class="md:hidden ml-2 bg-blue-600/40 px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-400/30"><i class="fa-solid fa-bars"></i></button>
+            </div>
+
+            <!-- Search -->
+            <div class="flex-1 max-w-xl relative hidden sm:block">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-blue-300 text-sm"></i>
+                <input type="text" id="song_no" onkeyup="desktopSearch(this)" placeholder="Search song number or title..." autocomplete="off" class="w-full pl-10 pr-10 py-2.5 bg-slate-900/50 backdrop-blur-md text-white border border-blue-500/30 rounded-xl focus:ring-2 focus:ring-blue-400 text-sm outline-none">
+                <button id="clearSearch" onclick="clearInp('song_no','suggestions','clearSearch')" class="absolute right-3 top-3 text-blue-300 hidden"><i class="fa-solid fa-circle-xmark"></i></button>
+                <div id="suggestions" class="absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-2xl hidden max-h-60 overflow-y-auto z-50 border border-slate-100">
+                    <ul id="suggestionsList" class="divide-y text-slate-800 text-sm"></ul>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="flex items-center gap-2">
+                <button onclick="clearScreenMaster()" class="hidden md:flex bg-white/10 hover:bg-white/20 text-amber-300 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-eraser"></i> Clear</button>
+                <button onclick="toggleModal('connModal', true)" class="hidden lg:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-tower-broadcast text-emerald-400"></i> Sync & OBS</button>
+                <button onclick="toggleModal('obsSettingsModal', true)" class="hidden md:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-display text-blue-400"></i> Display Setup</button>
+                <button onclick="openAddSongModal()" class="bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg"><i class="fa-solid fa-plus"></i> Add</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- WORKSPACE -->
+    <div id="mainLayoutContainer" class="max-w-7xl mx-auto w-full px-4 py-4 flex-1 grid grid-cols-1 md:grid-cols-12 gap-6 overflow-hidden min-h-0 relative">
+        
+        <!-- Mobile Drawer -->
+        <div id="mobileCategoryDrawer" class="fixed inset-0 bg-slate-950/70 z-50 md:hidden hidden flex-col justify-end">
+            <div class="glass-card rounded-t-3xl p-4 max-h-[80vh] flex flex-col text-slate-800">
+                <div class="flex justify-between border-b pb-2 mb-2"><span class="font-bold text-sm">Categories</span><button onclick="toggleMobileDrawer()"><i class="fa-solid fa-xmark"></i></button></div>
+                <div id="song_categories_mobile" class="overflow-y-auto flex-1"></div>
+            </div>
+        </div>
+
+        <!-- Sidebar (Hidden in Dock Mode) -->
+        <aside id="desktopSidebar" class="hidden md:flex col-span-3 h-full flex-col min-h-0">
+            <div class="glass-card rounded-2xl flex flex-col h-full min-h-0 text-slate-800 overflow-hidden shadow-lg border-blue-200/40">
+                <div class="p-4 border-b bg-blue-50 flex justify-between items-center shrink-0">
+                    <span class="text-xs font-bold uppercase">Song Library</span>
+                    <button onclick="toggleModal('connModal', true)" class="lg:hidden p-1.5 bg-white rounded shadow text-emerald-600"><i class="fa-solid fa-tower-broadcast"></i></button>
+                </div>
+                <div id="song_categories" class="overflow-y-auto flex-1 divide-y divide-slate-100"></div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main id="mainWorkspaceParent" class="col-span-1 md:col-span-9 flex flex-col h-full min-h-0">
+            <div id="mainWorkspaceCard" class="glass-card rounded-2xl p-4 sm:p-6 flex-1 flex flex-col shadow-xl border-blue-200/40 text-slate-800 overflow-hidden min-h-0">
+                
+                <!-- NATIVE OBS DOCK HEADER (Only visible in ?mode=dock) -->
+                <div id="obsDockHeader" class="hidden flex-col gap-1 p-2 bg-[#2b2b2b] border-b border-[#111] shrink-0">
+                    <!-- Search Row -->
+                    <div class="flex gap-1">
+                        <!-- Proper Relative Wrapper for Suggestion Dropdown Alignment -->
+                        <div class="relative flex-1 flex flex-col">
+                            <input type="text" id="dockSearch" onkeyup="dockSearch(this)" placeholder="Search song..." autocomplete="off" class="w-full pl-2 pr-6 py-1 text-xs font-sans">
+                            <button id="dockClearSearch" onclick="clearInp('dockSearch','dockSuggestions','dockClearSearch')" class="absolute right-1 top-1 text-[#888] hover:text-white hidden"><i class="fa-solid fa-xmark"></i></button>
+                            <!-- Suggestions Box now tied to input directly -->
+                            <div id="dockSuggestions" class="absolute left-0 right-0 top-full mt-1 hidden z-50 max-h-48 overflow-auto shadow-xl border border-[#111]">
+                                <ul id="dockSuggestionsList" class="text-xs divide-y divide-[#222]"></ul>
+                            </div>
+                        </div>
+                        <button onclick="clearScreenMaster()" class="px-2 py-1 text-xs whitespace-nowrap danger-btn" title="Clear Screen"><i class="fa-solid fa-eraser"></i> Clear</button>
+                    </div>
+                    
+                    <!-- Current Song Title & Settings Toggle -->
+                    <div class="flex justify-between items-center mt-1 px-1">
+                        <div class="text-[13px] font-bold text-[#aaa] font-telugu truncate flex-1" id="dockSongTitle">No Song Selected</div>
+                        <div class="flex gap-1 shrink-0">
+                            <!-- Adds New Song in Default Desktop Browser -->
+                            <button onclick="openAddSongExternal()" class="text-[#888] hover:text-white px-2 py-0.5" title="Add New Song (Opens Web Browser)"><i class="fa-solid fa-plus text-xs"></i></button>
+                            <button onclick="toggleDockPanel('dockDisplayPanel')" class="text-[#888] hover:text-white px-2 py-0.5" title="Display Canvas Settings"><i class="fa-solid fa-palette text-xs"></i></button>
+                            <button onclick="toggleDockPanel('dockSettingsPanel')" class="text-[#888] hover:text-white px-2 py-0.5" title="Connection Settings"><i class="fa-solid fa-gear text-xs"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Connection Panel -->
+                    <div id="dockSettingsPanel" class="hidden flex flex-col gap-1.5 mt-2 p-2 bg-[#1e1e1e] border border-[#111] rounded">
+                         <div class="flex justify-between items-center"><span class="text-[10px] text-[#888] uppercase font-bold tracking-wide">OBS WebSocket Setup</span><span id="dockObsStatusBadge" class="w-2.5 h-2.5 rounded-full bg-red-500" title="Disconnected"></span></div>
+                         <div class="flex gap-1">
+                            <input type="text" id="dockObsUrl" value="ws://127.0.0.1:4455" class="flex-1 text-[10px] p-1 font-mono" placeholder="ws://127.0.0.1:4455">
+                            <input type="password" id="dockObsPassword" placeholder="Pass" class="w-16 text-[10px] p-1">
+                            <input type="hidden" id="dockObsSourceName" value="Lyrics">
+                            <button onclick="connectOBS()" class="text-[10px] py-1 px-2 primary-btn font-bold">Connect</button>
+                         </div>
+                         
+                         <div class="text-[10px] text-[#888] mt-1 uppercase font-bold tracking-wide">Mobile Remote Sync Room</div>
+                         <div class="flex gap-1">
+                             <input type="text" id="dockRoomCodeInput" value="ZION-MAIN-ROOM" class="flex-1 text-[10px] p-1 font-mono font-bold">
+                             <button onclick="joinRoom()" class="px-2 py-1 text-[10px] primary-btn font-bold">Join</button>
+                         </div>
+                    </div>
+
+                    <!-- Collapsible Display Canvas Settings Panel -->
+                    <div id="dockDisplayPanel" class="hidden flex flex-col gap-2 mt-2 p-2 bg-[#1e1e1e] border border-[#111] rounded text-[11px]">
+                         <div class="text-[10px] text-[#888] uppercase font-bold tracking-wide border-b border-[#333] pb-1">Canvas Display Setup</div>
+
+                         <div class="flex items-center gap-2">
+                             <label class="w-10 text-[#aaa]">Size</label>
+                             <input type="range" id="dockObsFontSize" min="1.5" max="8.0" step="0.2" value="4.0" oninput="applyDockStyles()" class="flex-1 h-1 bg-[#333] rounded-lg appearance-none cursor-pointer">
+                         </div>
+                         
+                         <div class="flex items-center gap-2">
+                             <label class="w-10 text-[#aaa]">Font</label>
+                             <select id="dockObsFontFamily" onchange="applyDockStyles()" class="flex-1 bg-[#2b2b2b] border border-[#111] text-white rounded p-1 outline-none text-[10px]">
+                                 <option value="'Mandali', sans-serif">Mandali</option>
+                                 <option value="'Gidugu', sans-serif">Gidugu</option>
+                             </select>
+                         </div>
+
+                         <div class="flex items-center gap-2">
+                             <label class="w-10 text-[#aaa]">Align</label>
+                             <select id="dockObsTextAlign" onchange="applyDockStyles()" class="flex-1 bg-[#2b2b2b] border border-[#111] text-white rounded p-1 outline-none text-[10px]">
+                                 <option value="center">Center</option>
+                                 <option value="left">Left</option>
+                                 <option value="right">Right</option>
+                             </select>
+                         </div>
+
+                         <div class="flex items-center gap-2">
+                             <div class="flex items-center gap-1.5 flex-1 border border-[#333] p-1 rounded bg-[#2b2b2b]">
+                                 <label class="text-[#aaa] w-8">Text</label>
+                                 <input type="color" id="dockObsTextColor" value="#ffffff" onchange="applyDockStyles()" class="w-full h-4 border-0 bg-transparent cursor-pointer">
+                             </div>
+                             <div class="flex items-center gap-1.5 flex-1 border border-[#333] p-1 rounded bg-[#2b2b2b]">
+                                 <label class="text-[#aaa] w-8">Bg</label>
+                                 <input type="color" id="dockObsBgColor" value="#008000" onchange="applyDockStyles()" class="w-full h-4 border-0 bg-transparent cursor-pointer">
+                             </div>
+                         </div>
+
+                         <div class="flex gap-4 items-center border-t border-[#333] pt-1.5 mt-0.5">
+                             <label class="flex items-center gap-1.5 cursor-pointer text-[#aaa] hover:text-white"><input type="checkbox" id="dockObsTextShadow" checked onchange="applyDockStyles()"> Shadow</label>
+                             <label class="flex items-center gap-1.5 cursor-pointer text-[#aaa] hover:text-white"><input type="checkbox" id="dockObsHidePipes" onchange="applyDockStyles()"> Hide Pipes</label>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- DESKTOP SONG HEADER (Hidden in Dock Mode) -->
+                <div id="desktopSongHeader" class="border-b pb-3 mb-3 flex items-start justify-between gap-3 shrink-0">
+                    <div class="flex items-center gap-2">
+                        <div class="px-3 py-1 bg-blue-50 text-blue-800 border rounded-full text-xs font-bold shrink-0">#<span id="displaySongNum"></span></div>
+                        <div id="displayTitle" class="flex-1"></div>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="openEditCurrentSong()" class="px-3 py-1.5 border bg-white text-slate-700 text-xs font-semibold rounded-lg shadow-sm"><i class="fa-solid fa-pen text-blue-600"></i> Edit</button>
+                        <button onclick="changeFontSize(2)" class="p-1.5 border bg-white rounded-lg text-xs font-bold">A+</button>
+                        <button onclick="changeFontSize(-2)" class="p-1.5 border bg-white rounded-lg text-xs font-bold">A-</button>
+                    </div>
+                </div>
+
+                <!-- LYRICS VIEW -->
+                <!-- The structure here is fixed to correctly separate metadata from main lyrics -->
+                <div class="flex-1 flex flex-col overflow-y-auto pr-2 min-h-0" id="dock_lyrics_wrapper">
+                    <div id="fixed_song_meta" class="space-y-1 mb-1 shrink-0"></div>
+                    <div id="full_song_lyrics" class="space-y-1 flex-1"></div>
+                </div>
+                
+                <!-- LIVE PREVIEW BANNER (Hidden in Dock Mode) -->
+                <div id="livePreviewBoxOuter" class="mt-3 bg-slate-900 rounded-xl p-3 shadow-inner flex items-center gap-3 shrink-0">
+                    <div class="text-[9px] uppercase font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded shrink-0">Live Output</div>
+                    <div id="livePreviewBox" class="text-sm font-bold text-emerald-400 font-telugu truncate flex-1">(Standby...)</div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: CONNECTION & SYNC (Desktop only) -->
+    <div id="connModal" class="fixed inset-0 bg-slate-950/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-modal rounded-2xl w-full max-w-md flex flex-col overflow-hidden text-slate-800 shadow-2xl">
+            <div class="px-5 py-3 border-b bg-blue-50 flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-tower-broadcast text-blue-600 mr-2"></i>Sync & OBS Connection</h3><button onclick="toggleModal('connModal',false)"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="p-5 space-y-4">
+                <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100">
+                    <label class="block text-xs font-bold mb-1 text-slate-600">Cloud Sync Room (Mobile Remote)</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="roomCodeInput" value="ZION-MAIN-ROOM" class="flex-1 border rounded-lg px-3 py-2 text-sm font-mono font-bold outline-none focus:border-blue-500">
+                        <button onclick="joinRoom()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 rounded-lg text-xs font-bold">Join Room</button>
+                    </div>
+                </div>
+                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div class="flex justify-between items-center mb-2"><label class="text-xs font-bold text-slate-600">OBS Native WebSocket (v5)</label><span id="obsStatusBadge" class="text-[10px] font-bold px-2 py-1 bg-slate-200 rounded text-slate-500">Disconnected</span></div>
+                    <div class="space-y-2">
+                        <input type="text" id="obsUrl" value="ws://127.0.0.1:4455" placeholder="ws://127.0.0.1:4455" class="w-full border rounded-lg px-3 py-2 text-sm font-mono">
+                        <div class="flex gap-2">
+                            <input type="text" id="obsSourceName" value="Lyrics" placeholder="Text Source Name" class="flex-1 border rounded-lg px-3 py-2 text-sm">
+                            <input type="password" id="obsPassword" placeholder="WS Password" class="flex-1 border rounded-lg px-3 py-2 text-sm">
+                        </div>
+                        <button onclick="connectOBS()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-lg text-sm font-bold shadow-md">Connect to OBS Studio</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: OBS DISPLAY SETTINGS (Desktop only) -->
+    <div id="obsSettingsModal" class="fixed inset-0 bg-slate-950/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-modal rounded-2xl w-full max-w-lg flex flex-col overflow-hidden text-slate-800 shadow-2xl">
+            <div class="px-5 py-3 border-b bg-blue-50 flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-sliders text-blue-600 mr-2"></i>Canvas Style Options</h3><button onclick="toggleModal('obsSettingsModal',false)"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="p-5 space-y-4 max-h-[70vh] overflow-y-auto text-xs">
+                <div><div class="flex justify-between mb-1"><label class="font-bold">Font Size</label><span id="fontSizeVal" class="text-blue-600 font-bold">4.0vw</span></div><input type="range" id="obsFontSize" min="1.5" max="8.0" step="0.2" value="4.0" oninput="applyDesktopStylesFromModal()" class="w-full"></div>
+                <div><label class="block font-bold mb-1">Font Family</label><select id="obsFontFamily" onchange="applyDesktopStylesFromModal()" class="w-full border rounded p-2"><option value="'Mandali', sans-serif">Mandali</option><option value="'Gidugu', sans-serif">Gidugu</option></select></div>
+                <div class="grid grid-cols-2 gap-3"><div><label class="block font-bold mb-1">Text Color</label><input type="color" id="obsTextColor" value="#ffffff" onchange="applyDesktopStylesFromModal()" class="w-full h-8 rounded border p-0.5"></div><div><label class="block font-bold mb-1">Background (Chroma)</label><input type="color" id="obsBgColor" value="#008000" onchange="applyDesktopStylesFromModal()" class="w-full h-8 rounded border p-0.5"></div></div>
+                <div class="flex items-center justify-between p-2 bg-blue-50 rounded border"><label class="font-bold">Text Shadow</label><input type="checkbox" id="obsTextShadow" checked onchange="applyDesktopStylesFromModal()" class="w-4 h-4"></div>
+                <div class="flex items-center justify-between p-2 bg-blue-50 rounded border"><label class="font-bold">Hide Verse Tags (Pipes)</label><input type="checkbox" id="obsHidePipesText" onchange="applyDesktopStylesFromModal()" class="w-4 h-4"></div>
+            </div>
+            <div class="px-5 py-3 border-t bg-slate-50 flex justify-end"><button onclick="toggleModal('obsSettingsModal',false)" class="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold">Done</button></div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD/EDIT SONG -->
+    <div id="songModal" class="fixed inset-0 bg-slate-950/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-modal rounded-2xl w-full max-w-3xl flex flex-col overflow-hidden text-slate-800 shadow-2xl h-[90vh]">
+            <div class="px-5 py-3 border-b bg-blue-50 flex justify-between items-center"><h3 id="modalHeaderTitle" class="font-bold text-sm"></h3><button onclick="toggleModal('songModal',false)"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="p-5 overflow-y-auto space-y-4 flex-1">
+                <input type="hidden" id="editSongId">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-bold mb-1">Song Number</label><input type="number" id="inputSongNum" class="w-full border rounded-lg p-2 text-sm"></div>
+                    <div><label class="block text-xs font-bold mb-1">Category</label><select id="inputCategory" class="w-full border rounded-lg p-2 text-sm"></select></div>
+                </div>
+                <div><label class="block text-xs font-bold mb-1">Title (English || Telugu)</label><input type="text" id="inputTitle" class="w-full border rounded-lg p-2 text-sm"></div>
+                <div class="bg-amber-50 p-3 border rounded-xl space-y-2"><label class="block text-xs font-bold text-amber-900">Chorus</label><div id="inputChorusEditor"></div></div>
+                <div class="bg-purple-50 p-3 border rounded-xl space-y-2"><label class="block text-xs font-bold text-purple-900">Bridge</label><div id="inputBridgeEditor"></div></div>
+                <div><div class="flex justify-between items-center mb-2"><label class="text-xs font-bold">Stanzas</label><button onclick="addStanzaRow()" class="text-xs text-blue-600 font-bold">+ Add Stanza</button></div><div id="stanzasContainer" class="space-y-3"></div></div>
+            </div>
+            <div class="px-5 py-3 border-t bg-slate-50 flex justify-between">
+                <button id="deleteSongBtn" class="text-red-600 text-xs font-bold hidden">Delete</button>
+                <div class="flex gap-2 ml-auto"><button onclick="toggleModal('songModal',false)" class="px-4 py-2 text-slate-600 text-xs font-bold">Cancel</button><button onclick="saveSongForm()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold">Save Song</button></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
