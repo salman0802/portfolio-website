@@ -293,7 +293,7 @@
             return text.replace(/<ch>(.*?)<\/ch>/gi, "$1");
         }
 
-        function updateText(rawText, elementRef = null) {
+                function updateText(rawText, elementRef = null) {
             if (window.innerWidth < 768) return; 
             if (!newWindow || newWindow.closed) openWindow();
             if (newWindow && !newWindow.closed) {
@@ -302,6 +302,12 @@
                 var textElem = newWindow.document.getElementById('text');
                 textElem.innerHTML = cleanText;
                 applyOBSStyles();
+                
+                // Force window focus and repaint to ensure OBS captures updates instantly without manual window activation
+                try {
+                    newWindow.focus();
+                    window.focus();
+                } catch (e) {}
             }
 
             document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
@@ -310,6 +316,7 @@
                 currentActiveLyricIndex = currentProjectableElements.indexOf(elementRef);
             }
         }
+
 
         function clearOBSScreen() {
             if (newWindow && !newWindow.closed) {
