@@ -135,9 +135,9 @@
         var currentProjectableElements = [];
 
         var obsConfig = {
-            fontSize: "4.0vw",
+            fontSize: "48px",
             fontFamily: "'Mandali', 'Noto Sans Telugu', sans-serif",
-            textAlign: "center",
+            textAlign: "justify",
             textColor: "#ffffff",
             textShadow: true,
             bgColor: "green",
@@ -146,7 +146,7 @@
             textStrokeWidth: 0,
             hidePipesText: false,
             windowWidth: 1920,
-            windowHeight: 470
+            windowHeight: 300
         };
 
         function openOBSSettingsModal() {
@@ -157,6 +157,59 @@
             document.getElementById('obsSettingsModal').classList.add('hidden');
         }
 
+        function saveOBSSettings() {
+            localStorage.setItem('obs_settings_db', JSON.stringify(obsConfig));
+            closeOBSSettingsModal();
+        }
+
+        function loadOBSSettings() {
+            var saved = localStorage.getItem('obs_settings_db');
+            if (saved) {
+                try {
+                    var parsed = JSON.parse(saved);
+                    obsConfig = { ...obsConfig, ...parsed };
+                } catch (e) {
+                    console.error('Error parsing saved OBS settings');
+                }
+            }
+            updateOBSSettingsUI();
+        }
+
+        function updateOBSSettingsUI() {
+            var sizeInput = document.getElementById('obsFontSize');
+            var familyInput = document.getElementById('obsFontFamily');
+            var colorInput = document.getElementById('obsTextColor');
+            var shadowInput = document.getElementById('obsTextShadow');
+            var bgInput = document.getElementById('obsBgColor');
+            var strokeColorInput = document.getElementById('obsStrokeColor');
+            var strokeWidthInput = document.getElementById('obsStrokeWidth');
+            var hidePipesInput = document.getElementById('obsHidePipesText');
+            var widthInput = document.getElementById('obsWindowWidth');
+            var heightInput = document.getElementById('obsWindowHeight');
+
+            if (sizeInput) sizeInput.value = parseInt(obsConfig.fontSize) || 48;
+            if (familyInput) familyInput.value = obsConfig.fontFamily;
+            if (colorInput) colorInput.value = obsConfig.textColor;
+            if (shadowInput) shadowInput.checked = obsConfig.textShadow;
+            if (bgInput) bgInput.value = obsConfig.bgColor;
+            if (strokeColorInput) strokeColorInput.value = obsConfig.textStrokeColor;
+            if (strokeWidthInput) strokeWidthInput.value = obsConfig.textStrokeWidth;
+            if (hidePipesInput) hidePipesInput.checked = obsConfig.hidePipesText;
+            if (widthInput) widthInput.value = obsConfig.windowWidth;
+            if (heightInput) heightInput.value = obsConfig.windowHeight;
+
+            ['Left', 'Center', 'Right', 'Justify'].forEach(dir => {
+                let btn = document.getElementById(`align${dir}Btn`);
+                if (btn) {
+                    if (dir.toLowerCase() === obsConfig.textAlign) {
+                        btn.className = "py-2.5 border border-blue-600 bg-blue-50 text-blue-700 font-bold rounded-xl flex items-center justify-center gap-1 shadow-sm transition text-xs";
+                    } else {
+                        btn.className = "py-2.5 border border-slate-200/80 bg-white/60 hover:bg-slate-50 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition text-xs";
+                    }
+                }
+            });
+        }
+
         function toggleMobileDrawer() {
             var drawer = document.getElementById('mobileCategoryDrawer');
             drawer.classList.toggle('hidden');
@@ -164,12 +217,14 @@
 
         function setOBSAlignment(align) {
             obsConfig.textAlign = align;
-            ['Left', 'Center', 'Right'].forEach(dir => {
+            ['Left', 'Center', 'Right', 'Justify'].forEach(dir => {
                 let btn = document.getElementById(`align${dir}Btn`);
-                if (dir.toLowerCase() === align) {
-                    btn.className = "py-2.5 border border-blue-600 bg-blue-50 text-blue-700 font-bold rounded-xl flex items-center justify-center gap-1 shadow-sm transition text-xs";
-                } else {
-                    btn.className = "py-2.5 border border-slate-200/80 bg-white/60 hover:bg-slate-50 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition text-xs";
+                if (btn) {
+                    if (dir.toLowerCase() === align) {
+                        btn.className = "py-2.5 border border-blue-600 bg-blue-50 text-blue-700 font-bold rounded-xl flex items-center justify-center gap-1 shadow-sm transition text-xs";
+                    } else {
+                        btn.className = "py-2.5 border border-slate-200/80 bg-white/60 hover:bg-slate-50 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition text-xs";
+                    }
                 }
             });
             applyOBSStyles();
@@ -197,9 +252,10 @@
             if (window.innerWidth < 768) return; 
             if (newWindow && !newWindow.closed) return;
             var w = obsConfig.windowWidth || 1920;
-            var h = obsConfig.windowHeight || 470;
+            var h = obsConfig.windowHeight || 300;
             newWindow = window.open('', '_blank', `width=${w},height=${h},resizable=no`);
             if (newWindow) {
+                newWindow.document.id = "obs_lyric_display";
                 newWindow.document.write(`
           <html>
             <head>
@@ -218,20 +274,48 @@
                   background-repeat: no-repeat;
                   margin: 0;
                   height: 100vh;
+                  overflow: hidden;
                   transition: background 0.2s ease;
                 } 
                 #text { 
+                  box-sizing: border-box;
                   width: 90%;
                   margin: 0; 
                   padding: 20px;
-                  line-height: 1.35;
+                  line-height: 1.4;
                   font-weight: 700;
+                  text-align: justify;
+                  text-align-last: center;
                   transition: all 0.15s ease-in-out;
+                  overflow: hidden;
                 }
               </style>
             </head>
             <body>
               <p id="text"></p>
+              
+              <script>
+                  function adjustFontSize() {
+                      var el = document.getElementById('text');
+                      if (!el) return;
+                      
+                      el.style.transition = 'none';
+                      el.style.fontSize = window.baseFontSize || '48px';
+                      
+                      var currentSize = parseFloat(window.getComputedStyle(el).fontSize);
+                      var maxAllowedHeight = window.innerHeight * 0.9;
+                      
+                      while (el.offsetHeight > maxAllowedHeight && currentSize > 12) {
+                          currentSize -= 1.0; 
+                          el.style.fontSize = currentSize + 'px';
+                      }
+                      
+                      void el.offsetHeight; 
+                      el.style.transition = 'all 0.15s ease-in-out';
+                  }
+                  
+                  window.addEventListener('resize', adjustFontSize);
+              <\/script>
             </body>
           </html>
         `);
@@ -241,6 +325,7 @@
                 alert('The browser blocked opening the OBS projection window. Please allow popups.');
             }
         }
+
 
         function applyOBSStyles() {
             var sizeInput = document.getElementById('obsFontSize');
@@ -254,10 +339,7 @@
             var widthInput = document.getElementById('obsWindowWidth');
             var heightInput = document.getElementById('obsWindowHeight');
 
-            if (sizeInput) {
-                obsConfig.fontSize = sizeInput.value + 'vw';
-                document.getElementById('fontSizeVal').textContent = obsConfig.fontSize;
-            }
+            if (sizeInput) obsConfig.fontSize = sizeInput.value + 'px';
             if (familyInput) obsConfig.fontFamily = familyInput.value;
             if (colorInput) obsConfig.textColor = colorInput.value;
             if (shadowInput) obsConfig.textShadow = shadowInput.checked;
@@ -265,13 +347,16 @@
             if (strokeColorInput) obsConfig.textStrokeColor = strokeColorInput.value;
             if (strokeWidthInput) {
                 obsConfig.textStrokeWidth = parseFloat(strokeWidthInput.value);
-                document.getElementById('strokeWidthVal').textContent = obsConfig.textStrokeWidth + 'px';
             }
             if (hidePipesInput) obsConfig.hidePipesText = hidePipesInput.checked;
             if (widthInput) obsConfig.windowWidth = parseInt(widthInput.value) || 1920;
-            if (heightInput) obsConfig.windowHeight = parseInt(heightInput.value) || 470;
+            if (heightInput) obsConfig.windowHeight = parseInt(heightInput.value) || 300;
 
             if (newWindow && !newWindow.closed) {
+                newWindow.resizeTo(obsConfig.windowWidth, obsConfig.windowHeight);
+                newWindow.baseFontSize = obsConfig.fontSize;
+
+                newWindow.document.id = "obs_lyric_display"
                 var bodyElem = newWindow.document.body;
                 if (obsConfig.bgImage) {
                     bodyElem.style.backgroundImage = `url('${obsConfig.bgImage}')`;
@@ -283,12 +368,24 @@
 
                 var textElem = newWindow.document.getElementById('text');
                 if (textElem) {
-                    textElem.style.fontSize = obsConfig.fontSize;
                     textElem.style.fontFamily = obsConfig.fontFamily;
                     textElem.style.textAlign = obsConfig.textAlign;
+                    
+                    if(obsConfig.textAlign === 'justify') {
+                        textElem.style.textJustify = "inter-word";
+                        textElem.style.textAlignLast = "center";
+                    } else {
+                        textElem.style.textJustify = "auto";
+                        textElem.style.textAlignLast = "auto";
+                    }
+
                     textElem.style.color = obsConfig.textColor;
                     textElem.style.textShadow = obsConfig.textShadow ? "2px 2px 8px rgba(0,0,0,0.8), -2px -2px 8px rgba(0,0,0,0.8)" : "none";
                     textElem.style.webkitTextStroke = obsConfig.textStrokeWidth > 0 ? `${obsConfig.textStrokeWidth}px ${obsConfig.textStrokeColor}` : "0px transparent";
+                }
+                
+                if (typeof newWindow.adjustFontSize === 'function') {
+                    newWindow.adjustFontSize();
                 }
             }
         }
@@ -305,17 +402,12 @@
             if (window.innerWidth < 768) return; 
             if (!newWindow || newWindow.closed) openWindow();
             if (newWindow && !newWindow.closed) {
+                newWindow.document.id = "obs_lyric_display"
                 let processedText = processPipesInText(rawText);
                 let cleanText = processedText.replace(/<br\s*[\/]?>/gi, "<br/>");
                 var textElem = newWindow.document.getElementById('text');
                 textElem.innerHTML = cleanText;
                 applyOBSStyles();
-                
-                // Force window focus and repaint to ensure OBS captures updates instantly without manual window activation
-                try {
-                    newWindow.focus();
-                    window.focus();
-                } catch (e) {}
             }
 
             document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
@@ -325,11 +417,11 @@
             }
         }
 
-
         function clearOBSScreen() {
             if (newWindow && !newWindow.closed) {
                 var textElem = newWindow.document.getElementById('text');
                 if (textElem) textElem.innerHTML = '';
+                if (typeof newWindow.adjustFontSize === 'function') newWindow.adjustFontSize();
             }
             document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
             currentActiveLyricIndex = -1;
@@ -367,7 +459,16 @@
             return text.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right text-500 ml-4 pr-2">$1</span>');
         }
 
+        function isElementVisible(element){
+            if(!element) return false;
+            const rect = element.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            return element.contains(document.elementFromPoint(x, y));
+        }
+
         window.addEventListener('keydown', function (e) {
+            if (!isElementVisible(document.querySelector('#fixed_song_meta'))) return false;
             if (window.innerWidth < 768) return;
             if (e.key === 'Escape') {
                 clearOBSScreen();
@@ -418,6 +519,7 @@
             };
             reader.readAsText(file);
         }
+    
     </script>
 </head>
 
@@ -603,16 +705,12 @@
             <div class="p-5 sm:p-6 space-y-4 overflow-y-auto max-h-[75vh]">
                 <div class="space-y-4 text-xs font-semibold text-slate-700">
 
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <label>Font Size</label>
-                            <span id="fontSizeVal" class="text-blue-600 font-bold">4.0vw</span>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <label class="block mb-1">Font Size (px)</label>
+                            <input type="number" id="obsFontSize" value="48" onchange="applyOBSStyles()"
+                                class="w-full border border-slate-300/80 rounded-xl p-2.5 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-xs shadow-xs">
                         </div>
-                        <input type="range" id="obsFontSize" min="1.5" max="8.0" step="0.2" value="4.0"
-                            oninput="applyOBSStyles()" class="w-full accent-blue-600 cursor-pointer">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block mb-1">Window Width (px)</label>
                             <input type="number" id="obsWindowWidth" value="1920" onchange="applyOBSStyles()"
@@ -620,7 +718,7 @@
                         </div>
                         <div>
                             <label class="block mb-1">Window Height (px)</label>
-                            <input type="number" id="obsWindowHeight" value="470" onchange="applyOBSStyles()"
+                            <input type="number" id="obsWindowHeight" value="300" onchange="applyOBSStyles()"
                                 class="w-full border border-slate-300/80 rounded-xl p-2.5 bg-white text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none text-xs shadow-xs">
                         </div>
                     </div>
@@ -650,13 +748,15 @@
 
                     <div>
                         <label class="block mb-1.5">Text Alignment</label>
-                        <div class="grid grid-cols-3 gap-2">
+                        <div class="grid grid-cols-4 gap-2">
                             <button type="button" onclick="setOBSAlignment('left')" id="alignLeftBtn"
                                 class="py-2.5 border border-slate-200/80 bg-white/90 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition text-xs">Left</button>
                             <button type="button" onclick="setOBSAlignment('center')" id="alignCenterBtn"
-                                class="py-2.5 border border-blue-600 bg-blue-50 text-blue-700 font-bold rounded-xl flex items-center justify-center gap-1 shadow-xs transition text-xs">Center</button>
+                                class="py-2.5 border border-slate-200/80 bg-white/90 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition text-xs">Center</button>
                             <button type="button" onclick="setOBSAlignment('right')" id="alignRightBtn"
                                 class="py-2.5 border border-slate-200/80 bg-white/90 text-slate-700 rounded-xl flex items-center justify-center gap-1 transition text-xs">Right</button>
+                            <button type="button" onclick="setOBSAlignment('justify')" id="alignJustifyBtn"
+                                class="py-2.5 border border-blue-600 bg-blue-50 text-blue-700 font-bold rounded-xl flex items-center justify-center gap-1 shadow-xs transition text-xs">Justify</button>
                         </div>
                     </div>
 
@@ -708,8 +808,8 @@
             </div>
 
             <div class="px-5 py-3.5 border-t border-slate-200/60 bg-blue-50/80 flex justify-end">
-                <button type="button" onclick="closeOBSSettingsModal()"
-                    class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition">Done</button>
+                <button type="button" onclick="saveOBSSettings()"
+                    class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-500/20 transition">Save Settings</button>
             </div>
 
         </div>
@@ -804,15 +904,6 @@
     <!-- Application Script Logic -->
     <script src="./songs.js"></script>
     <script>
-        if (typeof categoryList === 'undefined') {
-            var categoryList = [
-                { id: 'cat1', name: 'కీర్తనలు (Psalms & Hymns)', range: [1, 100] },
-                { id: 'cat2', name: 'ఆరాధన గీతములు (Worship Songs)', range: [101, 200] },
-                { id: 'cat3', name: 'పరిశుద్ధాత్మ గీతములు (Holy Spirit)', range: [201, 300] },
-                { id: 'cat4', name: 'రక్షణ గీతములు (Salvation)', range: [301, 400] },
-                { id: 'cat5', name: 'క్రిస్మస్ & నూతన సంవత్సర గీతములు (Special)', range: [401, 500] }
-            ];
-        }
 
         var activeSong = null;
         var currentFontSize = 22;
@@ -832,6 +923,9 @@
             if (savedData) {
                 try { songs = JSON.parse(savedData); } catch (e) { }
             }
+
+            // Load OBS specific settings on boot
+            loadOBSSettings();
 
             initQuillEditors();
             populateCategorySelectDropdown();
@@ -921,11 +1015,9 @@
                         e.preventDefault();
                         var isCurrentlyHidden = songListDiv.classList.contains('hidden');
                         
-                        // Close all category panels within this container
                         container.querySelectorAll('.song-list-pane').forEach(pane => pane.classList.add('hidden'));
                         container.querySelectorAll('i.fa-chevron-down').forEach(icon => icon.style.transform = 'rotate(0deg)');
                         
-                        // Toggle clicked panel
                         if (isCurrentlyHidden) {
                             songListDiv.classList.remove('hidden');
                             headerBtn.querySelector('i.fa-chevron-down').style.transform = 'rotate(180deg)';
@@ -1186,79 +1278,6 @@
             currentFontSize = Math.max(14, Math.min(36, currentFontSize + delta));
             document.getElementById('fixed_song_meta').style.fontSize = currentFontSize + 'px';
             document.getElementById('full_song_lyrics').style.fontSize = currentFontSize + 'px';
-        }
-
-        function openWindow() {
-            if (window.innerWidth < 768) return; 
-            if (newWindow && !newWindow.closed) return;
-            var w = obsConfig.windowWidth || 1920;
-            var h = obsConfig.windowHeight || 470;
-            newWindow = window.open('', '_blank', `width=${w},height=${h},resizable=no`);
-            if (newWindow) {
-                newWindow.document.write(`
-          <html>
-            <head>
-              <title>OBS Song Lyric Display</title>
-              <link rel="preconnect" href="https://fonts.googleapis.com">
-              <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-              <link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@400;600;700&family=Gidugu&family=Mandali&family=Noto+Sans+Telugu:wght@700&family=NTR&family=Peddana&family=Ramabhadra&family=Sirivennela&family=Suranna&family=Tenali+Ramakrishna&display=swap" rel="stylesheet">
-              <style> 
-                body { 
-                  display: flex; 
-                  justify-content: center; 
-                  align-items: center; 
-                  background-color: ${obsConfig.bgColor};
-                  background-size: cover;
-                  background-position: center;
-                  background-repeat: no-repeat;
-                  margin: 0;
-                  height: 100vh;
-                  transition: background 0.2s ease;
-                } 
-                #text { 
-                  width: 90%;
-                  margin: 0; 
-                  padding: 20px;
-                  line-height: 1.35;
-                  font-weight: 700;
-                  transition: all 0.15s ease-in-out;
-                }
-              </style>
-            </head>
-            <body>
-              <p id="text"></p>
-            </body>
-          </html>
-        `);
-                startOBSStatusMonitor();
-                applyOBSStyles();
-            } else {
-                alert('The browser blocked opening the OBS projection window. Please allow popups.');
-            }
-        }
-
-        function updateText(rawText, elementRef = null) {
-            if (window.innerWidth < 768) return; 
-            if (!newWindow || newWindow.closed) openWindow();
-            if (newWindow && !newWindow.closed) {
-                let processedText = processPipesInText(rawText);
-                let cleanText = processedText.replace(/<br\s*[\/]?>/gi, "<br/>");
-                var textElem = newWindow.document.getElementById('text');
-                textElem.innerHTML = cleanText;
-                applyOBSStyles();
-                
-                // Force window focus and repaint to ensure OBS captures updates instantly without manual window activation
-                try {
-                    newWindow.focus();
-                    window.focus();
-                } catch (e) {}
-            }
-
-            document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
-            if (elementRef) {
-                elementRef.classList.add('active-projection');
-                currentActiveLyricIndex = currentProjectableElements.indexOf(elementRef);
-            }
         }
     </script>
 </body>

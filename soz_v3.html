@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>సీయోను గీతములు - Songs of Zion (v3 Multi-Church Sync)</title>
+    <title>సీయోను గీతములు - Songs of Zion (v3 Multi-Church)</title>
 
     <!-- Google Fonts & Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,6 +67,7 @@
         .obs-dock-theme #dockSuggestionsList li:hover { background: #444 !important; color: #fff; }
     </style>
 
+    <!-- Source File containing window.songs -->
     <script src="./songs.js"></script>
 
     <script>
@@ -96,6 +97,10 @@
         let obsConnected = false;
         let activeSong = null;
         let currentFontSize = 22;
+        
+        // Renamed internally to avoid collision with the variable exported by songs.js
+        let appSongs = []; 
+        
         let chorusQuill = null;
         let bridgeQuill = null;
         let stanzaQuills = [];
@@ -136,31 +141,38 @@
             if (urlParams.get('action') === 'add' && !isDockMode && !isDisplayMode) { setTimeout(openAddSongModal, 300); }
         });
 
-        // --- 3. MULTI-CHURCH DATABASE LOADING ---
+        // --- 3. MULTI-CHURCH DATABASE LOADING (MERGE STRATEGY) ---
         async function loadRoomDatabase(roomCode) {
-            try {
-                let doc = await db.collection("song_databases").doc(roomCode).get();
-                if (doc.exists && doc.data().songs) {
-                    songs = doc.data().songs;
-                    localStorage.setItem('zion_songs_' + roomCode, JSON.stringify(songs));
-                } else {
-                    // Fallback to local device storage, or initialize default
-                    let local = localStorage.getItem('zion_songs_' + roomCode) || localStorage.getItem('zion_songs_db');
-                    if (local) {
-                        songs = JSON.parse(local);
-                    } else {
-                        songs = [{ "id": 1, "SongNumber": 37, "title": "Sainyamula Yehovaa || సైన్యముల యెహోవా", "categoryId": "cat2", "Song": { "Chorus": "పల్లవి : సైన్యముల యెహోవా - మా బలము నీవేనయ్యా", "1": "సైన్యముల కధిపతివగు యెహోవా (2)<br/>నీ నివాసములు - ఎంతో రమ్యములు (2)" } }];
-                    }
-                    // Seed this room's database in Firebase for other devices
-                    db.collection("song_databases").doc(roomCode).set({ songs: songs });
-                }
-                renderAccordionCategories();
-                if (songs.length > 0) loadSong(songs[0].SongNumber);
-            } catch (e) {
-                console.error("Failed to sync database. Using offline cache.");
-                let local = localStorage.getItem('zion_songs_' + roomCode);
-                if (local) { songs = JSON.parse(local); renderAccordionCategories(); if(songs.length > 0) loadSong(songs[0].SongNumber); }
+            // 1. Base initialization from songs.js
+            if (typeof songs !== 'undefined' && Array.isArray(songs)) {
+                // Deep copy to ensure we don't accidentally mutate the core source
+                appSongs = JSON.parse(JSON.stringify(songs)); 
+            } else {
+                appSongs = [];
             }
+
+            try {
+                // 2. Fetch Church-Specific edits and additions
+                let doc = await db.collection("song_databases").doc(roomCode).get();
+                if (doc.exists && doc.data().customSongs) {
+                    let dbCustom = doc.data().customSongs;
+                    
+                    // Merge Firebase Custom Additions OVER the base songs.js
+                    dbCustom.forEach(cSong => {
+                        let idx = appSongs.findIndex(s => s.SongNumber == cSong.SongNumber || s.id == cSong.id);
+                        if (idx >= 0) {
+                            appSongs[idx] = cSong; // Update existing base song
+                        } else {
+                            appSongs.push(cSong); // Append newly created song
+                        }
+                    });
+                }
+            } catch (e) {
+                console.warn("Could not sync with Cloud DB for additions. Using base library.", e);
+            }
+
+            renderAccordionCategories();
+            if (appSongs.length > 0) loadSong(appSongs[0].SongNumber, true);
         }
 
         // --- 4. OMNI-DIRECTIONAL SYNC LOGIC ---
@@ -182,8 +194,8 @@
             db.collection("sessions").doc(currentSessionId).set({
                 activeTextPlain: plainText,
                 activeTextHtml: htmlText,
-                activeSongNum: songNum,
-                activeStanzaKey: stanzaKey,
+                activeSongNum: songNum || null,
+                activeStanzaKey: stanzaKey || null,
                 obsConfig: obsConfig,
                 isClear: false,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -208,16 +220,21 @@
                 let preview = document.getElementById('livePreviewBox');
                 if (preview && !isDockMode) preview.innerHTML = '<span class="text-slate-400 italic">Screen Cleared</span>';
             } else {
-                // If a remote user changed the song, auto-switch to it!
-                if (!activeSong || activeSong.SongNumber !== songNum) {
+                // Auto-switch UI to the song if changed remotely
+                if (songNum && (!activeSong || activeSong.SongNumber !== songNum)) {
                     loadSong(songNum, true); 
                 }
+                
                 document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
-                let targetId = `lyric_line_${songNum}_${stanzaKey.replace(/\s+/g, '_')}`;
-                let activeEl = document.getElementById(targetId);
-                if (activeEl) {
-                    activeEl.classList.add('active-projection');
-                    activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // SAFETY CHECK: Ensure stanzaKey exists before attempting replace to avoid Uncaught TypeError
+                if (songNum && stanzaKey) {
+                    let targetId = `lyric_line_${songNum}_${String(stanzaKey).replace(/\s+/g, '_')}`;
+                    let activeEl = document.getElementById(targetId);
+                    if (activeEl) {
+                        activeEl.classList.add('active-projection');
+                        activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 }
                 
                 let preview = document.getElementById('livePreviewBox');
@@ -356,9 +373,10 @@
                 var container = document.getElementById(containerId);
                 if (!container) return;
                 container.innerHTML = '';
-                songs.sort((a, b) => a.SongNumber - b.SongNumber);
+                appSongs.sort((a, b) => a.SongNumber - b.SongNumber);
+                
                 categoryList.forEach(cat => {
-                    var categorySongs = songs.filter(s => (s.categoryId === cat.id || (s.SongNumber >= cat.range[0] && s.SongNumber <= cat.range[1])));
+                    var categorySongs = appSongs.filter(s => (s.categoryId === cat.id || (s.SongNumber >= cat.range[0] && s.SongNumber <= cat.range[1])));
                     var catBox = document.createElement('div'); catBox.className = 'border-b border-slate-100/80';
                     var headerBtn = document.createElement('button'); headerBtn.type = 'button'; headerBtn.className = 'w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-700 hover:bg-white/80 hover:text-blue-700 flex justify-between items-center transition';
                     headerBtn.innerHTML = `<span class="font-telugu">${cat.name}</span><div class="flex items-center gap-2"><span class="text-[10px] font-bold bg-slate-200/50 text-slate-600 px-2 py-0.5 rounded-full">${categorySongs.length}</span><i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></div>`;
@@ -380,7 +398,7 @@
         }
 
         function loadSong(songNum, isSilentLoad = false) {
-            activeSong = songs.find(s => s.SongNumber == songNum);
+            activeSong = appSongs.find(s => s.SongNumber == songNum);
             if (!activeSong) return;
 
             if (isDockMode) document.getElementById('dockSongTitle').innerHTML = `#${activeSong.SongNumber} - ${activeSong.title.split('||')[1] || activeSong.title}`;
@@ -398,7 +416,7 @@
 
             function createLyricBlock(key, content, isFixed) {
                 var div = document.createElement('div');
-                div.id = `lyric_line_${songNum}_${key.replace(/\s+/g, '_')}`; // Added specific ID for remote highlighting!
+                div.id = `lyric_line_${songNum}_${String(key).replace(/\s+/g, '_')}`; // Ensure strings
                 
                 if (isDockMode) {
                     div.className = "lyric-line font-telugu";
@@ -428,7 +446,7 @@
             if (query.length > 0) clearBtn.classList.remove('hidden');
             else { clearBtn.classList.add('hidden'); sugg.classList.add('hidden'); return; }
 
-            let filtered = songs.filter(s => s.SongNumber.toString().includes(query) || (s.title && s.title.toLowerCase().includes(query)));
+            let filtered = appSongs.filter(s => s.SongNumber.toString().includes(query) || (s.title && s.title.toLowerCase().includes(query)));
             list.innerHTML = '';
             if (filtered.length === 0) list.innerHTML = `<li class="px-3 py-2 text-[#888] italic text-xs">No matching songs</li>`;
             else {
@@ -465,7 +483,7 @@
 
         function openAddSongModal() {
             document.getElementById('editSongId').value = ''; document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-file-circle-plus text-blue-600"></i> Add New Song`;
-            let nextNum = songs.length ? (Math.max(...songs.map(s => s.SongNumber)) + 1) : 1;
+            let nextNum = appSongs.length ? (Math.max(...appSongs.map(s => s.SongNumber)) + 1) : 1;
             document.getElementById('inputSongNum').value = nextNum; document.getElementById('inputTitle').value = '';
             setQHtml(chorusQuill, ''); setQHtml(bridgeQuill, ''); document.getElementById('stanzasContainer').innerHTML = ''; stanzaQuills = [];
             addStanzaRow(); document.getElementById('deleteSongBtn').classList.add('hidden'); toggleModal('songModal', true);
@@ -498,13 +516,14 @@
             let i = 1;
             document.querySelectorAll('.stanza-card').forEach(card => { let sq = stanzaQuills.find(q => q.card === card); if(sq) { let t = getQHtml(sq.instance); if(t) { songObj[i.toString()] = t; i++; } } });
 
-            let existingIdx = songs.findIndex(s => s.id == id || s.SongNumber == num);
-            if (existingIdx >= 0) { songs[existingIdx].SongNumber = num; songs[existingIdx].title = title; songs[existingIdx].Song = songObj; } 
-            else { songs.push({ id: Date.now(), SongNumber: num, title: title, categoryId: document.getElementById('inputCategory').value, Song: songObj }); }
+            let newSongData = { id: id || Date.now(), SongNumber: num, title: title, categoryId: document.getElementById('inputCategory').value, Song: songObj };
+
+            let existingIdx = appSongs.findIndex(s => s.id == id || s.SongNumber == num);
+            if (existingIdx >= 0) { appSongs[existingIdx] = newSongData; } 
+            else { appSongs.push(newSongData); }
             
-            // Save to Firebase for this Room (Multi-tenant) & Local cache
-            db.collection("song_databases").doc(currentSessionId).set({ songs: songs });
-            localStorage.setItem('zion_songs_' + currentSessionId, JSON.stringify(songs));
+            // Save ONLY custom/edited songs to Firebase for this specific church
+            db.collection("song_databases").doc(currentSessionId).set({ customSongs: appSongs }, { merge: true });
             
             renderAccordionCategories(); toggleModal('songModal', false); loadSong(num);
         }
