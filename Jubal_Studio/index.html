@@ -806,7 +806,6 @@
             if(window.saveSettings) saveSettings();
         }
 
-
         const notesArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         let liveBaseOctave = 2; let liveTranspose = 0; let learnBaseOctave = 2;
         let liveKeyCount = 61; // Default dynamic keys
@@ -823,10 +822,6 @@
             'kharaharapriya': [0, 2, 3, 5, 7, 9, 10], 'todi': [0, 1, 3, 5, 7, 8, 10], 'abheri': [0, 2, 3, 5, 7, 9, 10], 'kalyani_vasantham': [0, 2, 3, 6, 7, 9, 11], 
             'c_bhairavi': [0, 2, 3, 5, 7, 8, 9, 10], 'anandabhairavi': [0, 2, 3, 5, 7, 8, 9, 10]
         };
-        const degreeQualitiesMajor = ['Major', 'Minor', 'Minor', 'Major', 'Major', 'Minor', 'Diminished'];
-        const degreeQualitiesMinor = ['Minor', 'Diminished', 'Major', 'Minor', 'Minor', 'Major', 'Major'];
-        const degreeQualitiesHarmonic = ['Minor', 'Diminished', 'Augmented', 'Minor', 'Major', 'Major', 'Diminished'];
-        const degreeQualitiesPentatonic = ['Major', 'Minor', 'Minor', 'Major', 'Minor'];
 
         function switchView(viewName) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
@@ -893,18 +888,27 @@
             const rootIdx = notesArray.indexOf(currentScaleRoot);
             const intervals = scaleIntervals[currentScaleType];
             
-            let qualities = degreeQualitiesMajor;
-            if (currentScaleType === 'minor') qualities = degreeQualitiesMinor;
-            else if (currentScaleType === 'harmonic') qualities = degreeQualitiesHarmonic;
-            else if (currentScaleType === 'pentatonic' || intervals.length === 5) qualities = degreeQualitiesPentatonic;
-            
             let diatonicList = [];
             for (let i = 0; i < intervals.length; i++) {
                 const semitone = (rootIdx + intervals[i]) % 12;
                 const rootName = notesArray[semitone];
-                const quality = qualities[i] || '';
-                const name = quality ? `${rootName} ${quality}` : `${rootName} chord`;
-                diatonicList.push({ root: rootName, quality: quality, name: name });
+                
+                let thirdOffset = (intervals[(i + 2) % intervals.length] - intervals[i] + 12) % 12;
+                let fifthOffset = (intervals[(i + 4) % intervals.length] - intervals[i] + 12) % 12;
+                
+                if (currentScaleType === 'pentatonic') {
+                    const q = ['Major', 'Minor', 'Minor', 'Major', 'Minor'][i];
+                    if (q === 'Minor') { thirdOffset = 3; fifthOffset = 7; }
+                    else if (q === 'Major') { thirdOffset = 4; fifthOffset = 7; }
+                }
+
+                let quality = 'Other';
+                if (thirdOffset === 4 && fifthOffset === 7) quality = 'Major';
+                else if (thirdOffset === 3 && fifthOffset === 7) quality = 'Minor';
+                else if (thirdOffset === 3 && fifthOffset === 6) quality = 'Diminished';
+                else if (thirdOffset === 4 && fifthOffset === 8) quality = 'Augmented';
+                
+                diatonicList.push({ root: rootName, quality: quality, name: `${rootName} ${quality}` });
             }
             return diatonicList;
         }
@@ -961,38 +965,22 @@
             
             if (scaleDegreeIdx === -1) return { notes: [Tone.Frequency(midiNote, "midi").toNote()], isAccomp: false };
 
-            const thirdOffsetIdx = (scaleDegreeIdx + 2) % intervals.length;
-            const fifthOffsetIdx = (scaleDegreeIdx + 4) % intervals.length;
-            
-            let thirdOffset = (intervals[thirdOffsetIdx] - intervals[scaleDegreeIdx] + 12) % 12;
-            let fifthOffset = (intervals[fifthOffsetIdx] - intervals[scaleDegreeIdx] + 12) % 12;
+            let thirdOffset = (intervals[(scaleDegreeIdx + 2) % intervals.length] - intervals[scaleDegreeIdx] + 12) % 12;
+            let fifthOffset = (intervals[(scaleDegreeIdx + 4) % intervals.length] - intervals[scaleDegreeIdx] + 12) % 12;
 
-            if (['major', 'minor', 'harmonic', 'pentatonic'].includes(currentScaleType)) {
-                let qualities = degreeQualitiesMajor;
-                if (currentScaleType === 'minor') qualities = degreeQualitiesMinor;
-                else if (currentScaleType === 'harmonic') qualities = degreeQualitiesHarmonic;
-                else if (currentScaleType === 'pentatonic') qualities = degreeQualitiesPentatonic;
-                
-                const q = qualities[scaleDegreeIdx];
+            if (currentScaleType === 'pentatonic') {
+                const q = ['Major', 'Minor', 'Minor', 'Major', 'Minor'][scaleDegreeIdx];
                 if (q === 'Minor') { thirdOffset = 3; fifthOffset = 7; }
-                else if (q === 'Diminished') { thirdOffset = 3; fifthOffset = 6; }
                 else if (q === 'Major') { thirdOffset = 4; fifthOffset = 7; }
             }
 
             const inversionType = parseInt(document.getElementById('accomp-inversion')?.value || "0");
             let chordMidi = [midiNote, midiNote + thirdOffset, midiNote + fifthOffset];
 
-            if (inversionType === 1) {
-                chordMidi[0] += 12; 
-            } else if (inversionType === 2) {
-                chordMidi[0] += 12; 
-                chordMidi[1] += 12; 
-            }
+            if (inversionType === 1) chordMidi[0] += 12; 
+            else if (inversionType === 2) { chordMidi[0] += 12; chordMidi[1] += 12; }
 
-            return { 
-                notes: chordMidi.map(m => Tone.Frequency(m, "midi").toNote()), 
-                isAccomp: true 
-            };
+            return { notes: chordMidi.map(m => Tone.Frequency(m, "midi").toNote()), isAccomp: true };
         }
 
         let activeMouseNotes = new Set();
@@ -1257,6 +1245,7 @@
         document.getElementById('drum-kit-select').addEventListener('change', (e) => activeDrumKit = drumKits[e.target.value]);
         document.getElementById('live-voice').addEventListener('change', (e) => activeLiveVoice = voices[e.target.value]);
 
+        let activeMouseRouting = new Map();
 
         function handleMouseKey(isDown, noteStr, octave, containerId) {
             if (isDown && Tone.context.state !== 'running') Tone.start();
@@ -1266,11 +1255,13 @@
             const primaryNoteName = Tone.Frequency(finalMidi, "midi").toNote();
             const voice = containerId === 'live-keyboard' ? activeLiveVoice : activeLearnVoice;
             const chordResult = containerId === 'live-keyboard' ? getSmartAccompaniment(finalMidi, primaryNoteName) : { notes: [primaryNoteName], isAccomp: false };
-            const targetVoice = chordResult.isAccomp ? activeAccompanimentVoice : voice;
+            let targetVoice = chordResult.isAccomp ? activeAccompanimentVoice : voice;
 
             if (isDown) {
                 if (activeMouseNotes.has(primaryNoteName)) return;
                 activeMouseNotes.add(primaryNoteName);
+                
+                activeMouseRouting.set(primaryNoteName, { notes: chordResult.notes, voice: targetVoice });
                 targetVoice.triggerAttack(chordResult.notes, Tone.now(), 0.8);
                 
                 if (containerId === 'live-keyboard') {
@@ -1282,30 +1273,34 @@
                             activeRecs[cn] = { midi: cnMidi, time: Tone.now() - recStart, velocity: 0.8 };
                         });
                     }
-                } else { chordResult.notes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, true)); }
+                } else { 
+                    chordResult.notes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, true)); 
+                }
             } else {
                 if (!activeMouseNotes.has(primaryNoteName)) return;
                 activeMouseNotes.delete(primaryNoteName);
                 
-                let releaseNotes = chordResult.notes;
-                if (containerId === 'live-keyboard' && activeMouseAccompMap.has(primaryNoteName)) {
-                    releaseNotes = activeMouseAccompMap.get(primaryNoteName);
-                    activeMouseAccompMap.delete(primaryNoteName);
-                }
-
-                targetVoice.triggerRelease(releaseNotes);
-                
-                if (containerId === 'live-keyboard') {
-                    releaseNotes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, false));
-                    if (isRec) {
-                        releaseNotes.forEach(cn => {
-                            if (activeRecs[cn]) {
-                                recNotes.push({ midi: activeRecs[cn].midi, name: cn, time: activeRecs[cn].time, duration: (Tone.now() - recStart) - activeRecs[cn].time, velocity: 0.8 });
-                                delete activeRecs[cn];
-                            }
-                        });
+                const route = activeMouseRouting.get(primaryNoteName);
+                if (route) {
+                    route.voice.triggerRelease(route.notes);
+                    activeMouseRouting.delete(primaryNoteName);
+                    
+                    if (containerId === 'live-keyboard') {
+                        route.notes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, false));
+                        activeMouseAccompMap.delete(primaryNoteName);
+                        
+                        if (isRec) {
+                            route.notes.forEach(cn => {
+                                if (activeRecs[cn]) {
+                                    recNotes.push({ midi: activeRecs[cn].midi, name: cn, time: activeRecs[cn].time, duration: (Tone.now() - recStart) - activeRecs[cn].time, velocity: 0.8 });
+                                    delete activeRecs[cn];
+                                }
+                            });
+                        }
+                    } else { 
+                        route.notes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, false)); 
                     }
-                } else { releaseNotes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, false)); }
+                }
             }
             updateVisuals(containerId === 'live-keyboard');
         }
@@ -2041,6 +2036,7 @@
         ];
         buttonIdsToSave.forEach(id => document.getElementById(id)?.addEventListener('click', saveSettings));
 
+        let activeMidiRouting = new Map(); // Tracks exact { notes, voice } for each physical key
 
         async function initMIDI() {
             if (navigator.requestMIDIAccess) {
@@ -2195,10 +2191,12 @@
             const note = isLiveActive ? data1 + liveTranspose : data1;
             const primaryNoteName = Tone.Frequency(note, "midi").toNote();
             const chordResult = isLiveActive ? getSmartAccompaniment(note, primaryNoteName) : { notes: [primaryNoteName], isAccomp: false };
-            const activeVoice = isLiveActive ? (chordResult.isAccomp ? activeAccompanimentVoice : activeLiveVoice) : activeLearnVoice;
+            let activeVoice = isLiveActive ? (chordResult.isAccomp ? activeAccompanimentVoice : activeLiveVoice) : activeLearnVoice;
 
             if (cmd === 144 && vel > 0) {
+                activeMidiRouting.set(data1, { notes: chordResult.notes, voice: activeVoice });
                 activeVoice.triggerAttack(chordResult.notes, Tone.now(), vel);
+                
                 if (isLiveActive) {
                     chordResult.notes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, true));
                     if(chordResult.isAccomp) activeAccompNotesMap.set(data1, chordResult.notes);
@@ -2207,29 +2205,34 @@
                             activeRecs[cn] = { midi: Tone.Frequency(cn).toMidi(), time: Tone.now() - recStart, velocity: vel };
                         });
                     }
-                } else { chordResult.notes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, true)); }
+                } else { 
+                    chordResult.notes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, true)); 
+                }
                 Tone.Draw.schedule(() => updateVisuals(isLiveActive), Tone.now());
                 
             } else if (cmd === 128 || (cmd === 144 && vel === 0)) {
-                let releaseNotes = chordResult.notes;
-                if (isLiveActive && activeAccompNotesMap.has(data1)) {
-                    releaseNotes = activeAccompNotesMap.get(data1);
-                    activeAccompNotesMap.delete(data1);
-                }
-
-                activeVoice.triggerRelease(releaseNotes);
-                if (isLiveActive) {
-                    releaseNotes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, false));
-                    if (isRec) {
-                        releaseNotes.forEach(cn => {
-                            if (activeRecs[cn]) {
-                                recNotes.push({ midi: activeRecs[cn].midi, name: cn, time: activeRecs[cn].time, duration: (Tone.now() - recStart) - activeRecs[cn].time, velocity: activeRecs[cn].velocity });
-                                delete activeRecs[cn];
-                            }
-                        });
+                const route = activeMidiRouting.get(data1);
+                if (route) {
+                    route.voice.triggerRelease(route.notes);
+                    activeMidiRouting.delete(data1);
+                    
+                    if (isLiveActive) {
+                        route.notes.forEach(n => modifyActiveNote(activeLiveNotesMap, n, false));
+                        activeAccompNotesMap.delete(data1);
+                        
+                        if (isRec) {
+                            route.notes.forEach(cn => {
+                                if (activeRecs[cn]) {
+                                    recNotes.push({ midi: activeRecs[cn].midi, name: cn, time: activeRecs[cn].time, duration: (Tone.now() - recStart) - activeRecs[cn].time, velocity: activeRecs[cn].velocity });
+                                    delete activeRecs[cn];
+                                }
+                            });
+                        }
+                    } else { 
+                        route.notes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, false)); 
                     }
-                } else { releaseNotes.forEach(n => modifyActiveNote(activeLearnNotesMap, n, false)); }
-                Tone.Draw.schedule(() => updateVisuals(isLiveActive), Tone.now());
+                    Tone.Draw.schedule(() => updateVisuals(isLiveActive), Tone.now());
+                }
             }
         }
         initMIDI();
