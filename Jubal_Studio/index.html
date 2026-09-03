@@ -22,7 +22,8 @@
             --font-display: 'Orbitron', sans-serif; --font-body: 'Inter', sans-serif;
         }
 
-        body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, #0d1b33 0%, #020408 75%); }
+        body { font-family: var(--font-body); background: var(--bg-base); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, #0d1b33 0%, #020408 75%); user-select: none; -webkit-user-select: none; }
+        input, select, textarea { user-select: auto; -webkit-user-select: auto; }
         
         header { position: sticky; top: 0; background: var(--bg-panel); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); height: 70px; padding: 0 35px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; box-shadow: 0 10px 30px rgba(0,0,0,0.7); z-index: 50; }
         .brand { display: flex; align-items: center; gap: 14px; }
@@ -38,7 +39,7 @@
         .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--danger); transition: 0.3s; }
         .status-dot.active { background: var(--success); box-shadow: 0 0 12px var(--success); }
 
-        .panel-toggler-bar { background: rgba(10, 15, 25, 0.7); border-bottom: 1px solid var(--border-color); padding: 8px 35px; display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-size: 0.65rem; }
+        .panel-toggler-bar { background: rgba(10, 15, 25, 0.7); border-bottom: 1px solid var(--border-color); padding: 8px 35px; display: flex; gap: 10px; align-items: center; font-family: var(--font-display); font-size: 0.65rem; justify-content: space-between;}
         .toggle-chip { background: rgba(3, 5, 8, 0.6); border: 1px solid var(--border-color); color: var(--text-muted); padding: 4px 12px; border-radius: 15px; cursor: pointer; transition: 0.2s; }
         .toggle-chip.active { background: rgba(0, 240, 255, 0.15); color: var(--accent-cyan); border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-glow); }
 
@@ -50,11 +51,13 @@
         button.primary { background: linear-gradient(135deg, rgba(0,240,255,0.22), rgba(255,215,0,0.22)); border-color: var(--accent-gold); color: var(--accent-gold); font-weight: 700; }
         button.danger { border-color: rgba(255, 51, 102, 0.4); color: var(--danger); }
         button.recording { background: var(--danger) !important; color: #fff !important; animation: pulse-rec 1.5s infinite; border-color: #fff; }
+        button.listening { background: var(--accent-cyan) !important; color: #000 !important; animation: pulse-listen 1s infinite; border-color: #fff; }
         @keyframes pulse-rec { 0% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.8); } 70% { box-shadow: 0 0 0 12px rgba(255, 51, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); } }
+        @keyframes pulse-listen { 0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.8); } 70% { box-shadow: 0 0 0 12px rgba(0, 240, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); } }
         button:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        select, input[type="text"] { background: rgba(3, 5, 8, 0.85); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 6px; outline: none; font-family: var(--font-body); font-size: 0.82rem; }
-        input[type="text"]:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-glow); }
+        select, input[type="text"], input[type="number"] { background: rgba(3, 5, 8, 0.85); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 6px; outline: none; font-family: var(--font-body); font-size: 0.82rem; }
+        input[type="text"]:focus, input[type="number"]:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-glow); }
         
         input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 6px; background: #1e293b; border-radius: 4px; outline: none; border: 1px solid #334155; margin: 10px 0; }
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-cyan); cursor: pointer; box-shadow: 0 0 10px var(--accent-glow); transition: 0.2s; }
@@ -70,17 +73,17 @@
 
         .hardware-matrix { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 400px; margin: 0 auto; }
         .pad-grid { display: grid; grid-template-columns: repeat(4, 55px); justify-content: center; gap: 12px; }
-        .drum-pad { aspect-ratio: 1; width: 55px; height: 55px; background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid #334155; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.5rem; font-weight: 700; color: #64748b; transition: 0.1s; box-shadow: inset 0 4px 6px rgba(255,255,255,0.05); user-select: none; }
-        .drum-pad:active, .drum-pad.active { background: var(--accent-cyan); border-color: #fff; color: #000; box-shadow: 0 0 15px var(--accent-cyan); transform: scale(0.92); }
+        .drum-pad { aspect-ratio: 1; width: 55px; height: 55px; background: linear-gradient(135deg, #1e293b, #0f172a); border: 2px solid #334155; border-radius: 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 0.45rem; line-height: 1.2; word-wrap: break-word; overflow: hidden; font-weight: 700; color: #64748b; transition: 0.1s; box-shadow: inset 0 4px 6px rgba(255,255,255,0.05); user-select: none; text-align: center;}
+        .drum-pad:active, .drum-pad.active { background: var(--accent-cyan) !important; border-color: #fff !important; color: #000 !important; box-shadow: 0 0 15px var(--accent-cyan) !important; transform: scale(0.92); }
         
         .knob-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 4px; }
         .cc-knob-container { display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .cc-knob { width: 42px; height: 42px; border-radius: 50%; background: #0f172a; border: 2px solid var(--accent-cyan); position: relative; }
         .cc-knob-indicator { position: absolute; width: 2px; height: 15px; background: var(--accent-cyan); top: 2px; left: 50%; transform-origin: bottom center; transform: translateX(-50%) rotate(-135deg); transition: transform 0.1s; }
-        .cc-label { font-size: 0.55rem; font-family: var(--font-display); color: var(--text-muted); text-transform: uppercase; text-align: center; }
+        .cc-label { font-size: 0.5rem; font-family: var(--font-display); color: var(--text-muted); text-transform: uppercase; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
 
-        .keyboard-dock { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; width: 100%; box-sizing: border-box; box-shadow: 0 20px 50px rgba(0,0,0,0.7); display: flex; justify-content: flex-start; overflow-x: auto; backdrop-filter: blur(24px); }
-        .keyboard { display: block; position: relative; height: 170px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); border-radius: 8px; overflow: hidden; background: #030508; border: 1px solid var(--border-color); }
+        .keyboard-dock { background: var(--bg-panel); border: 1px solid var(--border-color); border-radius: 16px; padding: 18px; width: 100%; box-sizing: border-box; box-shadow: 0 20px 50px rgba(0,0,0,0.7); display: flex; justify-content: center; overflow-x: auto; backdrop-filter: blur(24px); }
+        .keyboard { margin: 0 auto; display: block; position: relative; height: 170px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); border-radius: 8px; overflow: hidden; background: #030508; border: 1px solid var(--border-color); flex-shrink: 0; }
         .key { transition: background 0.05s, box-shadow 0.05s; box-sizing: border-box; cursor: pointer; position: absolute; user-select: none; top: 0; }
         
         .key.white { width: 40px; height: 170px; background: linear-gradient(to bottom, #e2e8f0, #cbd5e1); border-right: 1px solid #94a3b8; z-index: 1; }
@@ -109,7 +112,6 @@
         #waterfall-canvas { width: 100%; height: 100%; display: block; }
         .sync-keyboard { width: 100%; border-radius: 0 0 12px 12px; border-top: none; }
 
-        /* Telemetry Timeline */
         .timeline-track { width: 100%; height: 42px; background: rgba(3, 5, 8, 0.9); border: 1px solid var(--border-color); border-radius: 8px; position: relative; cursor: crosshair; overflow: hidden; margin: 4px 0;}
         .timeline-progress { position: absolute; top: 0; left: 0; height: 100%; background: rgba(0, 240, 255, 0.2); pointer-events: none; border-right: 2px solid var(--accent-cyan); z-index: 2; }
         .timeline-loop-region { position: absolute; top: 0; height: 100%; background: rgba(255, 215, 0, 0.25); border-left: 2px dashed var(--accent-gold); border-right: 2px dashed var(--accent-gold); z-index: 3; pointer-events: none; display: none; }
@@ -131,6 +133,7 @@
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; z-index: 100; }
         .modal-card { background: #111; border: 1px solid #333; border-radius: 12px; width: 96vw; height: 95vh; max-width: none; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.9); }
+        .modal-card.small-modal { width: 600px; height: auto; max-height: 90vh; }
         
         .editor-toolbar { display: flex; justify-content: space-between; align-items: center; background: #1e1e1e; padding: 12px 20px; border-radius: 8px; border: 1px solid #333; }
         .piano-roll-viewport { width: 100%; flex-grow: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; position: relative; overflow: auto; display: flex; user-select: none; }
@@ -157,6 +160,12 @@
         .roll-note.selected { border: 2px solid var(--accent-gold); background: #c59b27; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
         .roll-note .resize-handle { position: absolute; right: 0; top: 0; width: 8px; height: 100%; cursor: ew-resize; background: rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.4); }
         .editor-playhead { position: absolute; top: 0; width: 2px; height: 100%; background: var(--success); pointer-events: none; z-index: 40; box-shadow: 0 0 10px var(--success); display: none; }
+
+        .midi-map-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #333; }
+        .midi-map-row:last-child { border-bottom: none; }
+        .midi-map-label { font-size: 0.8rem; font-family: var(--font-display); color: #fff; }
+        .midi-map-input { width: 50px; text-align: center; background: rgba(0, 240, 255, 0.05); color: var(--accent-cyan); border: 1px solid var(--border-color); padding: 6px; border-radius: 4px; font-family: var(--font-display); font-size: 0.75rem; }
+        .midi-map-input:focus { border-color: var(--accent-gold); outline: none; box-shadow: 0 0 10px var(--gold-glow); }
     </style>
 </head>
 <body>
@@ -181,10 +190,13 @@
     </header>
 
     <div class="panel-toggler-bar">
-        <span>Show/Hide Panels:</span>
-        <div class="toggle-chip active" id="toggle-scale-panel" onclick="togglePanel('scale')">Scale & Accomp</div>
-        <div class="toggle-chip active" id="toggle-hardware-panel" onclick="togglePanel('hardware')">Hardware Console</div>
-        <div class="toggle-chip active" id="toggle-seq-panel" onclick="togglePanel('seq')">Sequencer & Voice</div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <span>Show/Hide Panels:</span>
+            <div class="toggle-chip active" id="toggle-scale-panel" onclick="togglePanel('scale')">Scale & Accomp</div>
+            <div class="toggle-chip active" id="toggle-hardware-panel" onclick="togglePanel('hardware')">Hardware Console</div>
+            <div class="toggle-chip active" id="toggle-seq-panel" onclick="togglePanel('seq')">Sequencer & Voice</div>
+        </div>
+        <button class="primary" style="padding: 4px 12px;" onclick="openMidiMapModal()">🎛️ MIDI MAPPING</button>
     </div>
 
     <!-- VIEW 1: LIVE PERFORMANCE MATRIX -->
@@ -204,7 +216,37 @@
                             <option value="G#">G#</option><option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
                         </select>
                         <select id="scale-type" style="width: 100%;">
-                            <option value="none">Off</option><option value="major" selected>Major</option><option value="minor">Natural Minor</option><option value="harmonic">Harmonic Minor</option><option value="pentatonic">Pentatonic</option>
+                            <optgroup label="Western">
+                                <option value="none">Off</option>
+                                <option value="major" selected>Major</option>
+                                <option value="minor">Natural Minor</option>
+                                <option value="harmonic">Harmonic Minor</option>
+                                <option value="pentatonic">Pentatonic</option>
+                            </optgroup>
+                            <optgroup label="Hindustani Ragas">
+                                <option value="yaman">Yaman</option>
+                                <option value="bhairav">Bhairav</option>
+                                <option value="bhairavi">Bhairavi</option>
+                                <option value="malkauns">Malkauns</option>
+                                <option value="darbari_kanada">Darbari Kanada</option>
+                                <option value="bhimpalasi">Bhimpalasi</option>
+                                <option value="jaunpuri">Jaunpuri</option>
+                                <option value="ahir_bhairav">Ahir Bhairav</option>
+                                <option value="bihag">Bihag</option>
+                                <option value="miyan_malhar">Miyan Malhar</option>
+                            </optgroup>
+                            <optgroup label="Carnatic Ragas">
+                                <option value="hamsadhwani">Hamsadhwani</option>
+                                <option value="mohanam">Mohanam</option>
+                                <option value="kalyani">Kalyani</option>
+                                <option value="sankarabharanam">Sankarabharanam</option>
+                                <option value="kharaharapriya">Kharaharapriya</option>
+                                <option value="todi">Todi</option>
+                                <option value="abheri">Abheri</option>
+                                <option value="kalyani_vasantham">Kalyani Vasantham</option>
+                                <option value="c_bhairavi">Bhairavi (Carnatic)</option>
+                                <option value="anandabhairavi">Anandabhairavi</option>
+                            </optgroup>
                         </select>
                     </div>
                 </div>
@@ -212,13 +254,17 @@
                 <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px; background: rgba(0, 240, 255, 0.05); padding: 12px; border-radius: 8px; border: 1px dashed var(--accent-cyan);">
                     <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--accent-cyan); font-weight: 700;">ACCOMPANIMENT ZONE</label>
                     
-                    <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between;">
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="text" id="accomp-zone-start" value="C2" style="width: 45px; text-align: center; font-weight: bold; padding: 4px;">
-                            <span style="font-size: 0.6rem; color: var(--text-muted); font-family: var(--font-display);">TO</span>
-                            <input type="text" id="accomp-zone-end" value="B2" style="width: 45px; text-align: center; font-weight: bold; padding: 4px;">
+                    <div style="display: flex; gap: 4px; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; gap: 4px; align-items: center;">
+                            <input type="text" id="accomp-zone-start" value="C2" style="width: 35px; text-align: center; font-weight: bold; padding: 4px; font-size: 0.7rem;">
+                            <span style="font-size: 0.6rem; color: var(--text-muted); font-family: var(--font-display);">-</span>
+                            <input type="text" id="accomp-zone-end" value="B2" style="width: 35px; text-align: center; font-weight: bold; padding: 4px; font-size: 0.7rem;">
                         </div>
-                        <button id="accompaniment-toggle" class="primary" style="padding: 4px 8px; font-size: 0.6rem;">Accomp: On</button>
+                        <div style="display: flex; gap: 2px;">
+                            <button id="btn-accomp-oct-down" style="padding: 4px; font-size: 0.6rem;">- OCT</button>
+                            <button id="btn-accomp-oct-up" style="padding: 4px; font-size: 0.6rem;">+ OCT</button>
+                        </div>
+                        <button id="accompaniment-toggle" class="primary" style="padding: 4px 6px; font-size: 0.6rem;">On</button>
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
@@ -232,6 +278,15 @@
                         </select>
                     </div>
 
+                    <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+                        <label style="font-size: 0.55rem; color: var(--text-muted);">ACCOMP INVERSION</label>
+                        <select id="accomp-inversion" style="width: 100%; font-size: 0.75rem; padding: 6px;">
+                            <option value="0">Root Position</option>
+                            <option value="1">1st Inversion</option>
+                            <option value="2">2nd Inversion</option>
+                        </select>
+                    </div>
+
                     <div style="margin-top: 6px;">
                         <label style="font-family: var(--font-display); font-size: 0.55rem; color: var(--text-muted); font-weight: 700;">DIATONIC CHORDS</label>
                         <div id="live-chord-suggest" style="font-size: 0.72rem; color: var(--scale-color); font-weight: 500; line-height: 1.4;">Select scale...</div>
@@ -242,42 +297,53 @@
             </div>
 
             <div class="panel-card" id="panel-hardware" style="align-items: center;">
-                <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700; letter-spacing: 2px;">8x8 Hardware Console</label>
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700; letter-spacing: 2px;">HARDWARE CONSOLE</label>
+                    <select id="keyboard-size-select" style="font-size: 0.6rem; padding: 4px; width: 85px;">
+                        <option value="25">25 Keys</option>
+                        <option value="32">32 Keys</option>
+                        <option value="37">37 Keys</option>
+                        <option value="49">49 Keys</option>
+                        <option value="61" selected>61 Keys</option>
+                        <option value="88">88 Keys</option>
+                    </select>
+                </div>
                 
                 <div class="hardware-matrix">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 0.6rem; color: var(--accent-cyan); font-family: var(--font-display);">DRUM MATRIX</span>
+                        <span style="font-size: 0.6rem; color: var(--accent-cyan); font-family: var(--font-display);">PAD ROUTING</span>
                         <div style="display: flex; gap: 8px;">
-                            <button id="pads-toggle" class="primary" style="padding: 2px 8px; font-size: 0.6rem;">PADS: ON</button>
-                            <select id="drum-kit-select" style="font-size: 0.6rem; padding: 4px; width: 100px;">
+                            <button id="pads-toggle" class="primary" style="padding: 2px 8px; font-size: 0.6rem;" title="Toggle between Drums and App Control">PADS: ON (DRUMS)</button>
+                            <select id="drum-kit-select" style="font-size: 0.6rem; padding: 4px; width: 90px;">
                                 <option value="acoustic">Acoustic Kit</option><option value="808">808 Synth Kit</option>
                             </select>
                         </div>
                     </div>
-                    <div class="pad-grid">
-                        <div class="drum-pad" id="pad-40" data-note="40">SNARE</div>
-                        <div class="drum-pad" id="pad-41" data-note="41">TOM L</div>
-                        <div class="drum-pad" id="pad-42" data-note="42">HI-HAT C</div>
-                        <div class="drum-pad" id="pad-43" data-note="43">HI-HAT O</div>
-                        <div class="drum-pad" id="pad-36" data-note="36">KICK</div>
-                        <div class="drum-pad" id="pad-37" data-note="37">RIM</div>
-                        <div class="drum-pad" id="pad-38" data-note="38">CLAP</div>
-                        <div class="drum-pad" id="pad-39" data-note="39">CRASH</div>
+                    <!-- Note the addition of data-default-note here -->
+                    <div class="pad-grid" id="drum-pad-grid">
+                        <div class="drum-pad" data-default-note="40">SNARE</div>
+                        <div class="drum-pad" data-default-note="41">TOM L</div>
+                        <div class="drum-pad" data-default-note="42">HI-HAT C</div>
+                        <div class="drum-pad" data-default-note="43">HI-HAT O</div>
+                        <div class="drum-pad" data-default-note="36">KICK</div>
+                        <div class="drum-pad" data-default-note="37">RIM</div>
+                        <div class="drum-pad" data-default-note="38">CLAP</div>
+                        <div class="drum-pad" data-default-note="39">CRASH</div>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                        <span style="font-size: 0.6rem; color: var(--accent-cyan); font-family: var(--font-display);">CC AUTOMATION</span>
-                        <span style="font-size: 0.5rem; color: var(--text-muted);">MIDI CC 70-77</span>
+                        <span style="font-size: 0.6rem; color: var(--accent-cyan); font-family: var(--font-display);">KNOB ROUTING</span>
+                        <button id="knob-mode-toggle" class="primary" style="padding: 2px 8px; font-size: 0.6rem;" title="Toggle between Synthesizer control and App control">KNOBS: SYNTH</button>
                     </div>
                     <div class="knob-grid">
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-0"><div class="cc-knob-indicator"></div></div><span class="cc-label">Filter</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-1"><div class="cc-knob-indicator"></div></div><span class="cc-label">Reso</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-2"><div class="cc-knob-indicator"></div></div><span class="cc-label">Rev Size</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-3"><div class="cc-knob-indicator"></div></div><span class="cc-label">Rev Mix</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-4"><div class="cc-knob-indicator"></div></div><span class="cc-label">Dly Time</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-5"><div class="cc-knob-indicator"></div></div><span class="cc-label">Dly Fbk</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-6"><div class="cc-knob-indicator"></div></div><span class="cc-label">Chorus</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-7"><div class="cc-knob-indicator"></div></div><span class="cc-label">Master</span></div>
+                        <div class="cc-knob-container"><div class="cc-knob" id="knob-0"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-0">Filter</span></div>
+                        <div class="cc-knob-container"><div class="cc-knob" id="knob-1"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-1">Reso</span></div>
+                        <div class="cc-knob-container"><div class="cc-knob" id="knob-2"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-2">Rev Size</span></div>
+                        <div class="cc-knob-container"><div class="cc-knob" id="knob-3"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-3">Rev Mix</span></div>
+                        <div class="cc-knob-container"><div class="cc-knob" id="knob-4"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-4">Dly Time</span></div>
+                        <div class="cc-knob-container"><div class="cc-knob" id="knob-5"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-5">Dly Fbk</span></div>
+                        <div class="cc-knob-container"><div class="cc-knob" id="knob-6"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-6">Chorus</span></div>
+                        <div class="cc-knob-container"><div class="cc-knob" id="knob-7"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-7">Master</span></div>
                     </div>
                 </div>
             </div>
@@ -323,9 +389,11 @@
 
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <button id="metronome-toggle" style="padding: 4px 10px; font-size: 0.6rem;">METRONOME: OFF</button>
-                    <label style="font-size: 0.65rem;">BPM: <span id="live-tempo-val" style="color: var(--accent-cyan);">120</span></label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <label style="font-size: 0.65rem;">BPM: <span id="live-tempo-val" style="color: var(--accent-cyan);">120</span></label>
+                    </div>
                 </div>
-                <input type="range" id="live-tempo" min="40" max="200" value="120">
+                <input type="range" id="live-tempo" min="40" max="240" value="120">
 
                 <div style="display: flex; flex-direction: column; gap: 4px;">
                     <label style="font-size: 0.55rem; color: var(--text-muted);">IMPORT STREAM</label>
@@ -366,7 +434,7 @@
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
                         <label style="font-size: 0.65rem;">TEMPO: <span id="learn-tempo-val" style="color: var(--accent-cyan);">120</span> BPM</label>
-                        <input type="range" id="learn-tempo" min="30" max="240" value="120" style="width: 180px;">
+                        <input type="range" id="learn-tempo" min="40" max="240" value="120" style="width: 180px;">
                     </div>
                     
                     <div style="display: flex; gap: 8px; margin-top: 12px;">
@@ -428,6 +496,42 @@
         </div>
     </section>
 
+    <!-- MODAL: MIDI MAPPING -->
+    <div class="modal-overlay" id="midi-map-modal">
+        <div class="modal-card small-modal">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                <h3 style="margin: 0; font-family: var(--font-display); font-size: 1.1rem; color: #fff; letter-spacing: 1px;">Global MIDI Control Mapping</h3>
+                <button onclick="closeMidiMapModal()" style="padding: 6px 16px; background: #333; border-color: #555;">✕ Close</button>
+            </div>
+            
+            <p style="font-size: 0.75rem; color: #aaa; margin: 5px 0;">Click <b>Listen</b> to assign via controller, or manually enter the CC/Note value.</p>
+            
+            <div style="background: #111; border: 1px solid #333; border-radius: 8px; overflow-y: auto; max-height: 60vh;">
+                <!-- CC Mappings (Knobs) -->
+                <div class="midi-map-row"><span class="midi-map-label">Master Volume (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-masterVolume" placeholder="--" min="0" max="127" onchange="updateMidiMap('masterVolume', 'cc', this.value)"><button id="listen-masterVolume" onclick="startListen('masterVolume', 'cc')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Master Tempo (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-tempo" placeholder="--" min="0" max="127" onchange="updateMidiMap('tempo', 'cc', this.value)"><button id="listen-tempo" onclick="startListen('tempo', 'cc')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Timeline Loop Start (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-loopStart" placeholder="--" min="0" max="127" onchange="updateMidiMap('loopStart', 'cc', this.value)"><button id="listen-loopStart" onclick="startListen('loopStart', 'cc')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Timeline Loop Length (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-loopLength" placeholder="--" min="0" max="127" onchange="updateMidiMap('loopLength', 'cc', this.value)"><button id="listen-loopLength" onclick="startListen('loopLength', 'cc')">🎧 Listen</button></div></div>
+                
+                <!-- Note Mappings (Pads) -->
+                <div class="midi-map-row"><span class="midi-map-label">Play / Stop (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-playStop" placeholder="--" min="0" max="127" onchange="updateMidiMap('playStop', 'note', this.value)"><button id="listen-playStop" onclick="startListen('playStop', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Record Toggle (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-record" placeholder="--" min="0" max="127" onchange="updateMidiMap('record', 'note', this.value)"><button id="listen-record" onclick="startListen('record', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Transpose - (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-transDown" placeholder="--" min="0" max="127" onchange="updateMidiMap('transDown', 'note', this.value)"><button id="listen-transDown" onclick="startListen('transDown', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Transpose + (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-transUp" placeholder="--" min="0" max="127" onchange="updateMidiMap('transUp', 'note', this.value)"><button id="listen-transUp" onclick="startListen('transUp', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Octave Shift - (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-octDown" placeholder="--" min="0" max="127" onchange="updateMidiMap('octDown', 'note', this.value)"><button id="listen-octDown" onclick="startListen('octDown', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Octave Shift + (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-octUp" placeholder="--" min="0" max="127" onchange="updateMidiMap('octUp', 'note', this.value)"><button id="listen-octUp" onclick="startListen('octUp', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Accomp On/Off (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-accompToggle" placeholder="--" min="0" max="127" onchange="updateMidiMap('accompToggle', 'note', this.value)"><button id="listen-accompToggle" onclick="startListen('accompToggle', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Accomp Octave - (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-accompOctDown" placeholder="--" min="0" max="127" onchange="updateMidiMap('accompOctDown', 'note', this.value)"><button id="listen-accompOctDown" onclick="startListen('accompOctDown', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Accomp Octave + (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-accompOctUp" placeholder="--" min="0" max="127" onchange="updateMidiMap('accompOctUp', 'note', this.value)"><button id="listen-accompOctUp" onclick="startListen('accompOctUp', 'note')">🎧 Listen</button></div></div>
+            </div>
+            
+            <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 10px;">
+                <button class="danger" onclick="clearMidiMap()" style="padding: 6px 12px; font-size: 0.65rem;">Clear All</button>
+                <button class="primary" onclick="closeMidiMapModal()" style="padding: 6px 16px;">Save & Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL: MIDI EDITOR -->
     <div class="modal-overlay" id="editor-modal">
         <div class="modal-card">
@@ -475,6 +579,8 @@
     </div>
 
     <script>
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
         Tone.context.lookAhead = 0.01;
 
         const masterFilter = new Tone.Filter(20000, "lowpass").toDestination();
@@ -511,7 +617,6 @@
             panelEl.style.display = isHidden ? 'flex' : 'none';
             chipEl.classList.toggle('active', isHidden);
             
-            // Adjust grid layout depending on active visible panels
             const grid = document.getElementById('live-workspace-grid');
             if (grid) {
                 const visiblePanels = ['scale', 'hardware', 'seq'].filter(k => {
@@ -522,11 +627,22 @@
             }
         }
 
-        let drumPadsEnabled = true;
+        // --- HARDWARE CONSOLE SWITCHES ---
+        let drumPadsEnabled = true; // True = Drums, False = App Control mapped to Note on
         document.getElementById('pads-toggle').addEventListener('click', (e) => {
             drumPadsEnabled = !drumPadsEnabled;
-            e.target.innerText = `PADS: ${drumPadsEnabled ? 'ON' : 'OFF'}`;
+            e.target.innerText = `PADS: ${drumPadsEnabled ? 'ON (DRUMS)' : 'OFF (APP CTRL)'}`;
             e.target.classList.toggle('primary', drumPadsEnabled);
+            updateHardwareUI();
+            if(window.saveSettings) saveSettings();
+        });
+
+        let knobModeSynth = true; // True = CC 70-77 Synth, False = App CC bindings
+        document.getElementById('knob-mode-toggle').addEventListener('click', (e) => {
+            knobModeSynth = !knobModeSynth;
+            e.target.innerText = `KNOBS: ${knobModeSynth ? 'SYNTH' : 'APP'}`;
+            updateHardwareUI();
+            if(window.saveSettings) saveSettings();
         });
 
         const buildKit = (kickF, kickDecay, snareType, snareDecay) => ({
@@ -542,13 +658,171 @@
         const drumKits = { 'acoustic': buildKit('sine', 0.4, 'white', 0.2), '808': buildKit('triangle', 1.2, 'pink', 0.4) };
         let activeDrumKit = drumKits['acoustic'];
 
+        // --- GLOBAL MIDI MAPPING ENGINE ---
+        let midiMap = {
+            masterVolume: { type: 'cc', id: null },
+            tempo: { type: 'cc', id: null },
+            loopStart: { type: 'cc', id: null },
+            loopLength: { type: 'cc', id: null },
+            playStop: { type: 'note', id: null },
+            record: { type: 'note', id: null },
+            transUp: { type: 'note', id: null },
+            transDown: { type: 'note', id: null },
+            octUp: { type: 'note', id: null },
+            octDown: { type: 'note', id: null },
+            accompToggle: { type: 'note', id: null },
+            accompOctUp: { type: 'note', id: null },
+            accompOctDown: { type: 'note', id: null }
+        };
+
+        const actionNames = {
+            masterVolume: "Master Vol", tempo: "Tempo", loopStart: "Loop Start", loopLength: "Loop Len",
+            playStop: "Play / Stop", record: "Record", transDown: "Trans -", transUp: "Trans +",
+            octDown: "Octave -", octUp: "Octave +", accompToggle: "Accomp Tgl", accompOctDown: "Acc Oct -", accompOctUp: "Acc Oct +"
+        };
+
+        const defaultDrumLabels = {
+            40: "SNARE", 41: "TOM L", 42: "HI-HAT C", 43: "HI-HAT O",
+            36: "KICK", 37: "RIM", 38: "CLAP", 39: "CRASH"
+        };
+
+        // Static anchoring for the 8 UI slots in APP mode
+        const appPadMappings = ['playStop', 'record', 'transDown', 'transUp', 'octDown', 'octUp', 'accompToggle', 'accompOctUp'];
+        const appKnobMappings = ['masterVolume', 'tempo', 'loopStart', 'loopLength'];
+
+        let isListeningForMidi = false;
+        let activeListenTarget = null;
+        let activeListenType = null;
+
+        function openMidiMapModal() {
+            document.getElementById('midi-map-modal').style.display = 'flex';
+            renderMidiMapUI();
+        }
+        function closeMidiMapModal() {
+            document.getElementById('midi-map-modal').style.display = 'none';
+            if (isListeningForMidi && activeListenTarget) {
+                const btn = document.getElementById(`listen-${activeListenTarget}`);
+                if(btn) { btn.classList.remove('listening'); btn.innerText = "🎧 Listen"; }
+            }
+            isListeningForMidi = false;
+            activeListenTarget = null;
+        }
+
+        function renderMidiMapUI() {
+            for (const [key, mapping] of Object.entries(midiMap)) {
+                const inputEl = document.getElementById(`input-${key}`);
+                if (inputEl) {
+                    inputEl.value = mapping.id !== null ? mapping.id : '';
+                }
+            }
+        }
+
+        function updateMidiMap(key, type, val) {
+            const num = parseInt(val);
+            if (!isNaN(num) && num >= 0 && num <= 127) {
+                midiMap[key] = { type: type, id: num };
+            } else {
+                midiMap[key].id = null;
+            }
+            updateHardwareUI();
+            if(window.saveSettings) saveSettings();
+        }
+
+        function updateHardwareUI() {
+            // Update Pads Panel
+            const padGrid = document.getElementById('drum-pad-grid');
+            if (padGrid) {
+                const pads = Array.from(padGrid.children);
+                pads.forEach((pad, index) => {
+                    if (drumPadsEnabled) {
+                        const noteId = parseInt(pad.dataset.defaultNote);
+                        pad.innerHTML = defaultDrumLabels[noteId] || "PAD";
+                        pad.style.color = '#64748b';
+                        pad.style.borderColor = '#334155';
+                        pad.style.background = '';
+                    } else {
+                        const actionKey = appPadMappings[index];
+                        if (actionKey) {
+                            const mapping = midiMap[actionKey];
+                            const actionName = actionNames[actionKey];
+                            const mappingStr = mapping.id !== null ? (mapping.type === 'cc' ? `[C${mapping.id}]` : `[N${mapping.id}]`) : `[--]`;
+                            
+                            pad.innerHTML = `${actionName}<br><span style="font-size:0.4rem; color:var(--text-muted);">${mappingStr}</span>`;
+                            pad.style.color = mapping.id !== null ? 'var(--accent-cyan)' : '#475569';
+                            pad.style.borderColor = mapping.id !== null ? 'var(--accent-cyan)' : '#1e293b';
+                            pad.style.background = mapping.id !== null ? 'rgba(0, 240, 255, 0.05)' : '';
+                        }
+                    }
+                });
+            }
+
+            // Update Knobs Panel
+            const synthKnobLabels = ['Filter', 'Reso', 'Rev Size', 'Rev Mix', 'Dly Time', 'Dly Fbk', 'Chorus', 'Master'];
+            
+            for (let i = 0; i < 8; i++) {
+                const lbl = document.getElementById(`lbl-knob-${i}`);
+                const knobEl = document.getElementById(`knob-${i}`);
+                if (lbl && knobEl) {
+                    if (knobModeSynth) {
+                        lbl.innerText = synthKnobLabels[i];
+                        knobEl.style.borderColor = 'var(--accent-cyan)';
+                    } else {
+                        if (i < appKnobMappings.length) {
+                            const actionKey = appKnobMappings[i];
+                            const mapping = midiMap[actionKey];
+                            lbl.innerText = actionNames[actionKey] + (mapping.id !== null ? ` [C${mapping.id}]` : ` [--]`);
+                            knobEl.style.borderColor = mapping.id !== null ? 'var(--accent-gold)' : '#334155';
+                        } else {
+                            lbl.innerText = "--";
+                            knobEl.style.borderColor = '#334155';
+                        }
+                    }
+                }
+            }
+        }
+
+        function startListen(targetKey, type) {
+            if (isListeningForMidi && activeListenTarget) {
+                const oldBtn = document.getElementById(`listen-${activeListenTarget}`);
+                if(oldBtn) { oldBtn.classList.remove('listening'); oldBtn.innerText = "🎧 Listen"; }
+            }
+            
+            isListeningForMidi = true;
+            activeListenTarget = targetKey;
+            
+            const btn = document.getElementById(`listen-${targetKey}`);
+            if(btn) {
+                btn.classList.add('listening');
+                btn.innerText = "Listening...";
+            }
+        }
+
+        function clearMidiMap() {
+            for (const key of Object.keys(midiMap)) {
+                midiMap[key].id = null;
+            }
+            renderMidiMapUI();
+            updateHardwareUI();
+            if(window.saveSettings) saveSettings();
+        }
+
+
         const notesArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         let liveBaseOctave = 2; let liveTranspose = 0; let learnBaseOctave = 2;
+        let liveKeyCount = 61; // Default dynamic keys
         let autoAccompanimentEnabled = true;
         let currentScaleNotes = new Set();
         let currentScaleType = 'major'; let currentScaleRoot = 'D';
 
-        const scaleIntervals = { 'major': [0, 2, 4, 5, 7, 9, 11], 'minor': [0, 2, 3, 5, 7, 8, 10], 'harmonic': [0, 2, 3, 5, 7, 8, 11], 'pentatonic': [0, 2, 4, 7, 9] };
+        const scaleIntervals = { 
+            'major': [0, 2, 4, 5, 7, 9, 11], 'minor': [0, 2, 3, 5, 7, 8, 10], 'harmonic': [0, 2, 3, 5, 7, 8, 11], 'pentatonic': [0, 2, 4, 7, 9],
+            'yaman': [0, 2, 4, 6, 7, 9, 11], 'bhairav': [0, 1, 4, 5, 7, 8, 11], 'bhairavi': [0, 1, 3, 5, 7, 8, 10], 'malkauns': [0, 3, 5, 8, 10], 
+            'darbari_kanada': [0, 2, 3, 5, 7, 8, 10], 'bhimpalasi': [0, 2, 3, 5, 7, 9, 10], 'jaunpuri': [0, 2, 3, 5, 7, 8, 10], 'ahir_bhairav': [0, 1, 4, 5, 7, 9, 10], 
+            'bihag': [0, 2, 4, 5, 6, 7, 9, 11], 'miyan_malhar': [0, 2, 3, 5, 7, 9, 10, 11],
+            'hamsadhwani': [0, 2, 4, 7, 11], 'mohanam': [0, 2, 4, 7, 9], 'kalyani': [0, 2, 4, 6, 7, 9, 11], 'sankarabharanam': [0, 2, 4, 5, 7, 9, 11], 
+            'kharaharapriya': [0, 2, 3, 5, 7, 9, 10], 'todi': [0, 1, 3, 5, 7, 8, 10], 'abheri': [0, 2, 3, 5, 7, 9, 10], 'kalyani_vasantham': [0, 2, 3, 6, 7, 9, 11], 
+            'c_bhairavi': [0, 2, 3, 5, 7, 8, 9, 10], 'anandabhairavi': [0, 2, 3, 5, 7, 8, 9, 10]
+        };
         const degreeQualitiesMajor = ['Major', 'Minor', 'Minor', 'Major', 'Major', 'Minor', 'Diminished'];
         const degreeQualitiesMinor = ['Minor', 'Diminished', 'Major', 'Minor', 'Minor', 'Major', 'Major'];
         const degreeQualitiesHarmonic = ['Minor', 'Diminished', 'Augmented', 'Minor', 'Major', 'Major', 'Diminished'];
@@ -568,7 +842,7 @@
         }
 
         window.addEventListener('keydown', (e) => {
-            if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+            if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA' && e.target.type !== 'number') {
                 e.preventDefault();
                 const editorModal = document.getElementById('editor-modal');
                 if (editorModal.style.display === 'flex') {
@@ -597,34 +871,40 @@
             try { return Tone.Frequency(noteStr).toMidi(); } catch (e) { return fallback; }
         }
 
-        let zoneEndEdited = false;
-        const startZoneInput = document.getElementById('accomp-zone-start');
-        const endZoneInput = document.getElementById('accomp-zone-end');
-        endZoneInput.addEventListener('input', () => { zoneEndEdited = true; });
-        startZoneInput.addEventListener('change', (e) => {
-            if (!zoneEndEdited) {
+        function shiftAccompZone(shiftAmount) {
+            const shiftNote = (val) => {
                 try {
-                    const startMidi = Tone.Frequency(e.target.value).toMidi();
-                    endZoneInput.value = Tone.Frequency(startMidi + 11, "midi").toNote();
-                } catch(err) { }
-            }
-        });
+                    let midi = Tone.Frequency(val).toMidi();
+                    return Tone.Frequency(midi + (shiftAmount * 12), "midi").toNote();
+                } catch(e) { return val; }
+            };
+            const startZoneInput = document.getElementById('accomp-zone-start');
+            const endZoneInput = document.getElementById('accomp-zone-end');
+            startZoneInput.value = shiftNote(startZoneInput.value);
+            endZoneInput.value = shiftNote(endZoneInput.value);
+            if(window.saveSettings) saveSettings();
+        }
+
+        document.getElementById('btn-accomp-oct-up').addEventListener('click', () => { shiftAccompZone(1); });
+        document.getElementById('btn-accomp-oct-down').addEventListener('click', () => { shiftAccompZone(-1); });
 
         function getDiatonicChordsData() {
             if (currentScaleType === 'none') return [];
             const rootIdx = notesArray.indexOf(currentScaleRoot);
             const intervals = scaleIntervals[currentScaleType];
+            
             let qualities = degreeQualitiesMajor;
             if (currentScaleType === 'minor') qualities = degreeQualitiesMinor;
             else if (currentScaleType === 'harmonic') qualities = degreeQualitiesHarmonic;
-            else if (currentScaleType === 'pentatonic') qualities = degreeQualitiesPentatonic;
-
+            else if (currentScaleType === 'pentatonic' || intervals.length === 5) qualities = degreeQualitiesPentatonic;
+            
             let diatonicList = [];
             for (let i = 0; i < intervals.length; i++) {
                 const semitone = (rootIdx + intervals[i]) % 12;
                 const rootName = notesArray[semitone];
-                const quality = qualities[i] || 'Major';
-                diatonicList.push({ root: rootName, quality: quality, name: `${rootName} ${quality}` });
+                const quality = qualities[i] || '';
+                const name = quality ? `${rootName} ${quality}` : `${rootName} chord`;
+                diatonicList.push({ root: rootName, quality: quality, name: name });
             }
             return diatonicList;
         }
@@ -640,7 +920,7 @@
             if (activeChordName) {
                 suggestDisplay.innerHTML = `<b>Active:</b> ${activeChordName}<br><span style="font-size:0.75rem; color:var(--text-muted); line-height:1.6;">${chordNamesStr}</span>`;
             } else {
-                suggestDisplay.innerHTML = `<b>Diatonic Chords (${currentScaleRoot} ${currentScaleType}):</b><br><span style="font-size:0.75rem; color:var(--text-muted); line-height:1.6;">${chordNamesStr}</span>`;
+                suggestDisplay.innerHTML = `<b>Diatonic Chords (${currentScaleRoot}):</b><br><span style="font-size:0.75rem; color:var(--text-muted); line-height:1.6;">${chordNamesStr}</span>`;
             }
         }
 
@@ -667,8 +947,8 @@
         }
 
         function getAccompanimentNotes(midiNote) {
-            const startMidi = getSafeMidi(startZoneInput.value, 36); 
-            const endMidi = getSafeMidi(endZoneInput.value, 59);
+            const startMidi = getSafeMidi(document.getElementById('accomp-zone-start').value, 36); 
+            const endMidi = getSafeMidi(document.getElementById('accomp-zone-end').value, 59);
 
             if (!autoAccompanimentEnabled || currentScaleType === 'none' || midiNote < startMidi || midiNote > endMidi) {
                 return { notes: [Tone.Frequency(midiNote, "midi").toNote()], isAccomp: false };
@@ -678,22 +958,58 @@
             const intervals = scaleIntervals[currentScaleType];
             const semitoneFromRoot = ((midiNote % 12) - rootIdx + 12) % 12;
             const scaleDegreeIdx = intervals.indexOf(semitoneFromRoot);
+            
             if (scaleDegreeIdx === -1) return { notes: [Tone.Frequency(midiNote, "midi").toNote()], isAccomp: false };
 
-            let thirdOffset = 4, fifthOffset = 7;
-            let qualities = degreeQualitiesMajor;
-            if (currentScaleType === 'minor') qualities = degreeQualitiesMinor;
-            else if (currentScaleType === 'harmonic') qualities = degreeQualitiesHarmonic;
-            else if (currentScaleType === 'pentatonic') qualities = degreeQualitiesPentatonic;
+            const thirdOffsetIdx = (scaleDegreeIdx + 2) % intervals.length;
+            const fifthOffsetIdx = (scaleDegreeIdx + 4) % intervals.length;
             
-            const q = qualities[scaleDegreeIdx];
-            if (q === 'Minor') { thirdOffset = 3; fifthOffset = 7; }
-            else if (q === 'Diminished') { thirdOffset = 3; fifthOffset = 6; }
+            let thirdOffset = (intervals[thirdOffsetIdx] - intervals[scaleDegreeIdx] + 12) % 12;
+            let fifthOffset = (intervals[fifthOffsetIdx] - intervals[scaleDegreeIdx] + 12) % 12;
+
+            if (['major', 'minor', 'harmonic', 'pentatonic'].includes(currentScaleType)) {
+                let qualities = degreeQualitiesMajor;
+                if (currentScaleType === 'minor') qualities = degreeQualitiesMinor;
+                else if (currentScaleType === 'harmonic') qualities = degreeQualitiesHarmonic;
+                else if (currentScaleType === 'pentatonic') qualities = degreeQualitiesPentatonic;
+                
+                const q = qualities[scaleDegreeIdx];
+                if (q === 'Minor') { thirdOffset = 3; fifthOffset = 7; }
+                else if (q === 'Diminished') { thirdOffset = 3; fifthOffset = 6; }
+                else if (q === 'Major') { thirdOffset = 4; fifthOffset = 7; }
+            }
+
+            const inversionType = parseInt(document.getElementById('accomp-inversion')?.value || "0");
+            let chordMidi = [midiNote, midiNote + thirdOffset, midiNote + fifthOffset];
+
+            if (inversionType === 1) {
+                chordMidi[0] += 12; 
+            } else if (inversionType === 2) {
+                chordMidi[0] += 12; 
+                chordMidi[1] += 12; 
+            }
 
             return { 
-                notes: [midiNote, midiNote + thirdOffset, midiNote + fifthOffset].map(m => Tone.Frequency(m, "midi").toNote()), 
+                notes: chordMidi.map(m => Tone.Frequency(m, "midi").toNote()), 
                 isAccomp: true 
             };
+        }
+
+        let activeMouseNotes = new Set();
+        let activeMouseAccompMap = new Map();
+        let activeAccompNotesMap = new Map();
+
+        function getSmartAccompaniment(midiNote, primaryNoteName) {
+            if (!autoAccompanimentEnabled) return { notes: [primaryNoteName], isAccomp: false };
+            
+            for (let chordNotes of activeAccompNotesMap.values()) {
+                if (chordNotes.includes(primaryNoteName)) return { notes: [primaryNoteName], isAccomp: false };
+            }
+            for (let chordNotes of activeMouseAccompMap.values()) {
+                if (chordNotes.includes(primaryNoteName)) return { notes: [primaryNoteName], isAccomp: false };
+            }
+            
+            return getAccompanimentNotes(midiNote);
         }
 
         function updateScaleHighlight() {
@@ -725,23 +1041,86 @@
         document.getElementById('scale-root').addEventListener('change', updateScaleHighlight);
         document.getElementById('scale-type').addEventListener('change', updateScaleHighlight);
 
+        document.getElementById('keyboard-size-select').addEventListener('change', (e) => {
+            liveKeyCount = parseInt(e.target.value);
+            buildKeyboard('live-keyboard', liveBaseOctave, liveKeyCount);
+            if(window.saveSettings) saveSettings();
+        });
+
         document.querySelectorAll('.drum-pad').forEach(pad => {
             pad.addEventListener('mousedown', (e) => {
                 if (Tone.context.state !== 'running') Tone.start();
-                if (!drumPadsEnabled) return;
-                const note = parseInt(e.target.dataset.note);
-                if (activeDrumKit[note]) {
-                    if(activeDrumKit[note].name === "MetalSynth") activeDrumKit[note].triggerAttackRelease("32n", Tone.now(), 0.8);
-                    else if(activeDrumKit[note].name === "NoiseSynth") activeDrumKit[note].triggerAttackRelease("8n", Tone.now(), 0.8);
-                    else activeDrumKit[note].triggerAttackRelease("C2", "8n", Tone.now(), 0.8);
+                if (drumPadsEnabled) {
+                    const note = parseInt(e.currentTarget.dataset.defaultNote);
+                    if (activeDrumKit[note]) {
+                        if(activeDrumKit[note].name === "MetalSynth") activeDrumKit[note].triggerAttackRelease("32n", Tone.now(), 0.8);
+                        else if(activeDrumKit[note].name === "NoiseSynth") activeDrumKit[note].triggerAttackRelease("8n", Tone.now(), 0.8);
+                        else activeDrumKit[note].triggerAttackRelease("C2", "8n", Tone.now(), 0.8);
+                    }
+                } else {
+                    const index = Array.from(e.currentTarget.parentNode.children).indexOf(e.currentTarget);
+                    const actionKey = appPadMappings[index];
+                    if (actionKey) executeAppControl(actionKey);
                 }
-                pad.classList.add('active');
+                e.currentTarget.classList.add('active');
             });
-            pad.addEventListener('mouseup', (e) => e.target.classList.remove('active'));
-            pad.addEventListener('mouseleave', (e) => e.target.classList.remove('active'));
+            pad.addEventListener('mouseup', (e) => e.currentTarget.classList.remove('active'));
+            pad.addEventListener('mouseleave', (e) => e.currentTarget.classList.remove('active'));
         });
 
-        function handleCC(ccNum, value) {
+        // App-Level MIDI Functions
+        function executeAppControl(actionKey, value = null) {
+            const isLive = document.getElementById('view-live').classList.contains('active');
+            const norm = value !== null ? value / 127 : 1;
+
+            switch(actionKey) {
+                case 'masterVolume': mainBus.volume.value = (norm * 40) - 30; break;
+                case 'tempo': 
+                    const bpm = Math.round(40 + norm * 200); Tone.Transport.bpm.value = bpm;
+                    const lT = document.getElementById('live-tempo'); if (lT) { lT.value = bpm; document.getElementById('live-tempo-val').innerText = bpm; }
+                    const leT = document.getElementById('learn-tempo'); if (leT) { leT.value = bpm; document.getElementById('learn-tempo-val').innerText = bpm; }
+                    break;
+                case 'loopStart': 
+                    if (!isLive && fileMidi && timelineDuration > 0) {
+                        tlLoopStart = norm * timelineDuration;
+                        tlLoopEnd = Math.min(timelineDuration, tlLoopStart + currentLoopLength);
+                        Tone.Transport.seconds = tlLoopStart;
+                        if (timelineLoopActive) Tone.Transport.setLoopPoints(Math.max(0, tlLoopStart), Math.max(tlLoopStart + 0.01, tlLoopEnd));
+                        updateTimelineVisuals();
+                    }
+                    break;
+                case 'loopLength':
+                    if (!isLive && fileMidi && timelineDuration > 0) {
+                        currentLoopLength = norm * timelineDuration;
+                        if (currentLoopLength > 0.1) {
+                            timelineLoopActive = true; Tone.Transport.loop = true;
+                            tlLoopEnd = Math.min(timelineDuration, tlLoopStart + currentLoopLength);
+                            Tone.Transport.setLoopPoints(Math.max(0, tlLoopStart), Math.max(tlLoopStart + 0.01, tlLoopEnd));
+                        } else { timelineLoopActive = false; Tone.Transport.loop = false; }
+                        updateTimelineVisuals();
+                    }
+                    break;
+                case 'playStop':
+                    if (Tone.Transport.state === 'started') {
+                        if (isLive) document.getElementById('btn-stop-rec').click();
+                        else document.getElementById('btn-file-stop').click();
+                    } else {
+                        if (isLive && !document.getElementById('btn-play-rec').disabled) document.getElementById('btn-play-rec').click();
+                        else if (!isLive && !document.getElementById('btn-file-play').disabled) document.getElementById('btn-file-play').click();
+                    }
+                    break;
+                case 'record': document.getElementById('btn-record').click(); break;
+                case 'transUp': document.getElementById('btn-trans-up').click(); break;
+                case 'transDown': document.getElementById('btn-trans-down').click(); break;
+                case 'octUp': document.getElementById('btn-oct-up').click(); break;
+                case 'octDown': document.getElementById('btn-oct-down').click(); break;
+                case 'accompToggle': document.getElementById('accompaniment-toggle').click(); break;
+                case 'accompOctUp': document.getElementById('btn-accomp-oct-up').click(); break;
+                case 'accompOctDown': document.getElementById('btn-accomp-oct-down').click(); break;
+            }
+        }
+
+        function handleSynthCC(ccNum, value) {
             const knobIdx = ccNum - 70;
             if (knobIdx >= 0 && knobIdx <= 7) {
                 const el = document.getElementById(`knob-${knobIdx}`);
@@ -759,38 +1138,57 @@
                 case 77: mainBus.volume.value = (norm * 40) - 30; break;
             }
         }
+        
+        function updateTimelineVisuals() {
+            if (timelineLoopActive) {
+                timelineLoopRegion.style.display = 'block';
+                timelineLoopRegion.style.left = `${(tlLoopStart / timelineDuration) * 100}%`;
+                timelineLoopRegion.style.width = `${((tlLoopEnd - tlLoopStart) / timelineDuration) * 100}%`;
+            } else {
+                timelineLoopRegion.style.display = 'none';
+            }
+        }
 
-        function buildKeyboard(containerId, baseOctave = 2) {
+
+        function buildKeyboard(containerId, baseOctave = 2, numKeys = 61) {
             const container = document.getElementById(containerId);
             if (!container) return; container.innerHTML = '';
-            let currentX = 0;
             
-            for (let i = 0; i < 5; i++) {
-                const octave = baseOctave + i;
-                notesArray.forEach(noteStr => {
-                    const isBlack = noteStr.includes('#');
-                    const key = document.createElement('div');
-                    key.className = `key ${isBlack ? 'black' : 'white'}`;
-                    key.id = `${containerId}-${noteStr}${octave}`; 
-                    key.dataset.note = noteStr;
-                    
-                    if (isBlack) {
-                        key.style.left = `${currentX - 12}px`;
-                    } else {
-                        key.style.left = `${currentX}px`;
-                        currentX += 40;
-                        if (noteStr === 'C') { 
-                            const l = document.createElement('div'); 
-                            l.className = 'key-label'; l.innerText = `C${octave}`; 
-                            key.appendChild(l); 
-                        }
+            let currentX = 0;
+            let noteIdx = 0; // Starts at C
+            let oct = baseOctave;
+
+            for (let i = 0; i < numKeys; i++) {
+                const noteStr = notesArray[noteIdx];
+                const isBlack = noteStr.includes('#');
+                const key = document.createElement('div');
+                key.className = `key ${isBlack ? 'black' : 'white'}`;
+                key.id = `${containerId}-${noteStr}${oct}`; 
+                key.dataset.note = noteStr;
+                
+                if (isBlack) {
+                    key.style.left = `${currentX - 12}px`;
+                } else {
+                    key.style.left = `${currentX}px`;
+                    currentX += 40;
+                    if (noteStr === 'C') { 
+                        const l = document.createElement('div'); 
+                        l.className = 'key-label'; l.innerText = `C${oct}`; 
+                        key.appendChild(l); 
                     }
-                    
-                    const handlePress = (e) => { e.preventDefault(); handleMouseKey(true, noteStr, octave, containerId); };
-                    const handleRelease = (e) => { e.preventDefault(); handleMouseKey(false, noteStr, octave, containerId); };
-                    key.addEventListener('mousedown', handlePress); key.addEventListener('mouseup', handleRelease); key.addEventListener('mouseleave', handleRelease);
-                    container.appendChild(key);
-                });
+                }
+                
+                const currentKeyOctave = oct;
+                const handlePress = (e) => { e.preventDefault(); handleMouseKey(true, noteStr, currentKeyOctave, containerId); };
+                const handleRelease = (e) => { e.preventDefault(); handleMouseKey(false, noteStr, currentKeyOctave, containerId); };
+                key.addEventListener('mousedown', handlePress); key.addEventListener('mouseup', handleRelease); key.addEventListener('mouseleave', handleRelease);
+                container.appendChild(key);
+
+                noteIdx++;
+                if (noteIdx >= 12) {
+                    noteIdx = 0;
+                    oct++;
+                }
             }
             container.style.width = `${currentX}px`;
             updateScaleHighlight();
@@ -826,12 +1224,26 @@
             container.style.width = `${currentX}px`;
         }
 
-        buildKeyboard('live-keyboard', liveBaseOctave);
-        buildKeyboard('learn-keyboard', learnBaseOctave);
+        buildKeyboard('live-keyboard', liveBaseOctave, liveKeyCount);
+        buildKeyboard('learn-keyboard', learnBaseOctave, 61);
         buildMiniViz();
 
-        document.getElementById('btn-oct-up').addEventListener('click', () => { if (liveBaseOctave < 5) { liveBaseOctave++; document.getElementById('octave-val').innerText = liveBaseOctave; buildKeyboard('live-keyboard', liveBaseOctave); } });
-        document.getElementById('btn-oct-down').addEventListener('click', () => { if (liveBaseOctave > 1) { liveBaseOctave--; document.getElementById('octave-val').innerText = liveBaseOctave; buildKeyboard('live-keyboard', liveBaseOctave); } });
+        document.getElementById('btn-oct-up').addEventListener('click', () => { 
+            if (liveBaseOctave < 5) { 
+                liveBaseOctave++; 
+                document.getElementById('octave-val').innerText = liveBaseOctave; 
+                buildKeyboard('live-keyboard', liveBaseOctave, liveKeyCount); 
+                if(autoAccompanimentEnabled) shiftAccompZone(1); 
+            } 
+        });
+        document.getElementById('btn-oct-down').addEventListener('click', () => { 
+            if (liveBaseOctave > 1) { 
+                liveBaseOctave--; 
+                document.getElementById('octave-val').innerText = liveBaseOctave; 
+                buildKeyboard('live-keyboard', liveBaseOctave, liveKeyCount); 
+                if(autoAccompanimentEnabled) shiftAccompZone(-1); 
+            } 
+        });
         document.getElementById('btn-trans-up').addEventListener('click', () => { if (liveTranspose < 12) { liveTranspose++; document.getElementById('trans-val').innerText = liveTranspose > 0 ? `+${liveTranspose}` : liveTranspose; } });
         document.getElementById('btn-trans-down').addEventListener('click', () => { if (liveTranspose > -12) { liveTranspose--; document.getElementById('trans-val').innerText = liveTranspose > 0 ? `+${liveTranspose}` : liveTranspose; } });
 
@@ -839,13 +1251,12 @@
             autoAccompanimentEnabled = !autoAccompanimentEnabled;
             e.target.innerText = `Accomp: ${autoAccompanimentEnabled ? 'On' : 'Off'}`;
             e.target.classList.toggle('primary', autoAccompanimentEnabled);
+            if(window.saveSettings) saveSettings();
         });
 
         document.getElementById('drum-kit-select').addEventListener('change', (e) => activeDrumKit = drumKits[e.target.value]);
         document.getElementById('live-voice').addEventListener('change', (e) => activeLiveVoice = voices[e.target.value]);
 
-        let activeMouseNotes = new Set();
-        let activeMouseAccompMap = new Map();
 
         function handleMouseKey(isDown, noteStr, octave, containerId) {
             if (isDown && Tone.context.state !== 'running') Tone.start();
@@ -854,8 +1265,7 @@
             
             const primaryNoteName = Tone.Frequency(finalMidi, "midi").toNote();
             const voice = containerId === 'live-keyboard' ? activeLiveVoice : activeLearnVoice;
-
-            let chordResult = containerId === 'live-keyboard' ? getAccompanimentNotes(finalMidi) : { notes: [primaryNoteName], isAccomp: false };
+            const chordResult = containerId === 'live-keyboard' ? getSmartAccompaniment(finalMidi, primaryNoteName) : { notes: [primaryNoteName], isAccomp: false };
             const targetVoice = chordResult.isAccomp ? activeAccompanimentVoice : voice;
 
             if (isDown) {
@@ -1352,7 +1762,7 @@
         const timelineCanvas = document.getElementById('timeline-canvas');
         const timelineCtx = timelineCanvas.getContext('2d');
 
-        let isSelectingTimeline = false, tlStartX = 0, tlLoopStart = 0, tlLoopEnd = 0, timelineLoopActive = false;
+        let isSelectingTimeline = false, tlStartX = 0, tlLoopStart = 0, tlLoopEnd = 0, timelineLoopActive = false, currentLoopLength = 0;
 
         document.getElementById('file-input').addEventListener('change', async (e) => {
             const f = e.target.files[0]; if (!f) return;
@@ -1400,6 +1810,7 @@
                     
                     tlLoopStart = (minPx / timelineTrack.clientWidth) * timelineDuration;
                     tlLoopEnd = (maxPx / timelineTrack.clientWidth) * timelineDuration;
+                    currentLoopLength = tlLoopEnd - tlLoopStart;
                     
                     timelineLoopRegion.style.display = 'block';
                     timelineLoopRegion.style.left = `${(minPx / timelineTrack.clientWidth) * 100}%`;
@@ -1505,10 +1916,131 @@
             e.target.innerText = `METRONOME: ${metronomeRunning ? 'ON' : 'OFF'}`;
             if (metronomeRunning && Tone.Transport.state !== "started") Tone.Transport.start();
         });
-        document.getElementById('live-tempo').addEventListener('input', (e) => { Tone.Transport.bpm.value = e.target.value; document.getElementById('live-tempo-val').innerText = e.target.value; });
-        document.getElementById('learn-tempo').addEventListener('input', (e) => { Tone.Transport.bpm.value = e.target.value; document.getElementById('learn-tempo-val').innerText = e.target.value; });
+        document.getElementById('live-tempo').addEventListener('input', (e) => { Tone.Transport.bpm.value = e.target.value; document.getElementById('live-tempo-val').innerText = e.target.value; document.getElementById('learn-tempo').value = e.target.value; document.getElementById('learn-tempo-val').innerText = e.target.value; });
+        document.getElementById('learn-tempo').addEventListener('input', (e) => { Tone.Transport.bpm.value = e.target.value; document.getElementById('learn-tempo-val').innerText = e.target.value; document.getElementById('live-tempo').value = e.target.value; document.getElementById('live-tempo-val').innerText = e.target.value; });
 
-        let activeAccompNotesMap = new Map();
+
+        // --- LOCAL STORAGE SETTINGS ---
+        function saveSettings() {
+            const settings = {
+                scaleRoot: document.getElementById('scale-root').value,
+                scaleType: document.getElementById('scale-type').value,
+                accompStart: document.getElementById('accomp-zone-start').value,
+                accompEnd: document.getElementById('accomp-zone-end').value,
+                accompEnabled: autoAccompanimentEnabled,
+                accompVoice: document.getElementById('accomp-voice-select').value,
+                accompInversion: document.getElementById('accomp-inversion')?.value || "0",
+                drumPadsEnabled: drumPadsEnabled,
+                knobModeSynth: knobModeSynth,
+                drumKit: document.getElementById('drum-kit-select').value,
+                liveVoice: document.getElementById('live-voice').value,
+                liveOctave: liveBaseOctave,
+                liveTranspose: liveTranspose,
+                liveTempo: document.getElementById('live-tempo').value,
+                learnInstrument: document.getElementById('learn-instrument').value,
+                learnTempo: document.getElementById('learn-tempo').value,
+                keyboardSize: liveKeyCount,
+                midiMap: midiMap
+            };
+            localStorage.setItem('jubalStudioSettings', JSON.stringify(settings));
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('jubalStudioSettings');
+            if (saved) {
+                try {
+                    const settings = JSON.parse(saved);
+                    
+                    if (settings.scaleRoot) document.getElementById('scale-root').value = settings.scaleRoot;
+                    if (settings.scaleType) document.getElementById('scale-type').value = settings.scaleType;
+                    
+                    if (settings.accompStart) document.getElementById('accomp-zone-start').value = settings.accompStart;
+                    if (settings.accompEnd) document.getElementById('accomp-zone-end').value = settings.accompEnd;
+                    
+                    if (settings.accompEnabled !== undefined) {
+                        autoAccompanimentEnabled = settings.accompEnabled;
+                        document.getElementById('accompaniment-toggle').innerText = `Accomp: ${autoAccompanimentEnabled ? 'On' : 'Off'}`;
+                        document.getElementById('accompaniment-toggle').classList.toggle('primary', autoAccompanimentEnabled);
+                    }
+                    if (settings.accompVoice) {
+                        document.getElementById('accomp-voice-select').value = settings.accompVoice;
+                        activeAccompanimentVoice = voices[settings.accompVoice] || voices['warm-ep'];
+                    }
+                    if (settings.accompInversion) document.getElementById('accomp-inversion').value = settings.accompInversion;
+                    
+                    if (settings.drumPadsEnabled !== undefined) {
+                        drumPadsEnabled = settings.drumPadsEnabled;
+                        document.getElementById('pads-toggle').innerText = `PADS: ${drumPadsEnabled ? 'ON (DRUMS)' : 'OFF (APP CTRL)'}`;
+                        document.getElementById('pads-toggle').classList.toggle('primary', drumPadsEnabled);
+                    }
+                    
+                    if (settings.knobModeSynth !== undefined) {
+                        knobModeSynth = settings.knobModeSynth;
+                        document.getElementById('knob-mode-toggle').innerText = `KNOBS: ${knobModeSynth ? 'SYNTH' : 'APP'}`;
+                    }
+
+                    if (settings.drumKit) {
+                        document.getElementById('drum-kit-select').value = settings.drumKit;
+                        activeDrumKit = drumKits[settings.drumKit];
+                    }
+                    
+                    if (settings.liveVoice) {
+                        document.getElementById('live-voice').value = settings.liveVoice;
+                        activeLiveVoice = voices[settings.liveVoice] || voices['grand'];
+                    }
+                    
+                    if (settings.liveOctave !== undefined) {
+                        liveBaseOctave = settings.liveOctave;
+                        document.getElementById('octave-val').innerText = liveBaseOctave;
+                    }
+
+                    if (settings.keyboardSize !== undefined) {
+                        liveKeyCount = settings.keyboardSize;
+                        document.getElementById('keyboard-size-select').value = liveKeyCount;
+                    }
+
+                    if (settings.liveTranspose !== undefined) {
+                        liveTranspose = settings.liveTranspose;
+                        document.getElementById('trans-val').innerText = liveTranspose > 0 ? `+${liveTranspose}` : liveTranspose;
+                    }
+                    
+                    if (settings.liveTempo) {
+                        document.getElementById('live-tempo').value = settings.liveTempo;
+                        document.getElementById('live-tempo-val').innerText = settings.liveTempo;
+                        Tone.Transport.bpm.value = settings.liveTempo;
+                    }
+                    if (settings.learnTempo) {
+                        document.getElementById('learn-tempo').value = settings.learnTempo;
+                        document.getElementById('learn-tempo-val').innerText = settings.learnTempo;
+                    }
+                    if (settings.learnInstrument) {
+                        document.getElementById('learn-instrument').value = settings.learnInstrument;
+                        document.getElementById('learn-instrument').dispatchEvent(new Event('change'));
+                    }
+                    
+                    if (settings.midiMap) {
+                        midiMap = settings.midiMap;
+                        renderMidiMapUI();
+                    }
+                } catch (e) { console.error("Failed to load settings", e); }
+            }
+            updateHardwareUI();
+        }
+
+        loadSettings();
+
+        const inputIdsToSave = [
+            'scale-root', 'scale-type', 'accomp-zone-start', 'accomp-zone-end', 
+            'accomp-voice-select', 'accomp-inversion', 'drum-kit-select', 
+            'live-voice', 'live-tempo', 'learn-tempo', 'learn-instrument', 'keyboard-size-select'
+        ];
+        inputIdsToSave.forEach(id => document.getElementById(id)?.addEventListener('change', saveSettings));
+
+        const buttonIdsToSave = [
+            'btn-trans-up', 'btn-trans-down', 'btn-accomp-oct-up', 'btn-accomp-oct-down'
+        ];
+        buttonIdsToSave.forEach(id => document.getElementById(id)?.addEventListener('click', saveSettings));
+
 
         async function initMIDI() {
             if (navigator.requestMIDIAccess) {
@@ -1539,34 +2071,130 @@
         function processMIDI(e) {
             if (Tone.context.state !== 'running') Tone.start();
             const [status, data1, data2] = e.data; const cmd = status & 0xF0; const vel = (data2 || 0) / 127;
-            if (cmd === 176) { handleCC(data1, data2); return; }
+            
+            // --- MIDI LISTEN CAPTURE ROUTING ---
+            if (isListeningForMidi && activeListenTarget) {
+                if (cmd === 176 || cmd === 144) {
+                    midiMap[activeListenTarget].type = (cmd === 176) ? 'cc' : 'note';
+                    midiMap[activeListenTarget].id = data1;
+                    
+                    renderMidiMapUI();
+                    updateHardwareUI();
+                    if(window.saveSettings) saveSettings();
+                    
+                    const btn = document.getElementById(`listen-${activeListenTarget}`);
+                    if(btn) { 
+                        btn.classList.remove('listening'); 
+                        btn.innerText = "🎧 Listen"; 
+                    }
+                    isListeningForMidi = false;
+                    activeListenTarget = null;
+                    return;
+                }
+            }
 
             const isLiveActive = document.getElementById('view-live').classList.contains('active');
-            
+
+            // --- CC DATA ROUTING ---
+            if (cmd === 176) { 
+                if (knobModeSynth) {
+                    handleSynthCC(data1, data2); 
+                } else {
+                    for (const [key, mapping] of Object.entries(midiMap)) {
+                        if (mapping.type === 'cc' && mapping.id === data1) {
+                            const isToggle = ['playStop', 'record', 'transUp', 'transDown', 'octUp', 'octDown', 'accompToggle', 'accompOctUp', 'accompOctDown'].includes(key);
+                            if (isToggle && data2 === 0) continue;
+                            
+                            executeAppControl(key, data2);
+
+                            // Rotate mapped knob (only if action is anchored to a knob slot)
+                            const appKnobIdx = appKnobMappings.indexOf(key);
+                            if (appKnobIdx !== -1) {
+                                const el = document.getElementById(`knob-${appKnobIdx}`);
+                                if (el) el.querySelector('.cc-knob-indicator').style.transform = `translateX(-50%) rotate(${(data2 / 127) * 270 - 135}deg)`;
+                            }
+
+                            // Flash mapped pad (if a pad action was triggered via CC hardware)
+                            if (!drumPadsEnabled) {
+                                const appPadIdx = appPadMappings.indexOf(key);
+                                if (appPadIdx !== -1) {
+                                    const pad = document.getElementById('drum-pad-grid').children[appPadIdx];
+                                    if (pad) {
+                                        pad.classList.add('active');
+                                        setTimeout(() => pad.classList.remove('active'), 100);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return; 
+            }
+
+            // --- NOTE MAPPING APP CONTROL (PADS OFF) ---
+            if (cmd === 144 && vel > 0 && !drumPadsEnabled) {
+                let mappedAppControlExecuted = false;
+                for (const [key, mapping] of Object.entries(midiMap)) {
+                    if (mapping.type === 'note' && mapping.id === data1) {
+                        executeAppControl(key);
+                        mappedAppControlExecuted = true;
+                        
+                        // Flash mapped pad slot
+                        const appPadIdx = appPadMappings.indexOf(key);
+                        if (appPadIdx !== -1) {
+                            const pad = document.getElementById('drum-pad-grid').children[appPadIdx];
+                            if (pad) {
+                                pad.classList.add('active');
+                                setTimeout(() => pad.classList.remove('active'), 100);
+                            }
+                        }
+                    }
+                }
+                if (mappedAppControlExecuted) return; 
+            }
+
+            // --- DRUM PAD ROUTING (PADS ON) ---
             if (drumPadsEnabled && cmd === 144 && vel > 0 && activeDrumKit[data1] && isLiveActive) {
-                const pad = document.getElementById(`pad-${data1}`); if(pad) { pad.classList.add('active'); setTimeout(()=>pad.classList.remove('active'), 100); }
+                const padGrid = document.getElementById('drum-pad-grid');
+                const pad = Array.from(padGrid.children).find(p => parseInt(p.dataset.defaultNote) === data1);
+                if(pad) { pad.classList.add('active'); setTimeout(()=>pad.classList.remove('active'), 100); }
+                
                 if(activeDrumKit[data1].name === "MetalSynth") activeDrumKit[data1].triggerAttackRelease("32n", Tone.now(), vel);
                 else if(activeDrumKit[data1].name === "NoiseSynth") activeDrumKit[data1].triggerAttackRelease("8n", Tone.now(), vel);
                 else activeDrumKit[data1].triggerAttackRelease("C2", "8n", Tone.now(), vel);
                 return;
             }
 
+            // --- STANDARD PIANO / ACCOMPANIMENT ROUTING ---
             const physicalOct = parseInt(Tone.Frequency(data1, "midi").toNote().replace(/[^0-9]/g, ''));
             if (isLiveActive && cmd === 144 && vel > 0) {
-                let needsRebuild = false;
-                if (physicalOct < liveBaseOctave) { liveBaseOctave = Math.max(1, physicalOct); needsRebuild = true; }
-                else if (physicalOct > liveBaseOctave + 4) { liveBaseOctave = Math.min(5, physicalOct - 4); needsRebuild = true; }
+                let shiftAmount = 0;
+                let displayedOctaves = Math.max(1, Math.floor(liveKeyCount / 12)); 
                 
-                if (needsRebuild) {
+                if (physicalOct < liveBaseOctave) { 
+                    shiftAmount = physicalOct - liveBaseOctave;
+                    liveBaseOctave = Math.max(1, physicalOct); 
+                } else if (physicalOct >= liveBaseOctave + displayedOctaves) { 
+                    shiftAmount = physicalOct - (liveBaseOctave + displayedOctaves - 1);
+                    liveBaseOctave = Math.min(5, physicalOct - displayedOctaves + 1); 
+                }
+                
+                if (shiftAmount !== 0) {
                     const octVal = document.getElementById('octave-val');
                     if (octVal) octVal.innerText = liveBaseOctave;
-                    buildKeyboard('live-keyboard', liveBaseOctave);
+                    buildKeyboard('live-keyboard', liveBaseOctave, liveKeyCount);
                     updateScaleHighlight();
+                    
+                    if (autoAccompanimentEnabled) {
+                        shiftAccompZone(shiftAmount);
+                    }
+                    if(window.saveSettings) saveSettings();
                 }
             }
 
             const note = isLiveActive ? data1 + liveTranspose : data1;
-            const chordResult = isLiveActive ? getAccompanimentNotes(note) : { notes: [Tone.Frequency(note, "midi").toNote()], isAccomp: false };
+            const primaryNoteName = Tone.Frequency(note, "midi").toNote();
+            const chordResult = isLiveActive ? getSmartAccompaniment(note, primaryNoteName) : { notes: [primaryNoteName], isAccomp: false };
             const activeVoice = isLiveActive ? (chordResult.isAccomp ? activeAccompanimentVoice : activeLiveVoice) : activeLearnVoice;
 
             if (cmd === 144 && vel > 0) {
@@ -1605,6 +2233,8 @@
             }
         }
         initMIDI();
+        
+        buildKeyboard('live-keyboard', liveBaseOctave, liveKeyCount);
         updateScaleHighlight();
     </script>
 </body>
