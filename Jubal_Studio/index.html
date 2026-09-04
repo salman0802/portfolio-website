@@ -15,8 +15,8 @@
             --bg-base: #020408; --bg-panel: rgba(10, 15, 25, 0.9); --bg-elevated: rgba(18, 26, 43, 0.95);
             --border-color: rgba(0, 240, 255, 0.18); --border-hover: rgba(0, 240, 255, 0.45);
             --text-main: #f0f6fc; --text-muted: #8b949e; 
-            --accent-gold: #ffd700; --accent-cyan: #00f0ff; 
-            --accent-glow: rgba(0, 240, 255, 0.25); --gold-glow: rgba(255, 215, 0, 0.35);
+            --accent-gold: #ffd700; --accent-cyan: #00e5ff; 
+            --accent-glow: rgba(0, 229, 255, 0.25); --gold-glow: rgba(255, 215, 0, 0.35);
             --scale-color: #c084fc; --scale-glow: rgba(168, 85, 247, 0.5);
             --danger: #ff3366; --success: #00ff66;
             --font-display: 'Orbitron', sans-serif; --font-body: 'Inter', sans-serif;
@@ -53,7 +53,7 @@
         button.recording { background: var(--danger) !important; color: #fff !important; animation: pulse-rec 1.5s infinite; border-color: #fff; }
         button.listening { background: var(--accent-cyan) !important; color: #000 !important; animation: pulse-listen 1s infinite; border-color: #fff; }
         @keyframes pulse-rec { 0% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.8); } 70% { box-shadow: 0 0 0 12px rgba(255, 51, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); } }
-        @keyframes pulse-listen { 0% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0.8); } 70% { box-shadow: 0 0 0 12px rgba(0, 240, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 240, 255, 0); } }
+        @keyframes pulse-listen { 0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.8); } 70% { box-shadow: 0 0 0 12px rgba(0, 229, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); } }
         button:disabled { opacity: 0.3; cursor: not-allowed; }
 
         select, input[type="text"], input[type="number"] { background: rgba(3, 5, 8, 0.85); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 12px; border-radius: 6px; outline: none; font-family: var(--font-body); font-size: 0.82rem; }
@@ -69,21 +69,36 @@
         @media (max-width: 1400px) { .studio-workspace { grid-template-columns: 1fr; } }
 
         /* --- PRO LCD DISPLAY STYLES --- */
-        .lcd-workstation { background: linear-gradient(180deg, #091324 0%, #020408 100%); border: 3px solid #1e293b; border-radius: 12px; box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.08), 0 20px 40px rgba(0,0,0,0.8); padding: 18px 25px; margin-bottom: 20px; width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        .lcd-workstation { 
+            background: #000812; 
+            border: 2px solid #1a2a40; 
+            border-radius: 12px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9), inset 0 0 50px rgba(0, 30, 60, 1); 
+            padding: 22px 28px; 
+            margin-bottom: 20px; 
+            width: 100%; display: flex; flex-direction: column; gap: 18px; 
+            position: relative; overflow: hidden;
+        }
+        .lcd-workstation::after {
+            content: ""; position: absolute; inset: 0; pointer-events: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.02) 2px, rgba(0, 229, 255, 0.02) 4px);
+            z-index: 10;
+        }
+        .lcd-workstation > * { position: relative; z-index: 20; }
         .lcd-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 20px; }
-        .lcd-box { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); }
-        .lcd-label { font-family: var(--font-display); font-size: 0.55rem; color: #60a5fa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
-        .lcd-value { font-family: var(--font-display); font-size: 1.1rem; color: #e0f2fe; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); font-weight: 900; }
-        .lcd-center-display { background: rgba(0, 240, 255, 0.03); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 8px; position: relative; overflow: hidden; box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.08); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; }
-        .lcd-select { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(0, 240, 255, 0.3); color: #e0f2fe; padding: 6px; border-radius: 4px; font-family: var(--font-body); font-size: 0.75rem; outline: none; width: 100%; cursor: pointer; transition: 0.2s;}
-        .lcd-select:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-glow); }
+        .lcd-box { background: #011224; border: 1px solid #0a2544; border-radius: 6px; padding: 12px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); }
+        .lcd-label { font-family: var(--font-display); font-size: 0.55rem; color: #5090cc; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .lcd-value { font-family: var(--font-display); font-size: 1.15rem; color: #ffffff; text-shadow: 0 0 8px rgba(255, 255, 255, 0.4); font-weight: 700; }
+        .lcd-center-display { background: #000c18; border: 1px solid #003366; border-radius: 6px; position: relative; overflow: hidden; box-shadow: inset 0 0 30px rgba(0, 150, 255, 0.08); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .lcd-select { background: #00050a; border: 1px solid #0a2544; color: #b0d4ff; padding: 8px; border-radius: 4px; font-family: var(--font-body); font-size: 0.75rem; outline: none; width: 100%; cursor: pointer; transition: 0.2s; font-weight: 500;}
+        .lcd-select:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px rgba(0, 229, 255, 0.2); }
         .lcd-select option { background: #020617; }
-        .lcd-btn { background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); color: #00f0ff; padding: 2px 10px; border-radius: 4px; font-family: var(--font-display); font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
-        .lcd-btn:hover { background: rgba(0, 240, 255, 0.25); box-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
-        .lcd-btn.active-toggle { background: rgba(0, 240, 255, 0.3); border-color: #00f0ff; box-shadow: 0 0 12px rgba(0,240,255,0.5); color: #fff; }
+        .lcd-btn { background: #021a36; border: 1px solid #0a3560; color: #5090cc; padding: 4px 12px; border-radius: 4px; font-family: var(--font-display); font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
+        .lcd-btn:hover { background: #052a55; color: #fff; border-color: #0c4d8f; }
+        .lcd-btn.active-toggle { background: var(--accent-cyan); border-color: #fff; box-shadow: 0 0 15px rgba(0,229,255,0.6); color: #000; font-weight: 900;}
         
-        .note-display { font-family: var(--font-display); font-size: 3.2rem; font-weight: 900; color: var(--accent-cyan); letter-spacing: 3px; height: 60px; text-shadow: 0 0 25px var(--accent-glow); text-align: center; line-height: 1.1;}
-        .lcd-chord-suggest { font-size: 0.72rem; color: #93c5fd; font-family: var(--font-body); text-align: center; line-height: 1.4; height: 35px; overflow: hidden; }
+        .note-display { font-family: var(--font-display); font-size: 3.5rem; font-weight: 900; color: var(--accent-cyan); letter-spacing: 4px; height: 65px; text-shadow: 0 0 25px var(--accent-glow); text-align: center; line-height: 1.1;}
+        .lcd-chord-suggest { font-size: 0.75rem; color: #60a5fa; font-family: var(--font-body); text-align: center; line-height: 1.5; height: 38px; overflow: hidden; margin-top: 5px;}
 
         .hardware-matrix { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 400px; margin: 0 auto; }
         .pad-grid { display: grid; grid-template-columns: repeat(4, 55px); justify-content: center; gap: 12px; }
@@ -147,7 +162,7 @@
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.92); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; z-index: 100; }
         .modal-card { background: #111; border: 1px solid #333; border-radius: 12px; width: 96vw; height: 95vh; max-width: none; padding: 20px; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.9); }
-        .modal-card.small-modal { width: 600px; height: auto; max-height: 90vh; }
+        .modal-card.small-modal { width: 650px; height: auto; max-height: 90vh; }
         
         .editor-toolbar { display: flex; justify-content: space-between; align-items: center; background: #1e1e1e; padding: 12px 20px; border-radius: 8px; border: 1px solid #333; }
         .piano-roll-viewport { width: 100%; flex-grow: 1; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; position: relative; overflow: auto; display: flex; user-select: none; }
@@ -175,9 +190,9 @@
         .roll-note .resize-handle { position: absolute; right: 0; top: 0; width: 8px; height: 100%; cursor: ew-resize; background: rgba(255,255,255,0.2); border-left: 1px solid rgba(255,255,255,0.4); }
         .editor-playhead { position: absolute; top: 0; width: 2px; height: 100%; background: var(--success); pointer-events: none; z-index: 40; box-shadow: 0 0 10px var(--success); display: none; }
 
-        .midi-map-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #333; }
+        .midi-map-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #222; }
         .midi-map-row:last-child { border-bottom: none; }
-        .midi-map-label { font-size: 0.8rem; font-family: var(--font-display); color: #fff; }
+        .midi-map-label { font-size: 0.8rem; font-family: var(--font-display); color: #ccc; }
         .midi-map-input { width: 50px; text-align: center; background: rgba(0, 240, 255, 0.05); color: var(--accent-cyan); border: 1px solid var(--border-color); padding: 6px; border-radius: 4px; font-family: var(--font-display); font-size: 0.75rem; }
         .midi-map-input:focus { border-color: var(--accent-gold); outline: none; box-shadow: 0 0 10px var(--gold-glow); }
     </style>
@@ -219,14 +234,14 @@
         
         <!-- PRO LCD WORKSTATION DISPLAY -->
         <div class="lcd-workstation">
-            <div class="flex justify-between items-center mb-1">
-                <div class="text-[0.65rem] font-bold text-gray-500 uppercase tracking-widest" style="font-family: var(--font-display);">Studio-Accomp Pro Dashboard</div>
-                <div class="text-[0.65rem] font-bold text-cyan-500" style="font-family: var(--font-display);" id="arr-status">ARRANGER: STOPPED</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #1a2a40; padding-bottom: 8px;">
+                <div style="font-family: var(--font-display); font-size: 0.7rem; color: #5090cc; text-transform: uppercase; letter-spacing: 3px; font-weight: 900;">JUBAL PRO-Dashboard</div>
+                <div style="font-family: var(--font-display); font-size: 0.7rem; color: #00e5ff; font-weight: 700; letter-spacing: 1px;" id="arr-status">ARRANGER: STOPPED</div>
             </div>
             
             <div class="lcd-grid">
                 <!-- Left: Voice Selection -->
-                <div class="flex flex-col gap-3">
+                <div style="display:flex; flex-direction:column; gap:12px;">
                     <div class="lcd-box">
                         <span class="lcd-label">Main Voice (R1)</span>
                         <select id="live-voice" class="lcd-select">
@@ -255,17 +270,17 @@
                 
                 <!-- Center: Performance Display -->
                 <div class="lcd-center-display">
-                    <div style="position:absolute; top:10px; left:15px; font-family: var(--font-display); font-size: 0.6rem; color:#60a5fa;">CURRENT CHORD</div>
-                    <div style="position:absolute; top:10px; right:15px; font-family: var(--font-display); font-size: 0.6rem; color:#60a5fa; text-align:right;">
-                        TEMPO: <span id="live-tempo-val" style="color:#fff; font-size:0.8rem;">120</span><br>
-                        BEAT: <span id="arr-beat" style="color:#fff; font-size:0.8rem;">-</span>
+                    <div style="position:absolute; top:12px; left:18px; font-family: var(--font-display); font-size: 0.6rem; color:#5090cc;">CURRENT CHORD</div>
+                    <div style="position:absolute; top:12px; right:18px; font-family: var(--font-display); font-size: 0.6rem; color:#5090cc; text-align:right;">
+                        TEMPO: <span id="live-tempo-val" style="color:#fff; font-size:0.85rem; font-weight:bold;">120</span><br>
+                        BEAT: <span id="arr-beat" style="color:#fff; font-size:0.85rem; font-weight:bold;">-</span>
                     </div>
                     <div class="note-display" id="live-note">--</div>
                     <div class="lcd-chord-suggest" id="live-chord-suggest">Select scale to view diatonic chords</div>
                 </div>
 
                 <!-- Right: Pitch & Scale Controls -->
-                <div class="flex flex-col gap-3">
+                <div style="display:flex; flex-direction:column; gap:12px;">
                     <div class="lcd-box" style="flex-direction: row; align-items: center; justify-content: space-between;">
                         <div>
                             <span class="lcd-label" style="margin-bottom:0;">Octave</span>
@@ -288,42 +303,27 @@
                     </div>
                     <div class="lcd-box">
                         <span class="lcd-label">Scale Assist / Key</span>
-                        <div style="display:flex; gap:5px;">
-                            <select id="scale-root" class="lcd-select" style="width: 60px;">
+                        <div style="display:flex; gap:6px;">
+                            <select id="scale-root" class="lcd-select" style="width: 65px;">
                                 <option value="C">C</option><option value="C#">C#</option><option value="D" selected>D</option><option value="D#">D#</option>
                                 <option value="E">E</option><option value="F">F</option><option value="F#">F#</option><option value="G">G</option>
                                 <option value="G#">G#</option><option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
                             </select>
                             <select id="scale-type" class="lcd-select">
                                 <optgroup label="Western">
-                                    <option value="none">Off</option>
-                                    <option value="major" selected>Major</option>
-                                    <option value="minor">Natural Minor</option>
-                                    <option value="harmonic">Harmonic Minor</option>
-                                    <option value="pentatonic">Pentatonic</option>
+                                    <option value="none">Off</option><option value="major" selected>Major</option><option value="minor">Natural Minor</option>
+                                    <option value="harmonic">Harmonic Minor</option><option value="pentatonic">Pentatonic</option>
                                 </optgroup>
                                 <optgroup label="Hindustani Ragas">
-                                    <option value="yaman">Yaman</option>
-                                    <option value="bhairav">Bhairav</option>
-                                    <option value="bhairavi">Bhairavi</option>
-                                    <option value="malkauns">Malkauns</option>
-                                    <option value="darbari_kanada">Darbari Kanada</option>
-                                    <option value="bhimpalasi">Bhimpalasi</option>
-                                    <option value="jaunpuri">Jaunpuri</option>
-                                    <option value="ahir_bhairav">Ahir Bhairav</option>
-                                    <option value="bihag">Bihag</option>
+                                    <option value="yaman">Yaman</option><option value="bhairav">Bhairav</option><option value="bhairavi">Bhairavi</option>
+                                    <option value="malkauns">Malkauns</option><option value="darbari_kanada">Darbari Kanada</option><option value="bhimpalasi">Bhimpalasi</option>
+                                    <option value="jaunpuri">Jaunpuri</option><option value="ahir_bhairav">Ahir Bhairav</option><option value="bihag">Bihag</option>
                                     <option value="miyan_malhar">Miyan Malhar</option>
                                 </optgroup>
                                 <optgroup label="Carnatic Ragas">
-                                    <option value="hamsadhwani">Hamsadhwani</option>
-                                    <option value="mohanam">Mohanam</option>
-                                    <option value="kalyani">Kalyani</option>
-                                    <option value="sankarabharanam">Sankarabharanam</option>
-                                    <option value="kharaharapriya">Kharaharapriya</option>
-                                    <option value="todi">Todi</option>
-                                    <option value="abheri">Abheri</option>
-                                    <option value="kalyani_vasantham">Kalyani Vasantham</option>
-                                    <option value="c_bhairavi">Bhairavi (Carnatic)</option>
+                                    <option value="hamsadhwani">Hamsadhwani</option><option value="mohanam">Mohanam</option><option value="kalyani">Kalyani</option>
+                                    <option value="sankarabharanam">Sankarabharanam</option><option value="kharaharapriya">Kharaharapriya</option><option value="todi">Todi</option>
+                                    <option value="abheri">Abheri</option><option value="kalyani_vasantham">Kalyani Vasantham</option><option value="c_bhairavi">Bhairavi (Carnatic)</option>
                                     <option value="anandabhairavi">Anandabhairavi</option>
                                 </optgroup>
                             </select>
@@ -332,7 +332,7 @@
                 </div>
             </div>
             
-            <div class="flex items-center mt-2">
+            <div style="display:flex; align-items:center; margin-top: 4px; border-top: 1px solid #1a2a40; padding-top: 12px;">
                 <span class="lcd-label" style="margin:0;">Master Tempo</span>
                 <input type="range" id="live-tempo" min="40" max="240" value="120" style="flex:1; margin:0 15px;">
             </div>
@@ -383,21 +383,18 @@
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-size: 0.6rem; color: var(--accent-cyan); font-family: var(--font-display);">PAD ROUTING</span>
                         <div style="display: flex; gap: 8px;">
-                            <button id="pads-toggle" class="primary" style="padding: 2px 8px; font-size: 0.6rem;" title="Toggle between Drums and App Control">PADS: ON (DRUMS)</button>
-                            <select id="drum-kit-select" style="font-size: 0.6rem; padding: 4px; width: 90px;">
-                                <option value="acoustic">Acoustic Kit</option><option value="808">808 Synth Kit</option>
-                            </select>
+                            <button id="pads-toggle" class="primary" style="padding: 2px 8px; font-size: 0.6rem;" title="Toggle Pad Mode">PADS: ARRANGER</button>
                         </div>
                     </div>
                     <div class="pad-grid" id="drum-pad-grid">
-                        <div class="drum-pad" data-default-note="40">SNARE</div>
-                        <div class="drum-pad" data-default-note="41">TOM L</div>
-                        <div class="drum-pad" data-default-note="42">HI-HAT C</div>
-                        <div class="drum-pad" data-default-note="43">HI-HAT O</div>
-                        <div class="drum-pad" data-default-note="36">KICK</div>
-                        <div class="drum-pad" data-default-note="37">RIM</div>
-                        <div class="drum-pad" data-default-note="38">CLAP</div>
-                        <div class="drum-pad" data-default-note="39">CRASH</div>
+                        <div class="drum-pad">PAD 1</div>
+                        <div class="drum-pad">PAD 2</div>
+                        <div class="drum-pad">PAD 3</div>
+                        <div class="drum-pad">PAD 4</div>
+                        <div class="drum-pad">PAD 5</div>
+                        <div class="drum-pad">PAD 6</div>
+                        <div class="drum-pad">PAD 7</div>
+                        <div class="drum-pad" style="border-color: var(--accent-gold); color: var(--accent-gold);">TOGGLE</div>
                     </div>
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
@@ -569,14 +566,26 @@
             
             <p style="font-size: 0.75rem; color: #aaa; margin: 5px 0;">Click <b>Listen</b> to assign via controller, or manually enter the CC/Note value.</p>
             
-            <div style="background: #111; border: 1px solid #333; border-radius: 8px; overflow-y: auto; max-height: 60vh;">
+            <div style="background: #0a0a0a; border: 1px solid #222; border-radius: 8px; overflow-y: auto; max-height: 60vh;">
                 <!-- CC Mappings (Knobs) -->
                 <div class="midi-map-row"><span class="midi-map-label">Master Volume (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-masterVolume" placeholder="--" min="0" max="127" onchange="updateMidiMap('masterVolume', 'cc', this.value)"><button id="listen-masterVolume" onclick="startListen('masterVolume', 'cc')">🎧 Listen</button></div></div>
                 <div class="midi-map-row"><span class="midi-map-label">Master Tempo (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-tempo" placeholder="--" min="0" max="127" onchange="updateMidiMap('tempo', 'cc', this.value)"><button id="listen-tempo" onclick="startListen('tempo', 'cc')">🎧 Listen</button></div></div>
                 <div class="midi-map-row"><span class="midi-map-label">Timeline Loop Start (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-loopStart" placeholder="--" min="0" max="127" onchange="updateMidiMap('loopStart', 'cc', this.value)"><button id="listen-loopStart" onclick="startListen('loopStart', 'cc')">🎧 Listen</button></div></div>
                 <div class="midi-map-row"><span class="midi-map-label">Timeline Loop Length (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-loopLength" placeholder="--" min="0" max="127" onchange="updateMidiMap('loopLength', 'cc', this.value)"><button id="listen-loopLength" onclick="startListen('loopLength', 'cc')">🎧 Listen</button></div></div>
                 
-                <!-- Note Mappings (Pads) -->
+                <!-- Toggle Mapping -->
+                <div class="midi-map-row" style="background:#112;"><span class="midi-map-label" style="color:var(--accent-cyan); font-weight:bold;">PAD MODE TOGGLE (Pad 8/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-padModeToggle" placeholder="--" min="0" max="127" onchange="updateMidiMap('padModeToggle', 'note', this.value)"><button id="listen-padModeToggle" onclick="startListen('padModeToggle', 'note')">🎧 Listen</button></div></div>
+
+                <!-- Note Mappings (Arranger Controls) -->
+                <div class="midi-map-row"><span class="midi-map-label">Arranger Sync Start (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-arrSync" placeholder="--" min="0" max="127" onchange="updateMidiMap('arrSync', 'note', this.value)"><button id="listen-arrSync" onclick="startListen('arrSync', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Arranger Start/Stop (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-arrStart" placeholder="--" min="0" max="127" onchange="updateMidiMap('arrStart', 'note', this.value)"><button id="listen-arrStart" onclick="startListen('arrStart', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Arranger Intro (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-arrIntro" placeholder="--" min="0" max="127" onchange="updateMidiMap('arrIntro', 'note', this.value)"><button id="listen-arrIntro" onclick="startListen('arrIntro', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Arranger Main A (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-arrMainA" placeholder="--" min="0" max="127" onchange="updateMidiMap('arrMainA', 'note', this.value)"><button id="listen-arrMainA" onclick="startListen('arrMainA', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Arranger Main B (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-arrMainB" placeholder="--" min="0" max="127" onchange="updateMidiMap('arrMainB', 'note', this.value)"><button id="listen-arrMainB" onclick="startListen('arrMainB', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Arranger Fill In (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-arrFill" placeholder="--" min="0" max="127" onchange="updateMidiMap('arrFill', 'note', this.value)"><button id="listen-arrFill" onclick="startListen('arrFill', 'note')">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Arranger Ending (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-arrEnding" placeholder="--" min="0" max="127" onchange="updateMidiMap('arrEnding', 'note', this.value)"><button id="listen-arrEnding" onclick="startListen('arrEnding', 'note')">🎧 Listen</button></div></div>
+
+                <!-- Note Mappings (App Controls) -->
                 <div class="midi-map-row"><span class="midi-map-label">Play / Stop (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-playStop" placeholder="--" min="0" max="127" onchange="updateMidiMap('playStop', 'note', this.value)"><button id="listen-playStop" onclick="startListen('playStop', 'note')">🎧 Listen</button></div></div>
                 <div class="midi-map-row"><span class="midi-map-label">Record Toggle (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-record" placeholder="--" min="0" max="127" onchange="updateMidiMap('record', 'note', this.value)"><button id="listen-record" onclick="startListen('record', 'note')">🎧 Listen</button></div></div>
                 <div class="midi-map-row"><span class="midi-map-label">Transpose - (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-transDown" placeholder="--" min="0" max="127" onchange="updateMidiMap('transDown', 'note', this.value)"><button id="listen-transDown" onclick="startListen('transDown', 'note')">🎧 Listen</button></div></div>
@@ -584,8 +593,6 @@
                 <div class="midi-map-row"><span class="midi-map-label">Octave Shift - (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-octDown" placeholder="--" min="0" max="127" onchange="updateMidiMap('octDown', 'note', this.value)"><button id="listen-octDown" onclick="startListen('octDown', 'note')">🎧 Listen</button></div></div>
                 <div class="midi-map-row"><span class="midi-map-label">Octave Shift + (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-octUp" placeholder="--" min="0" max="127" onchange="updateMidiMap('octUp', 'note', this.value)"><button id="listen-octUp" onclick="startListen('octUp', 'note')">🎧 Listen</button></div></div>
                 <div class="midi-map-row"><span class="midi-map-label">Accomp On/Off (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-accompToggle" placeholder="--" min="0" max="127" onchange="updateMidiMap('accompToggle', 'note', this.value)"><button id="listen-accompToggle" onclick="startListen('accompToggle', 'note')">🎧 Listen</button></div></div>
-                <div class="midi-map-row"><span class="midi-map-label">Accomp Octave - (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-accompOctDown" placeholder="--" min="0" max="127" onchange="updateMidiMap('accompOctDown', 'note', this.value)"><button id="listen-accompOctDown" onclick="startListen('accompOctDown', 'note')">🎧 Listen</button></div></div>
-                <div class="midi-map-row"><span class="midi-map-label">Accomp Octave + (Pad/Note)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-accompOctUp" placeholder="--" min="0" max="127" onchange="updateMidiMap('accompOctUp', 'note', this.value)"><button id="listen-accompOctUp" onclick="startListen('accompOctUp', 'note')">🎧 Listen</button></div></div>
             </div>
             
             <div style="display: flex; justify-content: flex-end; gap: 10px; padding-top: 10px;">
@@ -691,11 +698,10 @@
         }
 
         // --- HARDWARE CONSOLE SWITCHES ---
-        let drumPadsEnabled = true; // True = Drums, False = App Control mapped to Note on
+        let currentPadMode = 'arranger'; // Options: 'arranger', 'app'
         document.getElementById('pads-toggle').addEventListener('click', (e) => {
-            drumPadsEnabled = !drumPadsEnabled;
-            e.target.innerText = `PADS: ${drumPadsEnabled ? 'ON (DRUMS)' : 'OFF (APP CTRL)'}`;
-            e.target.classList.toggle('primary', drumPadsEnabled);
+            currentPadMode = currentPadMode === 'arranger' ? 'app' : 'arranger';
+            e.target.innerText = `PADS: ${currentPadMode.toUpperCase()}`;
             updateHardwareUI();
             if(window.saveSettings) saveSettings();
         });
@@ -708,48 +714,34 @@
             if(window.saveSettings) saveSettings();
         });
 
-        const buildKit = (kickF, kickDecay, snareType, snareDecay) => ({
-            36: new Tone.MembraneSynth({ pitchDecay: 0.05, octaves: 4, oscillator: { type: kickF }, envelope: { attack: 0.001, decay: kickDecay } }).connect(mainBus),
-            37: new Tone.MembraneSynth({ pitchDecay: 0.02, octaves: 2, envelope: { attack: 0.001, decay: 0.2 } }).connect(mainBus),
-            38: new Tone.NoiseSynth({ noise: { type: snareType }, envelope: { attack: 0.001, decay: snareDecay } }).connect(mainBus),
-            39: new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 0.4, release: 0.2 } }).connect(mainBus),
-            40: new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.005, decay: 0.2 } }).connect(mainBus),
-            41: new Tone.MembraneSynth({ pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.4 } }).connect(mainBus),
-            42: new Tone.MetalSynth({ frequency: 250, envelope: { attack: 0.001, decay: 0.05, release: 0.01 } }).connect(mainBus),
-            43: new Tone.MetalSynth({ frequency: 250, envelope: { attack: 0.001, decay: 0.3, release: 0.1 } }).connect(mainBus)
-        });
-        const drumKits = { 'acoustic': buildKit('sine', 0.4, 'white', 0.2), '808': buildKit('triangle', 1.2, 'pink', 0.4) };
-        let activeDrumKit = drumKits['acoustic'];
-
         // --- GLOBAL MIDI MAPPING ENGINE ---
         let midiMap = {
-            masterVolume: { type: 'cc', id: null },
-            tempo: { type: 'cc', id: null },
-            loopStart: { type: 'cc', id: null },
-            loopLength: { type: 'cc', id: null },
-            playStop: { type: 'note', id: null },
-            record: { type: 'note', id: null },
-            transUp: { type: 'note', id: null },
-            transDown: { type: 'note', id: null },
-            octUp: { type: 'note', id: null },
-            octDown: { type: 'note', id: null },
-            accompToggle: { type: 'note', id: null },
-            accompOctUp: { type: 'note', id: null },
-            accompOctDown: { type: 'note', id: null }
+            masterVolume: { type: 'cc', id: null }, tempo: { type: 'cc', id: null },
+            loopStart: { type: 'cc', id: null }, loopLength: { type: 'cc', id: null },
+            padModeToggle: { type: 'note', id: null },
+            // Arranger
+            arrSync: { type: 'note', id: null }, arrStart: { type: 'note', id: null },
+            arrIntro: { type: 'note', id: null }, arrMainA: { type: 'note', id: null },
+            arrMainB: { type: 'note', id: null }, arrFill: { type: 'note', id: null }, arrEnding: { type: 'note', id: null },
+            // App
+            playStop: { type: 'note', id: null }, record: { type: 'note', id: null },
+            transUp: { type: 'note', id: null }, transDown: { type: 'note', id: null },
+            octUp: { type: 'note', id: null }, octDown: { type: 'note', id: null },
+            accompToggle: { type: 'note', id: null }
         };
 
         const actionNames = {
             masterVolume: "Master Vol", tempo: "Tempo", loopStart: "Loop Start", loopLength: "Loop Len",
+            padModeToggle: "MODE TOGGLE",
+            arrSync: "Sync Start", arrStart: "Arr Start", arrIntro: "Intro", arrMainA: "Main A", 
+            arrMainB: "Main B", arrFill: "Fill In", arrEnding: "Ending",
             playStop: "Play / Stop", record: "Record", transDown: "Trans -", transUp: "Trans +",
-            octDown: "Octave -", octUp: "Octave +", accompToggle: "Accomp Tgl", accompOctDown: "Acc Oct -", accompOctUp: "Acc Oct +"
+            octDown: "Octave -", octUp: "Octave +", accompToggle: "Accomp Tgl"
         };
 
-        const defaultDrumLabels = {
-            40: "SNARE", 41: "TOM L", 42: "HI-HAT C", 43: "HI-HAT O",
-            36: "KICK", 37: "RIM", 38: "CLAP", 39: "CRASH"
-        };
-
-        const appPadMappings = ['playStop', 'record', 'transDown', 'transUp', 'octDown', 'octUp', 'accompToggle', 'accompOctUp'];
+        // Note: index 7 is always the toggle
+        const arrangerPadMappings = ['arrSync', 'arrStart', 'arrIntro', 'arrMainA', 'arrMainB', 'arrFill', 'arrEnding', 'padModeToggle'];
+        const appPadMappings = ['playStop', 'record', 'transDown', 'transUp', 'octDown', 'octUp', 'accompToggle', 'padModeToggle'];
         const appKnobMappings = ['masterVolume', 'tempo', 'loopStart', 'loopLength'];
 
         let isListeningForMidi = false;
@@ -795,23 +787,20 @@
             if (padGrid) {
                 const pads = Array.from(padGrid.children);
                 pads.forEach((pad, index) => {
-                    if (drumPadsEnabled) {
-                        const noteId = parseInt(pad.dataset.defaultNote);
-                        pad.innerHTML = defaultDrumLabels[noteId] || "PAD";
-                        pad.style.color = '#64748b';
-                        pad.style.borderColor = '#334155';
-                        pad.style.background = '';
-                    } else {
-                        const actionKey = appPadMappings[index];
-                        if (actionKey) {
-                            const mapping = midiMap[actionKey];
-                            const actionName = actionNames[actionKey];
-                            const mappingStr = mapping.id !== null ? (mapping.type === 'cc' ? `[C${mapping.id}]` : `[N${mapping.id}]`) : `[--]`;
-                            
-                            pad.innerHTML = `${actionName}<br><span style="font-size:0.4rem; color:var(--text-muted);">${mappingStr}</span>`;
-                            pad.style.color = mapping.id !== null ? 'var(--accent-cyan)' : '#475569';
-                            pad.style.borderColor = mapping.id !== null ? 'var(--accent-cyan)' : '#1e293b';
-                            pad.style.background = mapping.id !== null ? 'rgba(0, 240, 255, 0.05)' : '';
+                    const actionKey = currentPadMode === 'arranger' ? arrangerPadMappings[index] : appPadMappings[index];
+                    
+                    if (actionKey) {
+                        const mapping = midiMap[actionKey];
+                        const actionName = actionNames[actionKey];
+                        const mappingStr = mapping.id !== null ? (mapping.type === 'cc' ? `[C${mapping.id}]` : `[N${mapping.id}]`) : `[--]`;
+                        
+                        pad.innerHTML = `${actionName}<br><span style="font-size:0.4rem; color:var(--text-muted);">${mappingStr}</span>`;
+                        pad.style.color = mapping.id !== null ? (index === 7 ? 'var(--accent-gold)' : 'var(--accent-cyan)') : '#475569';
+                        pad.style.borderColor = mapping.id !== null ? (index === 7 ? 'var(--accent-gold)' : 'var(--accent-cyan)') : '#1e293b';
+                        pad.style.background = mapping.id !== null ? 'rgba(0, 229, 255, 0.05)' : '';
+
+                        if (index === 7) {
+                            pad.style.background = mapping.id !== null ? 'rgba(255, 215, 0, 0.08)' : '';
                         }
                     }
                 });
@@ -1098,18 +1087,14 @@
         document.querySelectorAll('.drum-pad').forEach(pad => {
             pad.addEventListener('mousedown', (e) => {
                 if (Tone.context.state !== 'running') Tone.start();
-                if (drumPadsEnabled) {
-                    const note = parseInt(e.currentTarget.dataset.defaultNote);
-                    if (activeDrumKit[note]) {
-                        if(activeDrumKit[note].name === "MetalSynth") activeDrumKit[note].triggerAttackRelease("32n", Tone.now(), 0.8);
-                        else if(activeDrumKit[note].name === "NoiseSynth") activeDrumKit[note].triggerAttackRelease("8n", Tone.now(), 0.8);
-                        else activeDrumKit[note].triggerAttackRelease("C2", "8n", Tone.now(), 0.8);
-                    }
-                } else {
-                    const index = Array.from(e.currentTarget.parentNode.children).indexOf(e.currentTarget);
-                    const actionKey = appPadMappings[index];
-                    if (actionKey) executeAppControl(actionKey);
+                
+                const index = Array.from(e.currentTarget.parentNode.children).indexOf(e.currentTarget);
+                const actionKey = currentPadMode === 'arranger' ? arrangerPadMappings[index] : appPadMappings[index];
+                
+                if (actionKey) {
+                    executeAppControl(actionKey);
                 }
+                
                 e.currentTarget.classList.add('active');
             });
             pad.addEventListener('mouseup', (e) => e.currentTarget.classList.remove('active'));
@@ -1121,6 +1106,24 @@
             const norm = value !== null ? value / 127 : 1;
 
             switch(actionKey) {
+                // Shared Toggle
+                case 'padModeToggle': 
+                    currentPadMode = currentPadMode === 'arranger' ? 'app' : 'arranger';
+                    document.getElementById('pads-toggle').innerText = `PADS: ${currentPadMode.toUpperCase()}`;
+                    updateHardwareUI();
+                    if(window.saveSettings) saveSettings();
+                    break;
+                    
+                // Arranger Controls
+                case 'arrSync': document.getElementById('btn-arr-sync').click(); break;
+                case 'arrStart': document.getElementById('btn-arr-start').click(); break;
+                case 'arrIntro': document.querySelector('.arr-section-btn[data-section="intro"]').click(); break;
+                case 'arrMainA': document.querySelector('.arr-section-btn[data-section="mainA"]').click(); break;
+                case 'arrMainB': document.querySelector('.arr-section-btn[data-section="mainB"]').click(); break;
+                case 'arrFill': document.getElementById('btn-arr-fill').click(); break;
+                case 'arrEnding': document.querySelector('.arr-section-btn[data-section="ending"]').click(); break;
+                
+                // App Controls
                 case 'masterVolume': mainBus.volume.value = (norm * 40) - 30; break;
                 case 'tempo': 
                     const bpm = Math.round(40 + norm * 200); Tone.Transport.bpm.value = bpm;
@@ -1162,8 +1165,6 @@
                 case 'octUp': document.getElementById('btn-oct-up').click(); break;
                 case 'octDown': document.getElementById('btn-oct-down').click(); break;
                 case 'accompToggle': document.getElementById('accompaniment-toggle').click(); break;
-                case 'accompOctUp': document.getElementById('btn-accomp-oct-up').click(); break;
-                case 'accompOctDown': document.getElementById('btn-accomp-oct-down').click(); break;
             }
         }
 
@@ -1301,7 +1302,6 @@
             if(window.saveSettings) saveSettings();
         });
 
-        document.getElementById('drum-kit-select').addEventListener('change', (e) => activeDrumKit = drumKits[e.target.value]);
         document.getElementById('live-voice').addEventListener('change', (e) => activeLiveVoice = voices[e.target.value]);
 
         let activeMouseRouting = new Map();
@@ -1316,6 +1316,14 @@
         let arrCurrentStep = 0;
         let arrNextNoteTime = 0.0;
         let arrTimerID;
+
+        // Note: Using ToneJS default synths for Arranger drums
+        const activeDrumKit = {
+            36: new Tone.MembraneSynth({ pitchDecay: 0.05, octaves: 4, oscillator: { type: 'sine' }, envelope: { attack: 0.001, decay: 0.4 } }).connect(mainBus),
+            38: new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.001, decay: 0.2 } }).connect(mainBus),
+            39: new Tone.MetalSynth({ frequency: 200, envelope: { attack: 0.001, decay: 0.4, release: 0.2 } }).connect(mainBus),
+            42: new Tone.MetalSynth({ frequency: 250, envelope: { attack: 0.001, decay: 0.05, release: 0.01 } }).connect(mainBus)
+        };
 
         function generateStyle(name, totalSteps, kicks, snares, hats) {
             let style = { name, steps: totalSteps, intro: [], mainA: [], mainB: [], fill: [], ending: [] };
@@ -1402,8 +1410,6 @@
 
         function updateArrangerUI() {
             document.getElementById('arr-status').innerText = arrSyncStart ? "ARRANGER: SYNC WAIT" : (arrIsPlaying ? (arrFillActive ? 'ARRANGER: FILL' : `ARRANGER: ${arrCurrentSec.toUpperCase()}`) : "ARRANGER: STOPPED");
-            const arrDot = document.getElementById('arr-dot');
-            if (arrDot) arrDot.className = `status-dot ${arrIsPlaying ? 'active' : ''}`;
             
             const syncBtn = document.getElementById('btn-arr-sync');
             syncBtn.className = arrSyncStart ? 'primary listening' : ''; 
@@ -2112,9 +2118,8 @@
                 accompEnabled: autoAccompanimentEnabled,
                 accompVoice: document.getElementById('accomp-voice-select').value,
                 accompInversion: document.getElementById('accomp-inversion')?.value || "0",
-                drumPadsEnabled: drumPadsEnabled,
+                padMode: currentPadMode,
                 knobModeSynth: knobModeSynth,
-                drumKit: document.getElementById('drum-kit-select').value,
                 liveVoice: document.getElementById('live-voice').value,
                 liveOctave: liveBaseOctave,
                 liveTranspose: liveTranspose,
@@ -2150,20 +2155,14 @@
                     }
                     if (settings.accompInversion) document.getElementById('accomp-inversion').value = settings.accompInversion;
                     
-                    if (settings.drumPadsEnabled !== undefined) {
-                        drumPadsEnabled = settings.drumPadsEnabled;
-                        document.getElementById('pads-toggle').innerText = `PADS: ${drumPadsEnabled ? 'ON (DRUMS)' : 'OFF (APP CTRL)'}`;
-                        document.getElementById('pads-toggle').classList.toggle('primary', drumPadsEnabled);
+                    if (settings.padMode) {
+                        currentPadMode = settings.padMode;
+                        document.getElementById('pads-toggle').innerText = `PADS: ${currentPadMode.toUpperCase()}`;
                     }
                     
                     if (settings.knobModeSynth !== undefined) {
                         knobModeSynth = settings.knobModeSynth;
                         document.getElementById('knob-mode-toggle').innerText = `KNOBS: ${knobModeSynth ? 'SYNTH' : 'APP'}`;
-                    }
-
-                    if (settings.drumKit) {
-                        document.getElementById('drum-kit-select').value = settings.drumKit;
-                        activeDrumKit = drumKits[settings.drumKit];
                     }
                     
                     if (settings.liveVoice) {
@@ -2201,7 +2200,7 @@
                     }
                     
                     if (settings.midiMap) {
-                        midiMap = settings.midiMap;
+                        Object.assign(midiMap, settings.midiMap);
                         renderMidiMapUI();
                     }
                 } catch (e) { console.error("Failed to load settings", e); }
@@ -2213,7 +2212,7 @@
 
         const inputIdsToSave = [
             'scale-root', 'scale-type', 'accomp-zone-start', 'accomp-zone-end', 
-            'accomp-voice-select', 'accomp-inversion', 'drum-kit-select', 
+            'accomp-voice-select', 'accomp-inversion',
             'live-voice', 'live-tempo', 'learn-tempo', 'learn-instrument', 'keyboard-size-select'
         ];
         inputIdsToSave.forEach(id => document.getElementById(id)?.addEventListener('change', saveSettings));
@@ -2285,7 +2284,7 @@
                 } else {
                     for (const [key, mapping] of Object.entries(midiMap)) {
                         if (mapping.type === 'cc' && mapping.id === data1) {
-                            const isToggle = ['playStop', 'record', 'transUp', 'transDown', 'octUp', 'octDown', 'accompToggle', 'accompOctUp', 'accompOctDown'].includes(key);
+                            const isToggle = ['playStop', 'record', 'transUp', 'transDown', 'octUp', 'octDown', 'accompToggle', 'arrSync', 'arrStart', 'arrIntro', 'arrMainA', 'arrMainB', 'arrFill', 'arrEnding', 'padModeToggle'].includes(key);
                             if (isToggle && data2 === 0) continue;
                             
                             executeAppControl(key, data2);
@@ -2296,14 +2295,13 @@
                                 if (el) el.querySelector('.cc-knob-indicator').style.transform = `translateX(-50%) rotate(${(data2 / 127) * 270 - 135}deg)`;
                             }
 
-                            if (!drumPadsEnabled) {
-                                const appPadIdx = appPadMappings.indexOf(key);
-                                if (appPadIdx !== -1) {
-                                    const pad = document.getElementById('drum-pad-grid').children[appPadIdx];
-                                    if (pad) {
-                                        pad.classList.add('active');
-                                        setTimeout(() => pad.classList.remove('active'), 100);
-                                    }
+                            const padMap = currentPadMode === 'arranger' ? arrangerPadMappings : appPadMappings;
+                            const padIdx = padMap.indexOf(key);
+                            if (padIdx !== -1) {
+                                const pad = document.getElementById('drum-pad-grid').children[padIdx];
+                                if (pad) {
+                                    pad.classList.add('active');
+                                    setTimeout(() => pad.classList.remove('active'), 100);
                                 }
                             }
                         }
@@ -2312,17 +2310,18 @@
                 return; 
             }
 
-            // --- NOTE MAPPING APP CONTROL (PADS OFF) ---
-            if (cmd === 144 && vel > 0 && !drumPadsEnabled) {
+            // --- NOTE MAPPING APP / ARRANGER CONTROL ---
+            if (cmd === 144 && vel > 0) {
                 let mappedAppControlExecuted = false;
                 for (const [key, mapping] of Object.entries(midiMap)) {
                     if (mapping.type === 'note' && mapping.id === data1) {
                         executeAppControl(key);
                         mappedAppControlExecuted = true;
                         
-                        const appPadIdx = appPadMappings.indexOf(key);
-                        if (appPadIdx !== -1) {
-                            const pad = document.getElementById('drum-pad-grid').children[appPadIdx];
+                        const padMap = currentPadMode === 'arranger' ? arrangerPadMappings : appPadMappings;
+                        const padIdx = padMap.indexOf(key);
+                        if (padIdx !== -1) {
+                            const pad = document.getElementById('drum-pad-grid').children[padIdx];
                             if (pad) {
                                 pad.classList.add('active');
                                 setTimeout(() => pad.classList.remove('active'), 100);
@@ -2331,18 +2330,6 @@
                     }
                 }
                 if (mappedAppControlExecuted) return; 
-            }
-
-            // --- DRUM PAD ROUTING (PADS ON) ---
-            if (drumPadsEnabled && cmd === 144 && vel > 0 && activeDrumKit[data1] && isLiveActive) {
-                const padGrid = document.getElementById('drum-pad-grid');
-                const pad = Array.from(padGrid.children).find(p => parseInt(p.dataset.defaultNote) === data1);
-                if(pad) { pad.classList.add('active'); setTimeout(()=>pad.classList.remove('active'), 100); }
-                
-                if(activeDrumKit[data1].name === "MetalSynth") activeDrumKit[data1].triggerAttackRelease("32n", Tone.now(), vel);
-                else if(activeDrumKit[data1].name === "NoiseSynth") activeDrumKit[data1].triggerAttackRelease("8n", Tone.now(), vel);
-                else activeDrumKit[data1].triggerAttackRelease("C2", "8n", Tone.now(), vel);
-                return;
             }
 
             // --- STANDARD PIANO / ACCOMPANIMENT ROUTING ---
