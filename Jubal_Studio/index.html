@@ -65,11 +65,25 @@
 
         .panel-card { background: var(--bg-panel); backdrop-filter: blur(24px); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.7); display: flex; flex-direction: column; gap: 14px; box-sizing: border-box; }
         
-        .studio-workspace { display: grid; grid-template-columns: 450px 1fr 450px; gap: 20px; width: 100%; align-items: stretch; margin-bottom: 10px; }
+        .studio-workspace { display: grid; grid-template-columns: 350px 1fr 300px 350px; gap: 20px; width: 100%; align-items: stretch; margin-bottom: 10px; }
         @media (max-width: 1400px) { .studio-workspace { grid-template-columns: 1fr; } }
 
-        .display-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 4px; width: 100%; }
-        .note-display { font-family: var(--font-display); font-size: 2.2rem; font-weight: 900; color: var(--accent-cyan); letter-spacing: 3px; height: 45px; text-shadow: 0 0 20px var(--accent-glow); text-align: center; }
+        /* --- PRO LCD DISPLAY STYLES --- */
+        .lcd-workstation { background: linear-gradient(180deg, #091324 0%, #020408 100%); border: 3px solid #1e293b; border-radius: 12px; box-shadow: inset 0 0 40px rgba(0, 240, 255, 0.08), 0 20px 40px rgba(0,0,0,0.8); padding: 18px 25px; margin-bottom: 20px; width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        .lcd-grid { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 20px; }
+        .lcd-box { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: center; box-shadow: inset 0 0 15px rgba(0,0,0,0.5); }
+        .lcd-label { font-family: var(--font-display); font-size: 0.55rem; color: #60a5fa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .lcd-value { font-family: var(--font-display); font-size: 1.1rem; color: #e0f2fe; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); font-weight: 900; }
+        .lcd-center-display { background: rgba(0, 240, 255, 0.03); border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 8px; position: relative; overflow: hidden; box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.08); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; }
+        .lcd-select { background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(0, 240, 255, 0.3); color: #e0f2fe; padding: 6px; border-radius: 4px; font-family: var(--font-body); font-size: 0.75rem; outline: none; width: 100%; cursor: pointer; transition: 0.2s;}
+        .lcd-select:focus { border-color: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-glow); }
+        .lcd-select option { background: #020617; }
+        .lcd-btn { background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.3); color: #00f0ff; padding: 2px 10px; border-radius: 4px; font-family: var(--font-display); font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
+        .lcd-btn:hover { background: rgba(0, 240, 255, 0.25); box-shadow: 0 0 10px rgba(0, 240, 255, 0.4); }
+        .lcd-btn.active-toggle { background: rgba(0, 240, 255, 0.3); border-color: #00f0ff; box-shadow: 0 0 12px rgba(0,240,255,0.5); color: #fff; }
+        
+        .note-display { font-family: var(--font-display); font-size: 3.2rem; font-weight: 900; color: var(--accent-cyan); letter-spacing: 3px; height: 60px; text-shadow: 0 0 25px var(--accent-glow); text-align: center; line-height: 1.1;}
+        .lcd-chord-suggest { font-size: 0.72rem; color: #93c5fd; font-family: var(--font-body); text-align: center; line-height: 1.4; height: 35px; overflow: hidden; }
 
         .hardware-matrix { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 400px; margin: 0 auto; }
         .pad-grid { display: grid; grid-template-columns: repeat(4, 55px); justify-content: center; gap: 12px; }
@@ -192,84 +206,44 @@
     <div class="panel-toggler-bar">
         <div style="display: flex; gap: 10px; align-items: center;">
             <span>Show/Hide Panels:</span>
-            <div class="toggle-chip active" id="toggle-scale-panel" onclick="togglePanel('scale')">Scale & Accomp</div>
-            <div class="toggle-chip active" id="toggle-hardware-panel" onclick="togglePanel('hardware')">Hardware Console</div>
-            <div class="toggle-chip active" id="toggle-seq-panel" onclick="togglePanel('seq')">Sequencer & Voice</div>
+            <div class="toggle-chip active" id="toggle-scale-panel" onclick="togglePanel('scale')">Scale Zones</div>
+            <div class="toggle-chip active" id="toggle-hardware-panel" onclick="togglePanel('hardware')">Hardware</div>
+            <div class="toggle-chip active" id="toggle-arranger-panel" onclick="togglePanel('arranger')">Arranger Control</div>
+            <div class="toggle-chip active" id="toggle-seq-panel" onclick="togglePanel('seq')">Sequencer</div>
         </div>
         <button class="primary" style="padding: 4px 12px;" onclick="openMidiMapModal()">🎛️ MIDI MAPPING</button>
     </div>
 
     <!-- VIEW 1: LIVE PERFORMANCE MATRIX -->
     <section id="view-live" class="view-section active">
-        <div class="display-container">
-            <div class="note-display" id="live-note">--</div>
-        </div>
         
-        <div class="studio-workspace" id="live-workspace-grid">
-            <div class="panel-card" id="panel-scale">
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SCALE ASSIST</label>
-                    <div style="display: flex; gap: 8px;">
-                        <select id="scale-root" style="width: 70px;">
-                            <option value="C">C</option><option value="C#">C#</option><option value="D" selected>D</option><option value="D#">D#</option>
-                            <option value="E">E</option><option value="F">F</option><option value="F#">F#</option><option value="G">G</option>
-                            <option value="G#">G#</option><option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
-                        </select>
-                        <select id="scale-type" style="width: 100%;">
-                            <optgroup label="Western">
-                                <option value="none">Off</option>
-                                <option value="major" selected>Major</option>
-                                <option value="minor">Natural Minor</option>
-                                <option value="harmonic">Harmonic Minor</option>
-                                <option value="pentatonic">Pentatonic</option>
-                            </optgroup>
-                            <optgroup label="Hindustani Ragas">
-                                <option value="yaman">Yaman</option>
-                                <option value="bhairav">Bhairav</option>
-                                <option value="bhairavi">Bhairavi</option>
-                                <option value="malkauns">Malkauns</option>
-                                <option value="darbari_kanada">Darbari Kanada</option>
-                                <option value="bhimpalasi">Bhimpalasi</option>
-                                <option value="jaunpuri">Jaunpuri</option>
-                                <option value="ahir_bhairav">Ahir Bhairav</option>
-                                <option value="bihag">Bihag</option>
-                                <option value="miyan_malhar">Miyan Malhar</option>
-                            </optgroup>
-                            <optgroup label="Carnatic Ragas">
-                                <option value="hamsadhwani">Hamsadhwani</option>
-                                <option value="mohanam">Mohanam</option>
-                                <option value="kalyani">Kalyani</option>
-                                <option value="sankarabharanam">Sankarabharanam</option>
-                                <option value="kharaharapriya">Kharaharapriya</option>
-                                <option value="todi">Todi</option>
-                                <option value="abheri">Abheri</option>
-                                <option value="kalyani_vasantham">Kalyani Vasantham</option>
-                                <option value="c_bhairavi">Bhairavi (Carnatic)</option>
-                                <option value="anandabhairavi">Anandabhairavi</option>
-                            </optgroup>
+        <!-- PRO LCD WORKSTATION DISPLAY -->
+        <div class="lcd-workstation">
+            <div class="flex justify-between items-center mb-1">
+                <div class="text-[0.65rem] font-bold text-gray-500 uppercase tracking-widest" style="font-family: var(--font-display);">Studio-Accomp Pro Dashboard</div>
+                <div class="text-[0.65rem] font-bold text-cyan-500" style="font-family: var(--font-display);" id="arr-status">ARRANGER: STOPPED</div>
+            </div>
+            
+            <div class="lcd-grid">
+                <!-- Left: Voice Selection -->
+                <div class="flex flex-col gap-3">
+                    <div class="lcd-box">
+                        <span class="lcd-label">Main Voice (R1)</span>
+                        <select id="live-voice" class="lcd-select">
+                            <option value="grand">Sanctuary Grand Piano</option>
+                            <option value="strings">Symphonic Strings</option>
+                            <option value="accordion">Vintage Accordion</option>
+                            <option value="warm-ep">Rhodes Electric Piano</option>
+                            <option value="bansuri">Cyber Bansuri Flute</option>
+                            <option value="recorder">Master Wood Recorder</option>
                         </select>
                     </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 10px; background: rgba(0, 240, 255, 0.05); padding: 12px; border-radius: 8px; border: 1px dashed var(--accent-cyan);">
-                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--accent-cyan); font-weight: 700;">ACCOMPANIMENT ZONE</label>
-                    
-                    <div style="display: flex; gap: 4px; align-items: center; justify-content: space-between;">
-                        <div style="display: flex; gap: 4px; align-items: center;">
-                            <input type="text" id="accomp-zone-start" value="C2" style="width: 35px; text-align: center; font-weight: bold; padding: 4px; font-size: 0.7rem;">
-                            <span style="font-size: 0.6rem; color: var(--text-muted); font-family: var(--font-display);">-</span>
-                            <input type="text" id="accomp-zone-end" value="B2" style="width: 35px; text-align: center; font-weight: bold; padding: 4px; font-size: 0.7rem;">
+                    <div class="lcd-box">
+                        <div class="lcd-label">
+                            <span>Accomp Voice (L1)</span>
+                            <button id="accompaniment-toggle" class="lcd-btn active-toggle">ON</button>
                         </div>
-                        <div style="display: flex; gap: 2px;">
-                            <button id="btn-accomp-oct-down" style="padding: 4px; font-size: 0.6rem;">- OCT</button>
-                            <button id="btn-accomp-oct-up" style="padding: 4px; font-size: 0.6rem;">+ OCT</button>
-                        </div>
-                        <button id="accompaniment-toggle" class="primary" style="padding: 4px 6px; font-size: 0.6rem;">On</button>
-                    </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
-                        <label style="font-size: 0.55rem; color: var(--text-muted);">ACCOMPANY VOICE</label>
-                        <select id="accomp-voice-select" style="width: 100%; font-size: 0.75rem; padding: 6px;">
+                        <select id="accomp-voice-select" class="lcd-select">
                             <option value="warm-ep">Rhodes Electric Piano</option>
                             <option value="strings">Symphonic Strings</option>
                             <option value="grand">Sanctuary Grand Piano</option>
@@ -277,23 +251,119 @@
                             <option value="choir">Cosmic Choir Synth</option>
                         </select>
                     </div>
-
-                    <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
-                        <label style="font-size: 0.55rem; color: var(--text-muted);">ACCOMP INVERSION</label>
-                        <select id="accomp-inversion" style="width: 100%; font-size: 0.75rem; padding: 6px;">
-                            <option value="0">Root Position</option>
-                            <option value="1">1st Inversion</option>
-                            <option value="2">2nd Inversion</option>
-                        </select>
-                    </div>
-
-                    <div style="margin-top: 6px;">
-                        <label style="font-family: var(--font-display); font-size: 0.55rem; color: var(--text-muted); font-weight: 700;">DIATONIC CHORDS</label>
-                        <div id="live-chord-suggest" style="font-size: 0.72rem; color: var(--scale-color); font-weight: 500; line-height: 1.4;">Select scale...</div>
-                    </div>
-
-                    <div class="mini-chord-viz" id="mini-accomp-viz"></div>
                 </div>
+                
+                <!-- Center: Performance Display -->
+                <div class="lcd-center-display">
+                    <div style="position:absolute; top:10px; left:15px; font-family: var(--font-display); font-size: 0.6rem; color:#60a5fa;">CURRENT CHORD</div>
+                    <div style="position:absolute; top:10px; right:15px; font-family: var(--font-display); font-size: 0.6rem; color:#60a5fa; text-align:right;">
+                        TEMPO: <span id="live-tempo-val" style="color:#fff; font-size:0.8rem;">120</span><br>
+                        BEAT: <span id="arr-beat" style="color:#fff; font-size:0.8rem;">-</span>
+                    </div>
+                    <div class="note-display" id="live-note">--</div>
+                    <div class="lcd-chord-suggest" id="live-chord-suggest">Select scale to view diatonic chords</div>
+                </div>
+
+                <!-- Right: Pitch & Scale Controls -->
+                <div class="flex flex-col gap-3">
+                    <div class="lcd-box" style="flex-direction: row; align-items: center; justify-content: space-between;">
+                        <div>
+                            <span class="lcd-label" style="margin-bottom:0;">Octave</span>
+                            <div class="lcd-value" id="octave-val">2</div>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button id="btn-oct-down" class="lcd-btn">-</button>
+                            <button id="btn-oct-up" class="lcd-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="lcd-box" style="flex-direction: row; align-items: center; justify-content: space-between;">
+                        <div>
+                            <span class="lcd-label" style="margin-bottom:0;">Transpose</span>
+                            <div class="lcd-value" id="trans-val">0</div>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button id="btn-trans-down" class="lcd-btn">-</button>
+                            <button id="btn-trans-up" class="lcd-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="lcd-box">
+                        <span class="lcd-label">Scale Assist / Key</span>
+                        <div style="display:flex; gap:5px;">
+                            <select id="scale-root" class="lcd-select" style="width: 60px;">
+                                <option value="C">C</option><option value="C#">C#</option><option value="D" selected>D</option><option value="D#">D#</option>
+                                <option value="E">E</option><option value="F">F</option><option value="F#">F#</option><option value="G">G</option>
+                                <option value="G#">G#</option><option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
+                            </select>
+                            <select id="scale-type" class="lcd-select">
+                                <optgroup label="Western">
+                                    <option value="none">Off</option>
+                                    <option value="major" selected>Major</option>
+                                    <option value="minor">Natural Minor</option>
+                                    <option value="harmonic">Harmonic Minor</option>
+                                    <option value="pentatonic">Pentatonic</option>
+                                </optgroup>
+                                <optgroup label="Hindustani Ragas">
+                                    <option value="yaman">Yaman</option>
+                                    <option value="bhairav">Bhairav</option>
+                                    <option value="bhairavi">Bhairavi</option>
+                                    <option value="malkauns">Malkauns</option>
+                                    <option value="darbari_kanada">Darbari Kanada</option>
+                                    <option value="bhimpalasi">Bhimpalasi</option>
+                                    <option value="jaunpuri">Jaunpuri</option>
+                                    <option value="ahir_bhairav">Ahir Bhairav</option>
+                                    <option value="bihag">Bihag</option>
+                                    <option value="miyan_malhar">Miyan Malhar</option>
+                                </optgroup>
+                                <optgroup label="Carnatic Ragas">
+                                    <option value="hamsadhwani">Hamsadhwani</option>
+                                    <option value="mohanam">Mohanam</option>
+                                    <option value="kalyani">Kalyani</option>
+                                    <option value="sankarabharanam">Sankarabharanam</option>
+                                    <option value="kharaharapriya">Kharaharapriya</option>
+                                    <option value="todi">Todi</option>
+                                    <option value="abheri">Abheri</option>
+                                    <option value="kalyani_vasantham">Kalyani Vasantham</option>
+                                    <option value="c_bhairavi">Bhairavi (Carnatic)</option>
+                                    <option value="anandabhairavi">Anandabhairavi</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center mt-2">
+                <span class="lcd-label" style="margin:0;">Master Tempo</span>
+                <input type="range" id="live-tempo" min="40" max="240" value="120" style="flex:1; margin:0 15px;">
+            </div>
+        </div>
+
+        <div class="studio-workspace" id="live-workspace-grid">
+            <div class="panel-card" id="panel-scale">
+                <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">ACCOMPANIMENT ZONING</label>
+                
+                <div style="display: flex; gap: 4px; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; gap: 4px; align-items: center;">
+                        <input type="text" id="accomp-zone-start" value="C2" style="width: 35px; text-align: center; font-weight: bold; padding: 4px; font-size: 0.7rem;">
+                        <span style="font-size: 0.6rem; color: var(--text-muted); font-family: var(--font-display);">-</span>
+                        <input type="text" id="accomp-zone-end" value="B2" style="width: 35px; text-align: center; font-weight: bold; padding: 4px; font-size: 0.7rem;">
+                    </div>
+                    <div style="display: flex; gap: 4px;">
+                        <button id="btn-accomp-oct-down" style="padding: 4px; font-size: 0.6rem;">- OCT</button>
+                        <button id="btn-accomp-oct-up" style="padding: 4px; font-size: 0.6rem;">+ OCT</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+                    <label style="font-size: 0.55rem; color: var(--text-muted);">ACCOMP INVERSION ALGORITHM</label>
+                    <select id="accomp-inversion" style="width: 100%; font-size: 0.75rem; padding: 6px;">
+                        <option value="0">Root Position</option>
+                        <option value="1">1st Inversion</option>
+                        <option value="2">2nd Inversion</option>
+                    </select>
+                </div>
+
+                <div class="mini-chord-viz" id="mini-accomp-viz" style="margin-top: auto;"></div>
             </div>
 
             <div class="panel-card" id="panel-hardware" style="align-items: center;">
@@ -319,7 +389,6 @@
                             </select>
                         </div>
                     </div>
-                    <!-- Note the addition of data-default-note here -->
                     <div class="pad-grid" id="drum-pad-grid">
                         <div class="drum-pad" data-default-note="40">SNARE</div>
                         <div class="drum-pad" data-default-note="41">TOM L</div>
@@ -348,18 +417,35 @@
                 </div>
             </div>
 
-            <div class="panel-card" id="panel-seq">
-                <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SEQUENCER & VOICE</label>
+            <!-- ARRANGER ENGINE PANEL -->
+            <div class="panel-card" id="panel-arranger">
+                <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">STUDIO-ACCOMP ENGINE</label>
                 
-                <select id="live-voice" style="width: 100%;">
-                    <option value="grand">Sanctuary Grand Piano</option>
-                    <option value="strings">Symphonic Strings</option>
-                    <option value="accordion">Vintage Accordion</option>
-                    <option value="warm-ep">Rhodes Electric Piano</option>
-                    <option value="bansuri">Cyber Bansuri Flute</option>
-                    <option value="recorder">Master Wood Recorder</option>
+                <select id="arr-style" style="width: 100%;">
+                    <option value="4_4">4-4 — Worship / Pop</option>
+                    <option value="2_4">2-4 — March / Energetic Praise</option>
+                    <option value="4_2">4-2 — Praise / Gospel</option>
+                    <option value="6_8">6-8 — Worship (6/8)</option>
+                    <option value="12_8">12-8 — Gospel Shuffle</option>
                 </select>
 
+                <div style="display: flex; gap: 6px;">
+                    <button id="btn-arr-sync" style="flex: 1; font-size: 0.6rem;">SYNC START</button>
+                    <button id="btn-arr-start" class="danger" style="flex: 1; font-size: 0.6rem;">START/STOP</button>
+                    <button id="btn-arr-fill" style="flex: 1; font-size: 0.6rem; background: #eab308; color: #000; border-color: #ca8a04;">FILL IN</button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 4px;">
+                    <button class="arr-section-btn" data-section="intro" style="font-size: 0.55rem; padding: 6px 2px;">INTRO</button>
+                    <button class="arr-section-btn primary" data-section="mainA" style="font-size: 0.55rem; padding: 6px 2px;">MAIN A</button>
+                    <button class="arr-section-btn" data-section="mainB" style="font-size: 0.55rem; padding: 6px 2px;">MAIN B</button>
+                    <button class="arr-section-btn" data-section="ending" style="font-size: 0.55rem; padding: 6px 2px;">ENDING</button>
+                </div>
+            </div>
+
+            <div class="panel-card" id="panel-seq">
+                <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SEQUENCER</label>
+                
                 <div style="display: flex; gap: 8px;">
                     <button id="btn-record" class="danger" style="flex: 1;">🔴 REC</button>
                     <button id="btn-open-editor" style="flex: 1;" disabled>🎛️ EDIT</button>
@@ -370,32 +456,9 @@
                     <button id="btn-stop-rec" class="danger" style="flex: 1;" disabled>■ STOP</button>
                 </div>
 
-                <hr style="border-color: var(--border-color); margin: 0;">
+                <button id="metronome-toggle" style="padding: 8px 10px; font-size: 0.6rem; margin-top: 8px;">METRONOME: OFF</button>
 
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="text-align: center;">
-                        <label style="font-size: 0.55rem; color: var(--text-muted);">OCTAVE (<span id="octave-val">2</span>)</label>
-                        <div style="display: flex; gap: 4px; margin-top:2px;">
-                            <button id="btn-oct-down" style="padding: 2px 8px;">-</button><button id="btn-oct-up" style="padding: 2px 8px;">+</button>
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        <label style="font-size: 0.55rem; color: var(--text-muted);">TRANS (<span id="trans-val">0</span>)</label>
-                        <div style="display: flex; gap: 4px; margin-top:2px;">
-                            <button id="btn-trans-down" style="padding: 2px 8px;">-</button><button id="btn-trans-up" style="padding: 2px 8px;">+</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <button id="metronome-toggle" style="padding: 4px 10px; font-size: 0.6rem;">METRONOME: OFF</button>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <label style="font-size: 0.65rem;">BPM: <span id="live-tempo-val" style="color: var(--accent-cyan);">120</span></label>
-                    </div>
-                </div>
-                <input type="range" id="live-tempo" min="40" max="240" value="120">
-
-                <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: auto;">
                     <label style="font-size: 0.55rem; color: var(--text-muted);">IMPORT STREAM</label>
                     <input type="file" id="live-file-input" accept=".mid,.midi" style="width: 100%;">
                 </div>
@@ -619,11 +682,11 @@
             
             const grid = document.getElementById('live-workspace-grid');
             if (grid) {
-                const visiblePanels = ['scale', 'hardware', 'seq'].filter(k => {
+                const visiblePanels = ['scale', 'hardware', 'arranger', 'seq'].filter(k => {
                     const el = document.getElementById(`panel-${k}`);
                     return el && el.style.display !== 'none';
                 });
-                grid.style.gridTemplateColumns = visiblePanels.length === 3 ? '450px 1fr 450px' : visiblePanels.length === 2 ? '1fr 1fr' : '1fr';
+                grid.style.gridTemplateColumns = visiblePanels.length === 4 ? '350px 1fr 300px 350px' : (visiblePanels.length === 3 ? '450px 1fr 450px' : visiblePanels.length === 2 ? '1fr 1fr' : '1fr');
             }
         }
 
@@ -686,7 +749,6 @@
             36: "KICK", 37: "RIM", 38: "CLAP", 39: "CRASH"
         };
 
-        // Static anchoring for the 8 UI slots in APP mode
         const appPadMappings = ['playStop', 'record', 'transDown', 'transUp', 'octDown', 'octUp', 'accompToggle', 'accompOctUp'];
         const appKnobMappings = ['masterVolume', 'tempo', 'loopStart', 'loopLength'];
 
@@ -729,7 +791,6 @@
         }
 
         function updateHardwareUI() {
-            // Update Pads Panel
             const padGrid = document.getElementById('drum-pad-grid');
             if (padGrid) {
                 const pads = Array.from(padGrid.children);
@@ -756,7 +817,6 @@
                 });
             }
 
-            // Update Knobs Panel
             const synthKnobLabels = ['Filter', 'Reso', 'Rev Size', 'Rev Mix', 'Dly Time', 'Dly Fbk', 'Chorus', 'Master'];
             
             for (let i = 0; i < 8; i++) {
@@ -808,7 +868,7 @@
 
         const notesArray = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
         let liveBaseOctave = 2; let liveTranspose = 0; let learnBaseOctave = 2;
-        let liveKeyCount = 61; // Default dynamic keys
+        let liveKeyCount = 61;
         let autoAccompanimentEnabled = true;
         let currentScaleNotes = new Set();
         let currentScaleType = 'major'; let currentScaleRoot = 'D';
@@ -1056,7 +1116,6 @@
             pad.addEventListener('mouseleave', (e) => e.currentTarget.classList.remove('active'));
         });
 
-        // App-Level MIDI Functions
         function executeAppControl(actionKey, value = null) {
             const isLive = document.getElementById('view-live').classList.contains('active');
             const norm = value !== null ? value / 127 : 1;
@@ -1143,7 +1202,7 @@
             if (!container) return; container.innerHTML = '';
             
             let currentX = 0;
-            let noteIdx = 0; // Starts at C
+            let noteIdx = 0; 
             let oct = baseOctave;
 
             for (let i = 0; i < numKeys; i++) {
@@ -1237,8 +1296,8 @@
 
         document.getElementById('accompaniment-toggle').addEventListener('click', (e) => {
             autoAccompanimentEnabled = !autoAccompanimentEnabled;
-            e.target.innerText = `Accomp: ${autoAccompanimentEnabled ? 'On' : 'Off'}`;
-            e.target.classList.toggle('primary', autoAccompanimentEnabled);
+            e.target.innerText = autoAccompanimentEnabled ? 'ON' : 'OFF';
+            e.target.classList.toggle('active-toggle', autoAccompanimentEnabled);
             if(window.saveSettings) saveSettings();
         });
 
@@ -1246,6 +1305,132 @@
         document.getElementById('live-voice').addEventListener('change', (e) => activeLiveVoice = voices[e.target.value]);
 
         let activeMouseRouting = new Map();
+
+        // --- STUDIO-ACCOMP ARRANGER ENGINE ---
+        let arrIsPlaying = false;
+        let arrSyncStart = false;
+        let arrActiveStyle = '4_4';
+        let arrCurrentSec = 'mainA';
+        let arrQueuedSec = 'mainA';
+        let arrFillActive = false;
+        let arrCurrentStep = 0;
+        let arrNextNoteTime = 0.0;
+        let arrTimerID;
+
+        function generateStyle(name, totalSteps, kicks, snares, hats) {
+            let style = { name, steps: totalSteps, intro: [], mainA: [], mainB: [], fill: [], ending: [] };
+            for(let i=0; i<totalSteps; i++) {
+                let isKick = kicks.includes(i), isSnare = snares.includes(i), isHat = hats.includes(i);
+                let da = []; if(isKick) da.push(1); if(isSnare) da.push(2); if(isHat) da.push(3);
+                style.mainA.push({ D: da });
+                let db = [...da]; if (i % 2 !== 0 && !db.includes(3)) db.push(3); 
+                style.mainB.push({ D: db });
+                style.fill.push({ D: [2] });
+                style.intro.push({ D: (i === 0) ? [1, 4] : [] });
+                style.ending.push({ D: (i === 0) ? [1, 2, 4] : [] });
+            }
+            return style;
+        }
+
+        const stylesLib = {
+            "4_4": generateStyle("4-4 Worship/Pop", 16, [0,8], [4,12], [0,2,4,6,8,10,12,14]),
+            "2_4": generateStyle("2-4 March/Praise", 8, [0,4], [2,6], [0,2,4,6]),
+            "4_2": generateStyle("4-2 Praise/Gospel", 12, [0,6], [3,9], [0,1,3,4,6,7,9,10]), 
+            "6_8": generateStyle("6-8 Worship", 12, [0,6], [3,9], [0,2,4,6,8,10]),
+            "12_8": generateStyle("12-8 Gospel Shuffle", 24, [0,12], [6,18], [0,3,6,9,12,15,18,21])
+        };
+
+        function scheduleArrangerNote(step, time) {
+            const style = stylesLib[arrActiveStyle];
+            const pattern = arrFillActive ? 'fill' : arrCurrentSec;
+            const d = style[pattern][step].D;
+            
+            if (d.includes(1) && activeDrumKit[36]) activeDrumKit[36].triggerAttackRelease("C2", "8n", time, 1.2); 
+            if (d.includes(2) && activeDrumKit[38]) activeDrumKit[38].triggerAttackRelease("8n", time, 1.0); 
+            if (d.includes(3) && activeDrumKit[42]) activeDrumKit[42].triggerAttackRelease("32n", time, 0.4); 
+            if (d.includes(4) && activeDrumKit[39]) activeDrumKit[39].triggerAttackRelease("32n", time, 0.7); 
+
+            Tone.Draw.schedule(() => {
+                const pulse = style.steps >= 16 ? 4 : (style.steps === 12 ? 3 : 2);
+                if (step % pulse === 0) document.getElementById('arr-beat').innerText = Math.floor(step / pulse) + 1;
+            }, time);
+
+            if (step === style.steps - 1) {
+                if (arrCurrentSec === 'ending' && !arrFillActive) {
+                    setTimeout(stopArranger, (time - Tone.now()) * 1000);
+                } else {
+                    arrCurrentSec = arrQueuedSec;
+                    if (arrFillActive) {
+                        arrFillActive = false;
+                        Tone.Draw.schedule(updateArrangerUI, time);
+                    }
+                }
+                Tone.Draw.schedule(updateArrangerUI, time);
+            }
+        }
+
+        function nextArrangerNote() {
+            let mult = stylesLib[arrActiveStyle].steps > 16 ? 0.166 : 0.25; 
+            let currentTempo = Tone.Transport.bpm.value || 120;
+            arrNextNoteTime += mult * (60.0 / currentTempo);
+            arrCurrentStep = (arrCurrentStep + 1) % stylesLib[arrActiveStyle].steps;
+        }
+
+        function arrangerScheduler() {
+            while (arrNextNoteTime < Tone.now() + 0.1) {
+                scheduleArrangerNote(arrCurrentStep, arrNextNoteTime);
+                nextArrangerNote();
+            }
+            arrTimerID = setTimeout(arrangerScheduler, 25.0);
+        }
+
+        function startArranger() {
+            if (Tone.context.state !== 'running') Tone.start();
+            if (arrIsPlaying) return;
+            arrIsPlaying = true; arrSyncStart = false;
+            arrCurrentSec = arrFillActive ? 'fill' : arrQueuedSec;
+            arrCurrentStep = 0; arrNextNoteTime = Tone.now() + 0.05;
+            arrangerScheduler(); updateArrangerUI();
+        }
+
+        function stopArranger() {
+            arrIsPlaying = false; arrFillActive = false; arrSyncStart = false;
+            clearTimeout(arrTimerID);
+            document.getElementById('arr-beat').innerText = "-";
+            updateArrangerUI();
+        }
+
+        function updateArrangerUI() {
+            document.getElementById('arr-status').innerText = arrSyncStart ? "ARRANGER: SYNC WAIT" : (arrIsPlaying ? (arrFillActive ? 'ARRANGER: FILL' : `ARRANGER: ${arrCurrentSec.toUpperCase()}`) : "ARRANGER: STOPPED");
+            const arrDot = document.getElementById('arr-dot');
+            if (arrDot) arrDot.className = `status-dot ${arrIsPlaying ? 'active' : ''}`;
+            
+            const syncBtn = document.getElementById('btn-arr-sync');
+            syncBtn.className = arrSyncStart ? 'primary listening' : ''; 
+            
+            document.querySelectorAll('.arr-section-btn').forEach(btn => {
+                btn.classList.remove('primary');
+                if (btn.dataset.section === arrCurrentSec && arrIsPlaying) btn.classList.add('primary');
+                else if (btn.dataset.section === arrQueuedSec && !arrIsPlaying) btn.classList.add('primary');
+            });
+        }
+
+        document.getElementById('arr-style').addEventListener('change', (e) => { arrActiveStyle = e.target.value; if(arrIsPlaying) arrCurrentStep = 0; });
+        document.getElementById('btn-arr-start').addEventListener('click', () => arrIsPlaying ? stopArranger() : startArranger());
+        document.getElementById('btn-arr-sync').addEventListener('click', () => {
+            if (arrIsPlaying) stopArranger();
+            arrSyncStart = !arrSyncStart; updateArrangerUI();
+        });
+        document.getElementById('btn-arr-fill').addEventListener('click', () => {
+            if (arrIsPlaying && !arrFillActive) { arrFillActive = true; updateArrangerUI(); } 
+            else if (!arrIsPlaying && arrSyncStart) { arrFillActive = true; startArranger(); }
+        });
+        document.querySelectorAll('.arr-section-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                arrQueuedSec = e.target.dataset.section;
+                if (!arrIsPlaying && arrSyncStart) startArranger(); else updateArrangerUI();
+            });
+        });
 
         function handleMouseKey(isDown, noteStr, octave, containerId) {
             if (isDown && Tone.context.state !== 'running') Tone.start();
@@ -1258,6 +1443,8 @@
             let targetVoice = chordResult.isAccomp ? activeAccompanimentVoice : voice;
 
             if (isDown) {
+                if (arrSyncStart && !arrIsPlaying && containerId === 'live-keyboard') startArranger();
+                
                 if (activeMouseNotes.has(primaryNoteName)) return;
                 activeMouseNotes.add(primaryNoteName);
                 
@@ -1954,8 +2141,8 @@
                     
                     if (settings.accompEnabled !== undefined) {
                         autoAccompanimentEnabled = settings.accompEnabled;
-                        document.getElementById('accompaniment-toggle').innerText = `Accomp: ${autoAccompanimentEnabled ? 'On' : 'Off'}`;
-                        document.getElementById('accompaniment-toggle').classList.toggle('primary', autoAccompanimentEnabled);
+                        document.getElementById('accompaniment-toggle').innerText = autoAccompanimentEnabled ? 'ON' : 'OFF';
+                        document.getElementById('accompaniment-toggle').classList.toggle('active-toggle', autoAccompanimentEnabled);
                     }
                     if (settings.accompVoice) {
                         document.getElementById('accomp-voice-select').value = settings.accompVoice;
@@ -2036,7 +2223,7 @@
         ];
         buttonIdsToSave.forEach(id => document.getElementById(id)?.addEventListener('click', saveSettings));
 
-        let activeMidiRouting = new Map(); // Tracks exact { notes, voice } for each physical key
+        let activeMidiRouting = new Map();
 
         async function initMIDI() {
             if (navigator.requestMIDIAccess) {
@@ -2103,14 +2290,12 @@
                             
                             executeAppControl(key, data2);
 
-                            // Rotate mapped knob (only if action is anchored to a knob slot)
                             const appKnobIdx = appKnobMappings.indexOf(key);
                             if (appKnobIdx !== -1) {
                                 const el = document.getElementById(`knob-${appKnobIdx}`);
                                 if (el) el.querySelector('.cc-knob-indicator').style.transform = `translateX(-50%) rotate(${(data2 / 127) * 270 - 135}deg)`;
                             }
 
-                            // Flash mapped pad (if a pad action was triggered via CC hardware)
                             if (!drumPadsEnabled) {
                                 const appPadIdx = appPadMappings.indexOf(key);
                                 if (appPadIdx !== -1) {
@@ -2135,7 +2320,6 @@
                         executeAppControl(key);
                         mappedAppControlExecuted = true;
                         
-                        // Flash mapped pad slot
                         const appPadIdx = appPadMappings.indexOf(key);
                         if (appPadIdx !== -1) {
                             const pad = document.getElementById('drum-pad-grid').children[appPadIdx];
@@ -2194,6 +2378,8 @@
             let activeVoice = isLiveActive ? (chordResult.isAccomp ? activeAccompanimentVoice : activeLiveVoice) : activeLearnVoice;
 
             if (cmd === 144 && vel > 0) {
+                if (arrSyncStart && !arrIsPlaying && isLiveActive) startArranger();
+                
                 activeMidiRouting.set(data1, { notes: chordResult.notes, voice: activeVoice });
                 activeVoice.triggerAttack(chordResult.notes, Tone.now(), vel);
                 
