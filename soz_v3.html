@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>సీయోను గీతములు - Songs of Zion (v3 Multi-Church)</title>
+    <title>సీయోను గీతములు - Songs of Zion (v4.7 Typing Animation)</title>
 
     <!-- Google Fonts & Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@400;600;700&family=Gidugu&family=Inter:wght@300;400;500;600;700&family=Mandali&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anek+Telugu:wght@400;600;700&family=Gidugu&family=Inter:wght@300;400;500;600;700&family=Mandali&family=Noto+Sans+Telugu:wght@400;600;700&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -22,53 +24,159 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
-        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], telugu: ['Mandali', 'Noto Sans Telugu', 'Anek Telugu', 'sans-serif'], }, colors: { brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 900: '#0f172a' } } } } }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        telugu: ['Mandali', 'Noto Sans Telugu', 'Anek Telugu', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
     </script>
 
     <style>
-        .font-telugu { font-family: 'Mandali', 'Noto Sans Telugu', 'Anek Telugu', sans-serif !important; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.05); }
-        ::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
-        .glass-card { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(24px); border: 1px solid rgba(147, 197, 253, 0.3); box-shadow: 0 16px 48px 0 rgba(30, 64, 175, 0.12); }
-        .glass-header { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(147, 197, 253, 0.2); box-shadow: 0 10px 30px -10px rgba(30, 58, 138, 0.5); }
-        .glass-modal { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(24px); border: 1px solid rgba(147, 197, 253, 0.4); }
-        
-        .lyric-line { transition: all 0.2s ease; cursor: pointer; }
-        body:not(.obs-dock-theme) .lyric-line:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15); }
-        body:not(.obs-dock-theme) .lyric-line.active-projection { border-color: #2563eb !important; background-color: rgba(239, 246, 255, 0.95) !important; box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3); }
-        .ql-editor { font-family: 'Mandali', 'Noto Sans Telugu', sans-serif; font-size: 15px; min-height: 80px; }
+        .font-telugu {
+            font-family: 'Mandali', 'Noto Sans Telugu', 'Anek Telugu', sans-serif !important;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #93c5fd;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            box-shadow: 0 16px 48px 0 rgba(30, 64, 175, 0.12);
+        }
+
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        .glass-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(147, 197, 253, 0.2);
+            box-shadow: 0 10px 30px -10px rgba(30, 58, 138, 0.5);
+        }
+
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(147, 197, 253, 0.4);
+        }
+
+        .dark .glass-modal {
+            background: rgba(15, 23, 42, 0.96);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+        }
+
+        .lyric-line,
+        .bible-verse-tile {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        body:not(.obs-dock-theme) .lyric-line:hover,
+        body:not(.obs-dock-theme) .bible-verse-tile:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.15);
+        }
+
+        body:not(.obs-dock-theme) .lyric-line.active-projection,
+        body:not(.obs-dock-theme) .bible-verse-tile.active-projection {
+            border-color: #2563eb !important;
+            background-color: rgba(239, 246, 255, 0.95) !important;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+        }
+
+        .dark body:not(.obs-dock-theme) .lyric-line.active-projection,
+        .dark body:not(.obs-dock-theme) .bible-verse-tile.active-projection {
+            background-color: rgba(30, 58, 138, 0.8) !important;
+            border-color: #3b82f6 !important;
+        }
+
+        .ql-editor {
+            font-family: 'Mandali', 'Noto Sans Telugu', sans-serif;
+            font-size: 15px;
+            min-height: 80px;
+        }
 
         /* --- OBS NATIVE DOCK THEME OVERRIDES --- */
-        body.obs-dock-theme { background: #2b2b2b !important; color: #cccccc !important; margin: 0; padding: 0; }
-        .obs-dock-theme #mainLayoutContainer { padding: 0 !important; gap: 0 !important; border: none !important; }
-        .obs-dock-theme #mainWorkspaceCard { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; border-radius: 0 !important; display: flex; flex-direction: column; height: 100%; }
-        .obs-dock-theme .lyric-line { background: #333333 !important; border: 1px solid #222 !important; border-radius: 4px !important; color: #eee !important; margin-bottom: 4px !important; padding: 6px 8px !important; font-size: 14px !important; box-shadow: none !important; }
-        .obs-dock-theme .lyric-line:hover { background: #444444 !important; transform: none !important; }
-        .obs-dock-theme .lyric-line.active-projection { background: #2484f2 !important; border-color: #2484f2 !important; color: #fff !important; }
-        .obs-dock-theme .lyric-line span.font-sans { background: #1e1e1e !important; color: #999 !important; border: 1px solid #111; padding: 2px 6px !important; font-size: 10px !important; }
-        .obs-dock-theme input:not([type="range"]):not([type="color"]):not([type="checkbox"]), .obs-dock-theme select { background: #1e1e1e !important; border: 1px solid #111 !important; color: #fff !important; border-radius: 4px !important; padding: 4px 8px !important; outline: none; }
-        .obs-dock-theme input:focus, .obs-dock-theme select:focus { border-color: #2484f2 !important; }
-        .obs-dock-theme button { background: #3c3c3c !important; border: 1px solid #111 !important; color: #eee !important; border-radius: 4px !important; transition: none; padding: 4px 8px; cursor: pointer; }
-        .obs-dock-theme button:hover { background: #4d4d4d !important; }
-        .obs-dock-theme button.primary-btn { background: #2484f2 !important; border-color: #1a6ac4 !important; color: #fff !important; }
-        .obs-dock-theme button.primary-btn:hover { background: #1a6ac4 !important; }
-        .obs-dock-theme button.danger-btn { background: #d97706 !important; border-color: #b45309 !important; color: #fff !important; }
-        .obs-dock-theme input[type="color"] { -webkit-appearance: none; border: none; padding: 0; border-radius: 4px; overflow: hidden; }
-        .obs-dock-theme input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-        .obs-dock-theme input[type="color"]::-webkit-color-swatch { border: 1px solid #111; border-radius: 4px; }
-        .obs-dock-theme ::-webkit-scrollbar { width: 12px; height: 12px; }
-        .obs-dock-theme ::-webkit-scrollbar-track { background: #2b2b2b !important; }
-        .obs-dock-theme ::-webkit-scrollbar-thumb { background: #444 !important; border-radius: 0px !important; border: 2px solid #2b2b2b; }
-        .obs-dock-theme ::-webkit-scrollbar-thumb:hover { background: #555 !important; }
-        .obs-dock-theme #dockSuggestions { background: #333 !important; border: 1px solid #111 !important; }
-        .obs-dock-theme #dockSuggestionsList li { border-bottom: 1px solid #222; }
-        .obs-dock-theme #dockSuggestionsList li:hover { background: #444 !important; color: #fff; }
+        body.obs-dock-theme {
+            margin: 0;
+            padding: 0;
+            background-color: transparent !important;
+        }
+
+        .obs-dock-theme #mainLayoutContainer {
+            padding: 0 !important;
+            gap: 0 !important;
+            border: none !important;
+        }
+
+        .obs-dock-theme #mainWorkspaceCard {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            border-radius: 0 !important;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .grid-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.15s ease-in-out;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .grid-btn:hover {
+            transform: scale(1.03);
+        }
+        .grid-btn:active {
+            transform: scale(0.97);
+        }
     </style>
 
-    <!-- Source File containing window.songs -->
+    <!-- Source File containing window.songs and window.categoryList -->
     <script src="./songs.js"></script>
+
+    <!-- Bible Data & State -->
+    <script src="./BibleData.js"></script>
 
     <script>
         // --- 1. CONFIGURATIONS & STATE ---
@@ -89,96 +197,201 @@
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         let firestoreUnsubscribe = null;
-        
-        // Multi-Tenant Room Identification
-        let currentSessionId = urlParams.get('room') || localStorage.getItem('zion_room_code') || "ZION-MAIN-ROOM";
+        let typingTimer = null;
 
+        let currentSessionId = urlParams.get('room') || localStorage.getItem('zion_room_code') || "ZION-MAIN-ROOM";
         let ws = null;
         let obsConnected = false;
         let activeSong = null;
         let currentFontSize = 22;
-        
-        // Renamed internally to avoid collision with the variable exported by songs.js
-        let appSongs = []; 
-        
+        let appSongs = [];
+        let activeMainTab = 'songs';
+        let verseTimeout = null;
+
+        let bibleState = {
+            lang1: 'telugu',
+            lang2: 'none',
+            navLang: 'telugu',
+            book: 'Genesis',
+            chapter: '1',
+            font1: "'Mandali', sans-serif",
+            font2: "'Inter', sans-serif",
+            align: 'justify',
+            onlyReference: false,
+            duration: 0,
+            viewLevel: 'books',
+            lastSelectedVerseText: '(Click any verse number below to project)',
+            lastSelectedVerseNum: null
+        };
+
         let chorusQuill = null;
         let bridgeQuill = null;
         let stanzaQuills = [];
-        const quillToolbarOptions = [['bold', 'italic', 'underline'], [{'color': []}], [{'align': []}], ['clean']];
-
+        const quillToolbarOptions = [
+            ['bold', 'italic', 'underline'],
+            [{ 'color': [] }],
+            [{ 'align': [] }],
+            ['clean']
+        ];
         let obsConfig = {
-            fontSize: "4.0vw", fontFamily: "'Mandali', sans-serif", textAlign: "center",
-            textColor: "#ffffff", textShadow: true, bgColor: "#008000", bgImage: "",
-            textStrokeColor: "#000000", textStrokeWidth: 0, hidePipesText: false
+            fontSize: "4.0vw",
+            fontFamily: "'Mandali', sans-serif",
+            textAlign: "justify",
+            textColor: "#ffffff",
+            textShadow: true,
+            bgColor: "#008000",
+            bgImage: "",
+            textStrokeColor: "#000000",
+            textStrokeWidth: 0,
+            hidePipesText: false
         };
+
+        function getShortBookName(fullName) {
+            if (!fullName) return "";
+            let trimmed = fullName.trim();
+            let mapping = {
+                "Genesis": "Gen (ఆది)", "Exodus": "Exo (నిర్గమ)", "Leviticus": "Lev (లేవీయ)", "Numbers": "Num (సంఖ్యా)", "Deuteronomy": "Deut (ద్వితీయ)",
+                "Joshua": "Josh (యెహోషువ)", "Judges": "Judg (న్యాయా)", "Ruth": "Ruth (రూతు)", "1 Samuel": "1 Sam", "2 Samuel": "2 Sam",
+                "1 Kings": "1 Kgs", "2 Kings": "2 Kgs", "1 Chronicles": "1 Chron", "2 Chronicles": "2 Chron", "Ezra": "Ezra (ఎజ్రా)",
+                "Nehemiah": "Neh (నెహెమ్యా)", "Esther": "Esth (ఎస్తేరు)", "Job": "Job (యోబు)", "Psalms": "Psalms (కీర్తనలు)", "Proverbs": "Prov (సామెతలు)",
+                "Ecclesiastes": "Eccl (ప్రసంగి)", "Song of Solomon": "Song (పరమగీతము)", "Isaiah": "Isa (యెషయా)", "Jeremiah": "Jer (యిర్మియా)",
+                "Lamentations": "Lam (విలాపవాక్యములు)", "Ezekiel": "Ezek (యెహెజ్కేలు)", "Daniel": "Dan (దానియేలు)", "Hosea": "Hos (హోషేయ)",
+                "Joel": "Joel (యోయేలు)", "Amos": "Amos (ఆమోసు)", "Obadiah": "Obad (ఓబద్యా)", "Jonah": "Jonah (యోనా)", "Micah": "Micah (మీకా)",
+                "Nahum": "Nah (నహూము)", "Habakkuk": "Hab (హబక్కూకు)", "Zephaniah": "Zeph (జెఫన్యా)", "Haggai": "Hag (హగ్గయి)",
+                "Zechariah": "Zech (జెకర్యా)", "Malachi": "Mal (మలాకీ)", "Matthew": "Matt (మత్తయి)", "Mark": "Mark (మార్కు)",
+                "Luke": "Luke (లూకా)", "John": "John (యోహాను)", "Acts": "Acts (అపొస్తలుల)", "Romans": "Rom (రోమీయులకు)", "1 Corinthians": "1 Cor",
+                "2 Corinthians": "2 Cor", "Galatians": "Gal (గలతీయులకు)", "Ephesians": "Eph (ఎఫెసీయులకు)", "Philippians": "Phil (ఫిలిప్పీయులకు)",
+                "Colossians": "Col (కొలొస్సయులకు)", "1 Thessalonians": "1 Thess", "2 Thessalonians": "2 Thess", "1 Timothy": "1 Tim",
+                "2 Timothy": "2 Tim", "Titus": "Titus (తీతుకు)", "Philemon": "Philem", "Hebrews": "Heb (హెబ్రీయులకు)", "James": "James (యాకోబు)",
+                "1 Peter": "1 Pet", "2 Peter": "2 Pet", "1 John": "1 John", "2 John": "2 John", "3 John": "3 John", "Jude": "Jude (యూదా)", "Revelation": "Rev (ప్రకటన)"
+            };
+            if (mapping[trimmed]) return mapping[trimmed];
+            return trimmed.length > 12 ? trimmed.substring(0, 10) + '...' : trimmed;
+        }
 
         // --- 2. INITIALIZATION ---
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('roomCodeInput').value = currentSessionId;
-            document.getElementById('dockRoomCodeInput').value = currentSessionId;
+            let dockRoom = document.getElementById('dockRoomCodeInput');
+            if (dockRoom) dockRoom.value = currentSessionId;
+
+            let savedTheme = localStorage.getItem('zion_theme') || 'dark';
+            setTheme(savedTheme, false);
 
             if (isDisplayMode) {
-                document.body.className = ""; document.body.style.margin = "0"; document.body.style.overflow = "hidden";
-                document.body.innerHTML = `<div id="obsDisplayContainer" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; background-color: #008000; overflow: hidden; background-size: cover; background-position: center;"><p id="obsDisplayText" style="width: 90%; margin: 0; padding: 20px; text-align: center; font-weight: 700; line-height: 1.35; transition: all 0.15s ease-in-out;"></p></div>`;
+                document.body.className = "";
+                document.body.style.margin = "0";
+                document.body.style.overflow = "hidden";
+                document.body.innerHTML = `
+                    <div id="obsDisplayContainer" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; background-color: #008000; overflow: hidden; background-size: cover; background-position: center;">
+                        <p id="obsDisplayText" style="width: 90%; margin: 0; padding: 20px; text-align: justify; font-weight: 700; line-height: 1.35; transition: all 0.15s ease-in-out;"></p>
+                    </div>`;
                 applyOBSStylesToDisplay();
                 initFirebaseSync();
                 return;
             }
 
             if (isDockMode) {
-                document.body.className = "obs-dock-theme h-screen overflow-hidden flex flex-col font-sans";
-                ['desktopHeader', 'desktopSidebar', 'desktopSongHeader', 'livePreviewBoxOuter'].forEach(id => document.getElementById(id).classList.add('hidden'));
-                document.getElementById('obsDockHeader').classList.remove('hidden');
+                document.body.className = "obs-dock-theme bg-gray-50 dark:bg-[#2b2b2b] text-gray-900 dark:text-[#cccccc] h-screen overflow-hidden flex flex-col font-sans";
+                ['desktopHeader', 'desktopSidebar', 'desktopSongHeader', 'livePreviewBoxOuter', 'mobileSongActions'].forEach(id => {
+                    let el = document.getElementById(id);
+                    if (el) el.classList.add('hidden', '!hidden');
+                });
+                let dockH = document.getElementById('obsDockHeader');
+                if (dockH) dockH.classList.remove('hidden');
+                
+                let dockSearch = document.getElementById('dockSearchBar');
+                if (dockSearch && activeMainTab === 'songs') dockSearch.classList.remove('hidden');
             } else {
-                document.body.className = "bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 font-sans h-screen overflow-hidden flex flex-col";
-                document.getElementById('desktopHeader').classList.remove('hidden');
+                updateHeaderAndMobileVisibility();
             }
 
             initQuillEditors();
             loadRoomDatabase(currentSessionId);
+            initBibleGridNav();
             initFirebaseSync();
-
-            if (urlParams.get('action') === 'add' && !isDockMode && !isDisplayMode) { setTimeout(openAddSongModal, 300); }
         });
 
-        // --- 3. MULTI-CHURCH DATABASE LOADING (MERGE STRATEGY) ---
+        // Typing effect handler
+        function typeWriterHTML(element, htmlString, speed = 15) {
+            if (typingTimer) clearTimeout(typingTimer);
+            
+            element.innerHTML = '';
+            let i = 0;
+            let currentHTML = '';
+            let isTag = false;
+
+            function type() {
+                if (i < htmlString.length) {
+                    let char = htmlString.charAt(i);
+                    currentHTML += char;
+                    i++;
+
+                    if (char === '<') isTag = true;
+                    if (char === '>') isTag = false;
+
+                    if (isTag) {
+                        type(); 
+                    } else {
+                        element.innerHTML = currentHTML;
+                        typingTimer = setTimeout(type, speed);
+                    }
+                }
+            }
+            
+            type();
+        }
+
+        function toggleTheme() {
+            let isDark = document.documentElement.classList.contains('dark');
+            setTheme(isDark ? 'light' : 'dark', true);
+        }
+
+        function setTheme(theme, save = true) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+                if (!isDockMode) document.body.className = "bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-slate-100 font-sans h-screen overflow-hidden flex flex-col";
+            } else {
+                document.documentElement.classList.remove('dark');
+                if (!isDockMode) document.body.className = "bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 text-slate-900 font-sans h-screen overflow-hidden flex flex-col";
+            }
+            if (save) localStorage.setItem('zion_theme', theme);
+            
+            let icon = document.getElementById('themeToggleIcon');
+            if (icon) icon.className = theme === 'dark' ? 'fa-solid fa-sun text-amber-400 text-sm' : 'fa-solid fa-moon text-blue-600 text-sm';
+            
+            let dockIcon = document.getElementById('dockThemeToggleIcon');
+            if (dockIcon) dockIcon.className = theme === 'dark' ? 'fa-solid fa-sun text-xs text-amber-400' : 'fa-solid fa-moon text-xs text-blue-600';
+        }
+
         async function loadRoomDatabase(roomCode) {
-            // 1. Base initialization from songs.js
             if (typeof songs !== 'undefined' && Array.isArray(songs)) {
-                // Deep copy to ensure we don't accidentally mutate the core source
-                appSongs = JSON.parse(JSON.stringify(songs)); 
+                appSongs = JSON.parse(JSON.stringify(songs));
             } else {
                 appSongs = [];
             }
 
             try {
-                // 2. Fetch Church-Specific edits and additions
                 let doc = await db.collection("song_databases").doc(roomCode).get();
                 if (doc.exists && doc.data().customSongs) {
                     let dbCustom = doc.data().customSongs;
-                    
-                    // Merge Firebase Custom Additions OVER the base songs.js
                     dbCustom.forEach(cSong => {
                         let idx = appSongs.findIndex(s => s.SongNumber == cSong.SongNumber || s.id == cSong.id);
-                        if (idx >= 0) {
-                            appSongs[idx] = cSong; // Update existing base song
-                        } else {
-                            appSongs.push(cSong); // Append newly created song
-                        }
+                        if (idx >= 0) appSongs[idx] = cSong;
+                        else appSongs.push(cSong);
                     });
                 }
-            } catch (e) {
-                console.warn("Could not sync with Cloud DB for additions. Using base library.", e);
-            }
+            } catch (e) { console.warn("Cloud DB load error", e); }
 
             renderAccordionCategories();
             if (appSongs.length > 0) loadSong(appSongs[0].SongNumber, true);
         }
 
-        // --- 4. OMNI-DIRECTIONAL SYNC LOGIC ---
         function processPipesInText(text) {
             if (!text) return '';
-            if (obsConfig.hidePipesText) return text.replace(/<ch>.*?<\/ch>/g, '').replace(/\|\|[\s\S]*?\|\|/g, '').trim();
+            if (obsConfig.hidePipesText) {
+                return text.replace(/<ch>.*?<\/ch>/g, '').replace(/\|\|[\s\S]*?\|\|/g, '').trim();
+            }
             return text.replace(/<ch>(.*?)<\/ch>/gi, "$1");
         }
 
@@ -186,11 +399,9 @@
             let processedText = processPipesInText(rawText);
             let htmlText = processedText.replace(/<br\s*[\/]?>/gi, "<br/>");
             let plainText = htmlText.replace(/<[^>]+>/g, '\n').replace(/\n\n+/g, '\n').trim();
-            
-            // 1. Immediately push to Local OBS WS if this specific device is connected
+
             if (obsConnected) sendToOBSWebSocket(plainText);
 
-            // 2. Broadcast State to Firebase (Syncs Mobile, Desktop, Dock, and Display Canvas)
             db.collection("sessions").doc(currentSessionId).set({
                 activeTextPlain: plainText,
                 activeTextHtml: htmlText,
@@ -210,162 +421,228 @@
                 isClear: true,
                 updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
+            
+            bibleState.lastSelectedVerseNum = null;
+            renderBibleDrillDown();
             updateLocalUI("", null, null, true);
         }
 
-        // Handles Visual UI Syncing Locally based on remote commands
         function updateLocalUI(htmlText, songNum, stanzaKey, isClear) {
             if (isClear) {
                 document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
                 let preview = document.getElementById('livePreviewBox');
-                if (preview && !isDockMode) preview.innerHTML = '<span class="text-slate-400 italic">Screen Cleared</span>';
+                if (preview && !isDockMode) preview.innerHTML = '<span class="text-slate-400 dark:text-slate-500 italic">Screen Cleared</span>';
             } else {
-                // Auto-switch UI to the song if changed remotely
-                if (songNum && (!activeSong || activeSong.SongNumber !== songNum)) {
-                    loadSong(songNum, true); 
-                }
-                
+                if (songNum && (!activeSong || activeSong.SongNumber !== songNum)) loadSong(songNum, true);
                 document.querySelectorAll('.lyric-line').forEach(el => el.classList.remove('active-projection'));
-                
-                // SAFETY CHECK: Ensure stanzaKey exists before attempting replace to avoid Uncaught TypeError
+
                 if (songNum && stanzaKey) {
-                    let targetId = `lyric_line_${songNum}_${String(stanzaKey).replace(/\s+/g, '_')}`;
-                    let activeEl = document.getElementById(targetId);
+                    let activeEl = document.getElementById(`lyric_line_${songNum}_${String(stanzaKey).replace(/\s+/g, '_')}`);
                     if (activeEl) {
                         activeEl.classList.add('active-projection');
                         activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 }
-                
                 let preview = document.getElementById('livePreviewBox');
                 if (preview && !isDockMode) preview.innerHTML = htmlText;
             }
         }
 
-        // --- 5. FIREBASE LISTENER ---
         function initFirebaseSync() {
             if (firestoreUnsubscribe) firestoreUnsubscribe();
-
             firestoreUnsubscribe = db.collection("sessions").doc(currentSessionId).onSnapshot((doc) => {
                 if (doc.exists) {
                     var data = doc.data();
+                    if (data.obsConfig) obsConfig = data.obsConfig;
                     
-                    if (data.obsConfig) {
-                        obsConfig = data.obsConfig;
-                        if (isDisplayMode) applyOBSStylesToDisplay();
-                        else syncConfigToUIInputs(); 
-                    }
-
                     if (isDisplayMode) {
                         let textElem = document.getElementById('obsDisplayText');
-                        if (data.isClear) textElem.innerHTML = '';
-                        else if (data.activeTextHtml) textElem.innerHTML = data.activeTextHtml;
-                        return; 
+                        if (data.isClear) {
+                            if (typingTimer) clearTimeout(typingTimer);
+                            textElem.innerHTML = '';
+                        }
+                        else if (data.activeTextHtml) {
+                            typeWriterHTML(textElem, data.activeTextHtml, 15); 
+                        }
+                        return;
                     }
-
-                    if (data.isClear) {
-                        updateLocalUI("", null, null, true);
-                        if (obsConnected) sendToOBSWebSocket(""); 
-                    } else if (data.activeTextHtml && data.activeTextPlain) {
-                        updateLocalUI(data.activeTextHtml, data.activeSongNum, data.activeStanzaKey, false);
-                        if (obsConnected) sendToOBSWebSocket(data.activeTextPlain); 
-                    }
+                    
+                    if (data.isClear) updateLocalUI("", null, null, true);
+                    else if (data.activeTextHtml) updateLocalUI(data.activeTextHtml, data.activeSongNum, data.activeStanzaKey, false);
                 }
             });
         }
 
         function joinRoom() {
-            let roomInput = isDockMode ? document.getElementById('dockRoomCodeInput') : document.getElementById('roomCodeInput');
-            let newRoom = roomInput.value.trim().toUpperCase();
+            let newRoom = (isDockMode ? document.getElementById('dockRoomCodeInput') : document.getElementById('roomCodeInput')).value.trim().toUpperCase();
             if (newRoom && newRoom !== currentSessionId) {
                 currentSessionId = newRoom;
                 localStorage.setItem('zion_room_code', currentSessionId);
-                loadRoomDatabase(currentSessionId); // Load the new church's songs!
-                initFirebaseSync(); // Listen to the new church's projection!
-                alert(`Successfully joined Sync Room: ${newRoom}`);
+                loadRoomDatabase(currentSessionId);
+                initFirebaseSync();
+                alert(`Joined Room: ${newRoom}`);
             }
         }
 
-        // --- 6. OBS NATIVE WEBSOCKET ---
         async function connectOBS() {
             let url = (isDockMode ? document.getElementById('dockObsUrl') : document.getElementById('obsUrl')).value || 'ws://127.0.0.1:4455';
             let password = (isDockMode ? document.getElementById('dockObsPassword') : document.getElementById('obsPassword')).value || '';
-            let badges = [document.getElementById('obsStatusBadge'), document.getElementById('dockObsStatusBadge')];
+            let badge = document.getElementById('obsStatusBadge');
+            let dockBadge = document.getElementById('dockObsStatusBadge');
 
             try {
                 if (ws) ws.close();
                 ws = new WebSocket(url);
                 ws.onopen = () => console.log("Connected to OBS WebSocket");
+
                 ws.onmessage = async (event) => {
                     let msg = JSON.parse(event.data);
-                    if (msg.op === 0) { 
+                    if (msg.op === 0) {
                         let auth = null;
                         if (msg.d.authentication && password) {
-                            async function sha256(m) { const msgB = new TextEncoder().encode(m); const hashB = await crypto.subtle.digest('SHA-256', msgB); return btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(hashB)))); }
+                            async function sha256(m) {
+                                const msgB = new TextEncoder().encode(m);
+                                const hashB = await crypto.subtle.digest('SHA-256', msgB);
+                                return btoa(String.fromCharCode.apply(null, Array.from(new Uint8Array(hashB))));
+                            }
                             const secret = await sha256(password + msg.d.authentication.salt);
                             auth = await sha256(secret + msg.d.authentication.challenge);
                         }
                         ws.send(JSON.stringify({ op: 1, d: { rpcVersion: 1, authentication: auth } }));
-                    } else if (msg.op === 2) { 
+                    } else if (msg.op === 2) {
                         obsConnected = true;
-                        if (!isDockMode && badges[0]) { badges[0].className = "px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold flex items-center gap-1.5 shadow-sm shrink-0"; badges[0].innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>OBS WS Connected`; }
-                        if (isDockMode && badges[1]) { badges[1].style.backgroundColor = "#4ade80"; badges[1].title = "Connected"; }
+                        if (badge) {
+                            badge.className = "px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/40 text-[11px] font-bold flex items-center gap-1.5 shadow-sm shrink-0";
+                            badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>OBS WS Connected`;
+                        }
+                        if (dockBadge) dockBadge.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
                     }
                 };
-                ws.onerror = () => alert("Failed to connect to OBS WebSocket.");
-                ws.onclose = () => {
-                    obsConnected = false;
-                    if (!isDockMode && badges[0]) { badges[0].className = "px-2.5 py-1.5 rounded-xl bg-slate-800/80 text-slate-300 border border-slate-700 text-[11px] font-bold flex items-center gap-1.5 shadow-sm shrink-0"; badges[0].innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-400"></span>OBS WS Inactive`; }
-                    if (isDockMode && badges[1]) { badges[1].style.backgroundColor = "#ef4444"; badges[1].title = "Disconnected"; }
+                ws.onerror = () => alert("OBS Connection failed.");
+                ws.onclose = () => { 
+                    obsConnected = false; 
+                    if (dockBadge) dockBadge.className = "w-2 h-2 rounded-full bg-red-500";
                 };
-            } catch (error) { alert("Connection failed."); }
+            } catch (error) { console.error("OBS Connection Error", error); }
         }
 
         function sendToOBSWebSocket(plainText) {
             if (obsConnected && ws && ws.readyState === WebSocket.OPEN) {
-                let sourceName = (isDockMode ? document.getElementById('dockObsSourceName') : document.getElementById('obsSourceName')).value || 'Lyrics';
-                ws.send(JSON.stringify({ op: 6, d: { requestType: "SetInputSettings", requestId: "req_" + Date.now(), requestData: { inputName: sourceName, inputSettings: { text: plainText } } } }));
+                let sourceName = document.getElementById('obsSourceName') ? document.getElementById('obsSourceName').value : 'Lyrics';
+                ws.send(JSON.stringify({
+                    op: 6,
+                    d: {
+                        requestType: "SetInputSettings",
+                        requestId: "req_" + Date.now(),
+                        requestData: { inputName: sourceName, inputSettings: { text: plainText } }
+                    }
+                }));
             }
         }
 
-        // --- 7. UI LOGIC (Load, Search, Dock Panels) ---
+        function updateHeaderAndMobileVisibility() {
+            let isBible = activeMainTab === 'bible';
+            ['desktopSearchBoxContainer', 'desktopAddSongBtn'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) el.classList.toggle('hidden', isBible);
+            });
+            
+            let mobileActionEl = document.getElementById('mobileSongActions');
+            if (mobileActionEl) {
+                if (isDockMode) {
+                    mobileActionEl.classList.add('hidden', '!hidden');
+                } else {
+                    mobileActionEl.classList.toggle('hidden', isBible);
+                }
+            }
+        }
+
+        function switchMainTab(tab) {
+            activeMainTab = tab;
+            let isSong = tab === 'songs';
+
+            ['songsTabBtn', 'bibleTabBtn', 'dockSongsTabBtn', 'dockBibleTabBtn'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) {
+                    if (id.toLowerCase().includes(tab)) {
+                        if (isDockMode && id.startsWith('dock')) {
+                            el.classList.add('bg-white', 'text-black', 'shadow-sm', 'dark:bg-[#444]', 'dark:text-white');
+                            el.classList.remove('text-gray-600', 'dark:text-[#aaa]', 'dark:shadow-none');
+                        } else {
+                            el.classList.add('bg-blue-600', 'text-white', 'shadow');
+                            el.classList.remove('bg-slate-200/60', 'dark:bg-white/10', 'text-slate-700', 'dark:text-slate-300');
+                        }
+                    } else {
+                        if (isDockMode && id.startsWith('dock')) {
+                            el.classList.remove('bg-white', 'text-black', 'shadow-sm', 'dark:bg-[#444]', 'dark:text-white');
+                            el.classList.add('text-gray-600', 'dark:text-[#aaa]');
+                        } else {
+                            el.classList.remove('bg-blue-600', 'text-white', 'shadow');
+                            el.classList.add('bg-slate-200/60', 'dark:bg-white/10', 'text-slate-700', 'dark:text-slate-300');
+                        }
+                    }
+                }
+            });
+
+            let songWorkspace = document.getElementById('desktopSongWorkspace');
+            if (songWorkspace) songWorkspace.classList.toggle('hidden', !isSong);
+
+            let desktopBible = document.getElementById('desktopBibleWorkspace');
+            if (desktopBible) desktopBible.classList.toggle('hidden', isSong);
+            
+            let dockSearch = document.getElementById('dockSearchBar');
+            if (dockSearch) dockSearch.classList.toggle('hidden', !isSong);
+
+            updateHeaderAndMobileVisibility();
+        }
+
         function applyOBSStylesToDisplay() {
             var container = document.getElementById('obsDisplayContainer');
             var textElem = document.getElementById('obsDisplayText');
             if (!container || !textElem) return;
+
             container.style.backgroundImage = obsConfig.bgImage ? `url('${obsConfig.bgImage}')` : 'none';
             container.style.backgroundColor = obsConfig.bgImage ? 'transparent' : (obsConfig.bgColor || '#008000');
             textElem.style.fontSize = obsConfig.fontSize || '4.0vw';
             textElem.style.fontFamily = obsConfig.fontFamily || "'Mandali', sans-serif";
-            textElem.style.textAlign = obsConfig.textAlign || 'center';
+            textElem.style.textAlign = obsConfig.textAlign || 'justify';
             textElem.style.color = obsConfig.textColor || '#ffffff';
             textElem.style.textShadow = obsConfig.textShadow ? "2px 2px 8px rgba(0,0,0,0.8), -2px -2px 8px rgba(0,0,0,0.8)" : "none";
-            textElem.style.webkitTextStroke = obsConfig.textStrokeWidth > 0 ? `${obsConfig.textStrokeWidth}px ${obsConfig.textStrokeColor}` : "0px transparent";
-        }
-
-        function syncConfigToUIInputs() {
-            let numSize = parseFloat(obsConfig.fontSize) || 4.0;
-            if(document.getElementById('obsFontSize')) { document.getElementById('obsFontSize').value = numSize; document.getElementById('fontSizeVal').textContent = obsConfig.fontSize; document.getElementById('obsFontFamily').value = obsConfig.fontFamily; document.getElementById('obsTextColor').value = obsConfig.textColor; document.getElementById('obsBgColor').value = obsConfig.bgColor; document.getElementById('obsTextShadow').checked = obsConfig.textShadow; document.getElementById('obsHidePipesText').checked = obsConfig.hidePipesText; }
-            if(document.getElementById('dockObsFontSize')) { document.getElementById('dockObsFontSize').value = numSize; document.getElementById('dockObsFontFamily').value = obsConfig.fontFamily; document.getElementById('dockObsTextAlign').value = obsConfig.textAlign; document.getElementById('dockObsTextColor').value = obsConfig.textColor; document.getElementById('dockObsBgColor').value = obsConfig.bgColor; document.getElementById('dockObsTextShadow').checked = obsConfig.textShadow; document.getElementById('dockObsHidePipes').checked = obsConfig.hidePipesText; }
         }
 
         function applyDesktopStylesFromModal() {
-            obsConfig.fontSize = document.getElementById('obsFontSize').value + 'vw'; obsConfig.fontFamily = document.getElementById('obsFontFamily').value; obsConfig.textColor = document.getElementById('obsTextColor').value; obsConfig.textShadow = document.getElementById('obsTextShadow').checked; obsConfig.bgColor = document.getElementById('obsBgColor').value; obsConfig.hidePipesText = document.getElementById('obsHidePipesText').checked;
+            obsConfig.fontSize = (document.getElementById('dockObsFontSize') || document.getElementById('obsFontSize')).value + 'vw';
+            obsConfig.fontFamily = document.getElementById('obsFontFamily') ? document.getElementById('obsFontFamily').value : obsConfig.fontFamily;
+            obsConfig.textColor = document.getElementById('obsTextColor') ? document.getElementById('obsTextColor').value : obsConfig.textColor;
+            obsConfig.textShadow = document.getElementById('obsTextShadow') ? document.getElementById('obsTextShadow').checked : obsConfig.textShadow;
+            obsConfig.bgColor = document.getElementById('obsBgColor') ? document.getElementById('obsBgColor').value : obsConfig.bgColor;
+            obsConfig.bgImage = document.getElementById('obsBgImage') ? document.getElementById('obsBgImage').value.trim() : obsConfig.bgImage;
+            obsConfig.hidePipesText = document.getElementById('obsHidePipesText') ? document.getElementById('obsHidePipesText').checked : obsConfig.hidePipesText;
             db.collection("sessions").doc(currentSessionId).set({ obsConfig: obsConfig }, { merge: true });
         }
 
-        function applyDockStyles() {
-            obsConfig.fontSize = document.getElementById('dockObsFontSize').value + 'vw'; obsConfig.fontFamily = document.getElementById('dockObsFontFamily').value; obsConfig.textAlign = document.getElementById('dockObsTextAlign').value; obsConfig.textColor = document.getElementById('dockObsTextColor').value; obsConfig.bgColor = document.getElementById('dockObsBgColor').value; obsConfig.textShadow = document.getElementById('dockObsTextShadow').checked; obsConfig.hidePipesText = document.getElementById('dockObsHidePipes').checked;
-            db.collection("sessions").doc(currentSessionId).set({ obsConfig: obsConfig }, { merge: true });
+        function clearBgImageInput(inputId) {
+            document.getElementById(inputId).value = '';
+            applyDesktopStylesFromModal();
         }
 
-        function toggleDockPanel(panelId) { ['dockSettingsPanel', 'dockDisplayPanel'].forEach(id => { let el = document.getElementById(id); if (el) { if (id === panelId) el.classList.toggle('hidden'); else el.classList.add('hidden'); } }); }
+        function toggleSettings() {
+            if (activeMainTab === 'bible') {
+                let el = document.getElementById('bibleSettingsPanel');
+                if (el) el.classList.toggle('hidden');
+            } else {
+                toggleDockPanel('dockSettingsPanel');
+            }
+        }
 
-        function openAddSongExternal() {
-            let externalUrl = new URL(window.location.href);
-            externalUrl.searchParams.delete('mode');
-            externalUrl.searchParams.set('action', 'add');
-            window.open(externalUrl.toString(), '_blank');
+        function toggleDockPanel(panelId) {
+            ['dockSettingsPanel', 'dockDisplayPanel'].forEach(id => {
+                let el = document.getElementById(id);
+                if (el) {
+                    if (id === panelId) el.classList.toggle('hidden');
+                    else el.classList.add('hidden');
+                }
+            });
         }
 
         function renderAccordionCategories() {
@@ -374,57 +651,89 @@
                 if (!container) return;
                 container.innerHTML = '';
                 appSongs.sort((a, b) => a.SongNumber - b.SongNumber);
-                
-                categoryList.forEach(cat => {
-                    var categorySongs = appSongs.filter(s => (s.categoryId === cat.id || (s.SongNumber >= cat.range[0] && s.SongNumber <= cat.range[1])));
-                    var catBox = document.createElement('div'); catBox.className = 'border-b border-slate-100/80';
-                    var headerBtn = document.createElement('button'); headerBtn.type = 'button'; headerBtn.className = 'w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-700 hover:bg-white/80 hover:text-blue-700 flex justify-between items-center transition';
-                    headerBtn.innerHTML = `<span class="font-telugu">${cat.name}</span><div class="flex items-center gap-2"><span class="text-[10px] font-bold bg-slate-200/50 text-slate-600 px-2 py-0.5 rounded-full">${categorySongs.length}</span><i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></div>`;
-                    var songListDiv = document.createElement('div'); songListDiv.className = 'song-list-pane bg-slate-50/40 backdrop-blur-sm divide-y divide-slate-100/60 hidden';
 
-                    if (categorySongs.length === 0) songListDiv.innerHTML = `<div class="px-4 py-2.5 text-xs text-slate-400 italic">No songs</div>`;
-                    else categorySongs.forEach(s => {
-                        var songItem = document.createElement('div'); songItem.className = `px-4 py-2.5 cursor-pointer text-xs flex items-center justify-between transition hover:bg-white/90 text-slate-700`;
-                        songItem.innerHTML = `<span class="truncate font-telugu"><span class="font-bold text-blue-600 mr-1.5 font-sans">#${s.SongNumber}</span> ${s.title}</span>`;
-                        songItem.onclick = (e) => { e.stopPropagation(); loadSong(s.SongNumber); };
-                        songListDiv.appendChild(songItem);
+                if (typeof categoryList !== 'undefined') {
+                    categoryList.forEach(cat => {
+                        var categorySongs = appSongs.filter(s => (s.categoryId === cat.id || (s.SongNumber >= cat.range[0] && s.SongNumber <= cat.range[1])));
+                        var catBox = document.createElement('div');
+                        catBox.className = 'border-b border-slate-200 dark:border-slate-800';
+
+                        var headerBtn = document.createElement('button');
+                        headerBtn.type = 'button';
+                        headerBtn.className = 'w-full px-4 py-3 text-left font-semibold text-xs sm:text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex justify-between items-center transition';
+                        headerBtn.innerHTML = `<span class="font-telugu">${cat.name}</span><div class="flex items-center gap-2"><span class="text-[10px] font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-full">${categorySongs.length}</span><i class="fa-solid fa-chevron-down text-xs text-slate-400"></i></div>`;
+
+                        var songListDiv = document.createElement('div');
+                        songListDiv.className = 'song-list-pane bg-slate-50/40 dark:bg-slate-900/40 backdrop-blur-sm divide-y divide-slate-100 dark:divide-slate-800 hidden';
+
+                        if (categorySongs.length === 0) {
+                            songListDiv.innerHTML = `<div class="px-4 py-2.5 text-xs text-slate-400 italic">No songs</div>`;
+                        } else {
+                            categorySongs.forEach(s => {
+                                var songItem = document.createElement('div');
+                                songItem.className = `px-4 py-2.5 cursor-pointer text-xs flex items-center justify-between transition hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300`;
+                                songItem.innerHTML = `<span class="truncate font-telugu"><span class="font-bold text-blue-600 dark:text-blue-400 mr-1.5 font-sans">#${s.SongNumber}</span> ${s.title}</span>`;
+                                songItem.onclick = (e) => { e.stopPropagation(); loadSong(s.SongNumber); };
+                                songListDiv.appendChild(songItem);
+                            });
+                        }
+
+                        headerBtn.onclick = (e) => {
+                            e.preventDefault();
+                            var isHidden = songListDiv.classList.contains('hidden');
+                            container.querySelectorAll('.song-list-pane').forEach(p => p.classList.add('hidden'));
+                            container.querySelectorAll('i.fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)');
+                            if (isHidden) {
+                                songListDiv.classList.remove('hidden');
+                                headerBtn.querySelector('i').style.transform = 'rotate(180deg)';
+                            }
+                        };
+                        catBox.appendChild(headerBtn);
+                        catBox.appendChild(songListDiv);
+                        container.appendChild(catBox);
                     });
 
-                    headerBtn.onclick = (e) => { e.preventDefault(); var isHidden = songListDiv.classList.contains('hidden'); container.querySelectorAll('.song-list-pane').forEach(p => p.classList.add('hidden')); container.querySelectorAll('i.fa-chevron-down').forEach(i => i.style.transform = 'rotate(0deg)'); if (isHidden) { songListDiv.classList.remove('hidden'); headerBtn.querySelector('i').style.transform = 'rotate(180deg)'; } };
-                    catBox.appendChild(headerBtn); catBox.appendChild(songListDiv); container.appendChild(catBox);
-                });
+                    let sel = document.getElementById('inputCategory');
+                    if (sel) {
+                        sel.innerHTML = '';
+                        categoryList.forEach(c => sel.appendChild(new Option(c.name, c.id)));
+                    }
+                }
             });
-            let sel = document.getElementById('inputCategory'); if(sel) { sel.innerHTML = ''; categoryList.forEach(c => sel.appendChild(new Option(c.name, c.id))); }
         }
 
         function loadSong(songNum, isSilentLoad = false) {
             activeSong = appSongs.find(s => s.SongNumber == songNum);
             if (!activeSong) return;
 
-            if (isDockMode) document.getElementById('dockSongTitle').innerHTML = `#${activeSong.SongNumber} - ${activeSong.title.split('||')[1] || activeSong.title}`;
-            else {
-                document.getElementById('displaySongNum').textContent = activeSong.SongNumber;
-                let tParts = activeSong.title.split('||');
-                document.getElementById('displayTitle').innerHTML = tParts.length === 2 ? `<div class="space-y-0.5"><h2 class="text-lg sm:text-2xl font-extrabold text-slate-700 font-telugu leading-snug">${tParts[1].trim()}<p class="text-xs font-bold uppercase text-blue-600 font-sans">${tParts[0].trim()}</p></h2></div>` : `<h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 font-telugu leading-snug">${activeSong.title}</h2>`;
+            document.getElementById('displaySongNum').textContent = activeSong.SongNumber;
+            let tParts = activeSong.title.split('||');
+            document.getElementById('displayTitle').innerHTML = tParts.length === 2 ?
+                `<div class="space-y-0.5"><h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 font-telugu leading-snug">${tParts[1].trim()}<p class="text-xs font-bold uppercase text-blue-600 dark:text-blue-400 font-sans">${tParts[0].trim()}</p></h2></div>`
+                : `<h2 class="text-lg sm:text-2xl font-extrabold text-slate-900 dark:text-slate-100 font-telugu leading-snug">${activeSong.title}</h2>`;
+
+            var fMeta = document.getElementById('fixed_song_meta');
+            var fLyrics = document.getElementById('full_song_lyrics');
+            if (!isDockMode) {
+                fMeta.style.fontSize = currentFontSize + 'px';
+                fLyrics.style.fontSize = currentFontSize + 'px';
             }
+            fMeta.innerHTML = '';
+            fLyrics.innerHTML = '';
 
-            var fMeta = document.getElementById('fixed_song_meta'); var fLyrics = document.getElementById('full_song_lyrics');
-            if (!isDockMode) { fMeta.style.fontSize = currentFontSize + 'px'; fLyrics.style.fontSize = currentFontSize + 'px'; }
-            fMeta.innerHTML = ''; fLyrics.innerHTML = '';
-            
             var songObj = activeSong.Song;
-
             function createLyricBlock(key, content, isFixed) {
                 var div = document.createElement('div');
-                div.id = `lyric_line_${songNum}_${String(key).replace(/\s+/g, '_')}`; // Ensure strings
+                div.id = `lyric_line_${songNum}_${String(key).replace(/\s+/g, '_')}`;
                 
-                if (isDockMode) {
-                    div.className = "lyric-line font-telugu";
-                    div.innerHTML = `<span class="font-sans mr-2">${key}</span>${content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right ml-4 opacity-50">$1</span>')}`;
+                div.className = isDockMode 
+                    ? `p-2 mb-1 bg-white dark:bg-[#333] border border-gray-200 dark:border-[#222] rounded text-[13px] text-gray-900 dark:text-[#eee] shadow-sm lyric-line font-telugu flex gap-2 items-center ${isFixed ? 'border-l-4 border-l-amber-500' : ''}` 
+                    : (isFixed ? `p-2.5 rounded-r-xl font-medium shadow-sm lyric-line font-telugu ${key === 'Chorus' ? 'bg-amber-50 dark:bg-amber-950/40 border-l-4 border-amber-500 text-amber-900 dark:text-amber-200' : 'bg-purple-50 dark:bg-purple-950/40 border-l-4 border-purple-500 text-purple-900 dark:text-purple-200'}` : `p-3 sm:p-4 bg-white/70 dark:bg-slate-800/70 hover:bg-blue-50/50 dark:hover:bg-slate-800 border border-slate-200/70 dark:border-slate-700 rounded-2xl transition lyric-line flex gap-3 items-center backdrop-blur-sm shadow-xs text-slate-900 dark:text-slate-100`);
+
+                if (isFixed) {
+                    div.innerHTML = content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right text-blue-600 dark:text-blue-400 ml-4 pr-2">$1</span>');
                 } else {
-                    div.className = isFixed ? `p-2.5 rounded-r-xl font-medium shadow-sm lyric-line font-telugu ${key==='Chorus'?'bg-amber-50/80 border-l-4 border-amber-500 text-amber-900':'bg-purple-50/80 border-l-4 border-purple-500 text-purple-900'}` : `p-3 sm:p-4 bg-white/70 hover:bg-blue-50/50 border border-slate-200/70 rounded-2xl transition lyric-line flex gap-3 items-center backdrop-blur-sm shadow-xs`;
-                    if (isFixed) div.innerHTML = content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right text-500 ml-4 pr-2">$1</span>');
-                    else div.innerHTML = `<span class="text-xs font-bold bg-slate-200/80 text-slate-700 px-2.5 py-1 rounded-lg shrink-0 font-sans">${key}</span><div class="flex-1 font-telugu">${content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right ml-4 pr-2">$1</span>')}</div>`;
+                    div.innerHTML = `<span class="text-[10px] font-bold bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-200 px-2 py-0.5 rounded shrink-0 font-sans">${key}</span><div class="flex-1 font-telugu">${content.replace(/<ch>(.*?)<\/ch>/gi, '<span class="float-right ml-4 pr-2 text-blue-600 dark:text-blue-400">$1</span>')}</div>`;
                 }
                 div.onclick = () => triggerProjection(content, songNum, key);
                 (isFixed ? fMeta : fLyrics).appendChild(div);
@@ -432,9 +741,179 @@
 
             if (songObj.Chorus) createLyricBlock('Chorus', songObj.Chorus, true);
             if (songObj.Bridge) createLyricBlock('Bridge', songObj.Bridge, true);
-            Object.keys(songObj).forEach(key => { if (key !== 'Chorus' && key !== 'Bridge' && key !== 'Verse') createLyricBlock(key, songObj[key], false); });
-            
-            var drawer = document.getElementById('mobileCategoryDrawer'); if (drawer) drawer.classList.add('hidden');
+            Object.keys(songObj).forEach(key => {
+                if (key !== 'Chorus' && key !== 'Bridge' && key !== 'Verse') createLyricBlock(key, songObj[key], false);
+            });
+
+            let drawer = document.getElementById('mobileCategoryDrawer');
+            if (drawer) drawer.classList.add('hidden');
+        }
+
+        // --- GRID BIBLE NAVIGATION MODULE ---
+        function initBibleGridNav() {
+            syncBibleSettingsToUI();
+            renderBibleDrillDown();
+        }
+
+        function syncBibleSettingsToUI() {
+            bibleState.lang1 = document.getElementById('bibleLang1') ? document.getElementById('bibleLang1').value : bibleState.lang1;
+            bibleState.lang2 = document.getElementById('bibleLang2') ? document.getElementById('bibleLang2').value : bibleState.lang2;
+            bibleState.navLang = document.getElementById('bibleNavLang') ? document.getElementById('bibleNavLang').value : bibleState.navLang;
+            bibleState.duration = parseInt(document.getElementById('bibleDuration') ? document.getElementById('bibleDuration').value : 0);
+            bibleState.onlyReference = document.getElementById('bibleOnlyRef') ? document.getElementById('bibleOnlyRef').checked : false;
+            renderBibleDrillDown();
+        }
+
+        function setBibleLevel(level) {
+            bibleState.viewLevel = level;
+            renderBibleDrillDown();
+        }
+
+        function handleNavLangChange(el) {
+            bibleState.navLang = el.value;
+            bibleState.viewLevel = 'books';
+            renderBibleDrillDown();
+        }
+
+        function renderBibleDrillDown() {
+            let container = document.getElementById('bibleDrilldownContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            let primaryDict = bibleData[bibleState.navLang] || bibleData.telugu;
+
+            let headerHtml = `<div class="flex items-center gap-2 px-2 py-2 shrink-0 border-b border-gray-300 dark:border-[#333] mb-2">`;
+            if (bibleState.viewLevel === 'books') {
+                headerHtml += `<span class="font-bold text-gray-900 dark:text-white text-sm"><i class="fa-solid fa-book-open text-blue-500 mr-2"></i>Select Bible Book</span>`;
+            } else if (bibleState.viewLevel === 'chapters') {
+                let fullBookName = primaryDict[bibleState.book]?.name || bibleState.book;
+                let shortBookName = getShortBookName(fullBookName);
+                headerHtml += `
+                    <button onclick="setBibleLevel('books')" class="px-2.5 py-1.5 bg-white hover:bg-gray-100 text-gray-800 dark:bg-[#333] dark:hover:bg-[#444] dark:text-white rounded text-[11px] font-bold transition flex items-center gap-1.5 shadow-sm border border-gray-300 dark:border-[#444]"><i class="fa-solid fa-book"></i> Books</button>
+                    <span class="font-bold text-blue-600 dark:text-[#4488ff] text-[13px] ml-1 font-telugu"> ${shortBookName}</span>`;
+            } else if (bibleState.viewLevel === 'verses') {
+                let fullBookName = primaryDict[bibleState.book]?.name || bibleState.book;
+                let shortBookName = getShortBookName(fullBookName);
+                headerHtml += `
+                    <button onclick="setBibleLevel('books')" class="px-2.5 py-1.5 bg-white hover:bg-gray-100 text-gray-800 dark:bg-[#333] dark:hover:bg-[#444] dark:text-white rounded text-[11px] font-bold transition flex items-center gap-1.5 shadow-sm border border-gray-300 dark:border-[#444]"><i class="fa-solid fa-book"></i> Books</button>
+                    <button onclick="setBibleLevel('chapters')" class="px-2.5 py-1.5 bg-white hover:bg-gray-100 text-gray-800 dark:bg-[#333] dark:hover:bg-[#444] dark:text-white rounded text-[11px] font-bold transition flex items-center gap-1.5 shadow-sm border border-gray-300 dark:border-[#444]"><i class="fa-solid fa-arrow-left"></i> Chapters</button>
+                    <span class="font-bold text-blue-600 dark:text-[#4488ff] text-[13px] ml-1 font-telugu"> ${shortBookName} ${bibleState.chapter}</span>`;
+            }
+            headerHtml += `</div>`;
+
+            let previewBarHtml = '';
+            if (bibleState.viewLevel === 'verses') {
+                previewBarHtml = `
+                    <div class="px-2 mb-3 shrink-0">
+                        <div id="activeVersePreviewBox" class="px-3 py-2 bg-gray-100 text-gray-900 border border-gray-300 dark:bg-[#444] dark:text-white dark:border-[#333] rounded-lg text-[11px] truncate font-telugu shadow-inner">
+                            <span class="truncate" id="previewVerseTextContent">${bibleState.lastSelectedVerseText}</span>
+                        </div>
+                    </div>`;
+            }
+
+            let gridHtml = document.createElement('div');
+            gridHtml.className = "flex-1 overflow-y-auto w-full px-2";
+
+            if (bibleState.viewLevel === 'books') {
+                let grid = document.createElement('div');
+                grid.className = "grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 pb-4";
+                Object.keys(primaryDict).forEach(bKey => {
+                    let fullName = primaryDict[bKey].name || bKey;
+                    let shortName = getShortBookName(fullName);
+
+                    let btn = document.createElement('button');
+                    btn.className = "grid-btn bg-white border border-gray-300 hover:bg-blue-50 text-gray-900 dark:bg-[#262626] dark:border-[#111] dark:hover:bg-[#444] dark:text-white font-telugu min-h-[50px] px-2 shadow-sm dark:shadow-none";
+                    btn.title = fullName;
+                    btn.textContent = shortName;
+                    btn.onclick = () => {
+                        bibleState.book = bKey;
+                        setBibleLevel('chapters');
+                    };
+                    grid.appendChild(btn);
+                });
+                gridHtml.appendChild(grid);
+            } 
+            else if (bibleState.viewLevel === 'chapters') {
+                let grid = document.createElement('div');
+                grid.className = "grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2.5 pb-4";
+                let chaps = Object.keys(primaryDict[bibleState.book]?.chapters || { "1": {} });
+                chaps.forEach(ch => {
+                    let btn = document.createElement('button');
+                    btn.className = "grid-btn bg-white border border-gray-300 hover:bg-blue-50 text-gray-900 dark:bg-[#262626] dark:border-[#111] dark:hover:bg-[#444] dark:text-white h-[48px] text-lg font-bold shadow-sm dark:shadow-none";
+                    btn.textContent = ch;
+                    btn.onclick = () => {
+                        bibleState.chapter = ch;
+                        setBibleLevel('verses');
+                    };
+                    grid.appendChild(btn);
+                });
+                gridHtml.appendChild(grid);
+            }
+            else if (bibleState.viewLevel === 'verses') {
+                let grid = document.createElement('div');
+                grid.className = "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-1.5 pb-6";
+
+                let chKey = bibleState.chapter;
+                let navLang = bibleState.navLang;
+                let l1Lang = bibleState.lang1;
+                let l2Lang = bibleState.lang2;
+
+                let navKeys = Object.keys(bibleData[navLang] || {});
+                let l1Keys = Object.keys(bibleData[l1Lang] || {});
+                let l2Keys = l2Lang !== 'none' ? Object.keys(bibleData[l2Lang] || {}) : [];
+                let bookIndex = navKeys.indexOf(bibleState.book);
+
+                let key1 = l1Keys[bookIndex] || bibleState.book;
+                let key2 = l2Keys[bookIndex] || bibleState.book;
+
+                let l1Dict = bibleData[l1Lang]?.[key1]?.chapters?.[chKey] || [];
+                let l2Dict = l2Lang !== 'none' ? (bibleData[l2Lang]?.[key2]?.chapters?.[chKey] || []) : [];
+                let navDict = bibleData[navLang]?.[bibleState.book] || { name: bibleState.book };
+
+                let bookDisplayName = navDict.name || bibleState.book;
+                let maxVerses = Math.max(l1Dict.length, l2Dict.length, 5);
+
+                for (let i = 0; i < maxVerses; i++) {
+                    let vNum = i + 1;
+                    let text1 = (typeof l1Dict[i] === 'object' && l1Dict[i].text) ? l1Dict[i].text : (l1Dict[i] || `[Verse ${vNum} missing]`);
+                    let text2 = l2Lang !== 'none' ? ((typeof l2Dict[i] === 'object' && l2Dict[i].text) ? l2Dict[i].text : (l2Dict[i] || '')) : '';
+                    let refStr = `${bookDisplayName} ${chKey}:${vNum}`;
+
+                    let isActive = (bibleState.lastSelectedVerseNum === vNum);
+                    let bgClass = isActive 
+                        ? "bg-blue-100 border-blue-400 text-blue-900 dark:bg-[#555] dark:border-[#777] dark:text-white" 
+                        : "bg-white border-gray-300 hover:bg-gray-100 text-gray-800 dark:bg-[#262626] dark:border-[#111] dark:hover:bg-[#444] dark:text-white";
+
+                    let tile = document.createElement('button');
+                    tile.className = `bible-verse-tile h-12 ${bgClass} rounded-md font-bold text-sm flex items-center justify-center transition shadow-sm dark:shadow-none`;
+                    tile.textContent = vNum;
+                    tile.title = `${refStr}: ${text1.substring(0, 40)}...`;
+
+                    let projContent = bibleState.onlyReference ? refStr : `${text1}${text2 ? '<br/>'+text2 : ''}<br/>(${refStr})`;
+                    let previewStr = `${text1}${text2 ? ' | ' + text2 : ''}`;
+
+                    tile.onclick = () => {
+                        bibleState.lastSelectedVerseText = previewStr;
+                        bibleState.lastSelectedVerseNum = vNum;
+                        
+                        let previewSpan = document.getElementById('previewVerseTextContent');
+                        if (previewSpan) previewSpan.textContent = previewStr;
+
+                        triggerProjection(projContent, null, null);
+                        renderBibleDrillDown();
+                        
+                        if (window.verseTimeout) clearTimeout(window.verseTimeout);
+                        if (bibleState.duration > 0) {
+                            window.verseTimeout = setTimeout(() => { clearScreenMaster(); }, bibleState.duration * 1000);
+                        }
+                    };
+                    grid.appendChild(tile);
+                }
+                gridHtml.appendChild(grid);
+            }
+
+            container.innerHTML = headerHtml + previewBarHtml;
+            container.appendChild(gridHtml);
         }
 
         function handleSearch(input, suggId, listId, clearBtnId) {
@@ -448,225 +927,396 @@
 
             let filtered = appSongs.filter(s => s.SongNumber.toString().includes(query) || (s.title && s.title.toLowerCase().includes(query)));
             list.innerHTML = '';
-            if (filtered.length === 0) list.innerHTML = `<li class="px-3 py-2 text-[#888] italic text-xs">No matching songs</li>`;
-            else {
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<li class="px-3 py-2 text-slate-400 italic text-xs">No matching songs</li>`;
+            } else {
                 filtered.forEach(s => {
                     let li = document.createElement('li');
-                    if (isDockMode) {
-                        li.className = "px-3 py-2 cursor-pointer flex justify-between";
-                        li.innerHTML = `<div><span class="font-bold text-[#2484f2] mr-2 font-sans">#${s.SongNumber}</span><span class="font-telugu text-[13px] text-white">${s.title.split('||')[1] || s.title}</span></div>`;
-                    } else {
-                        li.className = "px-4 py-2 hover:bg-blue-50 cursor-pointer flex justify-between";
-                        li.innerHTML = `<div><span class="font-bold text-blue-600 mr-2 font-sans">#${s.SongNumber}</span><span class="font-telugu text-sm">${s.title}</span></div>`;
-                    }
-                    li.onclick = () => { loadSong(s.SongNumber); sugg.classList.add('hidden'); input.value = ''; clearBtn.classList.add('hidden'); };
+                    li.className = "px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-[#444] cursor-pointer flex justify-between text-gray-900 dark:text-white text-xs";
+                    li.innerHTML = `<div><span class="font-bold text-blue-600 dark:text-[#4488ff] mr-2 font-sans">#${s.SongNumber}</span><span class="font-telugu">${s.title}</span></div>`;
+                    li.onclick = () => {
+                        loadSong(s.SongNumber);
+                        sugg.classList.add('hidden');
+                        input.value = '';
+                        clearBtn.classList.add('hidden');
+                    };
                     list.appendChild(li);
                 });
             }
             sugg.classList.remove('hidden');
         }
+
         function desktopSearch(inp) { handleSearch(inp, 'suggestions', 'suggestionsList', 'clearSearch'); }
         function dockSearch(inp) { handleSearch(inp, 'dockSuggestions', 'dockSuggestionsList', 'dockClearSearch'); }
-        function clearInp(inId, suId, cbId) { document.getElementById(inId).value=''; document.getElementById(suId).classList.add('hidden'); document.getElementById(cbId).classList.add('hidden'); }
+        function clearInp(inId, suId, cbId) {
+            document.getElementById(inId).value = '';
+            document.getElementById(suId).classList.add('hidden');
+            document.getElementById(cbId).classList.add('hidden');
+        }
 
         function toggleModal(id, show) { document.getElementById(id).classList.toggle('hidden', !show); }
         function toggleMobileDrawer() { document.getElementById('mobileCategoryDrawer').classList.toggle('hidden'); }
-        function changeFontSize(delta) { currentFontSize = Math.max(14, Math.min(36, currentFontSize + delta)); document.getElementById('fixed_song_meta').style.fontSize = currentFontSize + 'px'; document.getElementById('full_song_lyrics').style.fontSize = currentFontSize + 'px'; }
-
-        // --- 8. EDITOR LOGIC (Quill) ---
-        function initQuillEditors() {
-            if(document.getElementById('inputChorusEditor') && !chorusQuill) chorusQuill = new Quill('#inputChorusEditor', { theme: 'snow', modules: { toolbar: quillToolbarOptions }, placeholder: 'Chorus lyrics...' });
-            if(document.getElementById('inputBridgeEditor') && !bridgeQuill) bridgeQuill = new Quill('#inputBridgeEditor', { theme: 'snow', modules: { toolbar: quillToolbarOptions }, placeholder: 'Bridge lyrics...' });
+        function changeFontSize(delta) {
+            currentFontSize = Math.max(14, Math.min(36, currentFontSize + delta));
+            let m = document.getElementById('fixed_song_meta');
+            let l = document.getElementById('full_song_lyrics');
+            if(m) m.style.fontSize = currentFontSize + 'px';
+            if(l) l.style.fontSize = currentFontSize + 'px';
         }
-        function getQHtml(q) { if(!q)return ''; let h=q.root.innerHTML; return h==='<p><br></p>'?'':h.replace(/<p>/g,'').replace(/<\/p>/g,'<br/>').replace(/(<br\s*[\/]?>)+$/,''); }
-        function setQHtml(q, h) { if(!q)return; if(!h){q.setText('');return;} q.root.innerHTML = h.split('<br/>').map(l=>`<p>${l}</p>`).join(''); }
+
+        function initQuillEditors() {
+            if (document.getElementById('inputChorusEditor') && !chorusQuill) {
+                chorusQuill = new Quill('#inputChorusEditor', { theme: 'snow', modules: { toolbar: quillToolbarOptions }, placeholder: 'Chorus lyrics...' });
+            }
+            if (document.getElementById('inputBridgeEditor') && !bridgeQuill) {
+                bridgeQuill = new Quill('#inputBridgeEditor', { theme: 'snow', modules: { toolbar: quillToolbarOptions }, placeholder: 'Bridge lyrics...' });
+            }
+        }
+
+        function getQHtml(q) {
+            if (!q) return '';
+            let h = q.root.innerHTML;
+            return h === '<p><br></p>' ? '' : h.replace(/<p>/g, '').replace(/<\/p>/g, '<br/>').replace(/(<br\s*[\/]?>)+$/, '');
+        }
+
+        function setQHtml(q, h) {
+            if (!q) return;
+            if (!h) { q.setText(''); return; }
+            q.root.innerHTML = h.split('<br/>').map(l => `<p>${l}</p>`).join('');
+        }
 
         function openAddSongModal() {
-            document.getElementById('editSongId').value = ''; document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-file-circle-plus text-blue-600"></i> Add New Song`;
+            document.getElementById('editSongId').value = '';
+            document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-file-circle-plus text-blue-600 mr-1.5"></i> Add New Song`;
             let nextNum = appSongs.length ? (Math.max(...appSongs.map(s => s.SongNumber)) + 1) : 1;
-            document.getElementById('inputSongNum').value = nextNum; document.getElementById('inputTitle').value = '';
-            setQHtml(chorusQuill, ''); setQHtml(bridgeQuill, ''); document.getElementById('stanzasContainer').innerHTML = ''; stanzaQuills = [];
-            addStanzaRow(); document.getElementById('deleteSongBtn').classList.add('hidden'); toggleModal('songModal', true);
+            document.getElementById('inputSongNum').value = nextNum;
+            document.getElementById('inputTitle').value = '';
+            setQHtml(chorusQuill, '');
+            setQHtml(bridgeQuill, '');
+            document.getElementById('stanzasContainer').innerHTML = '';
+            stanzaQuills = [];
+            addStanzaRow();
+            document.getElementById('deleteSongBtn').classList.add('hidden');
+            toggleModal('songModal', true);
         }
 
+        function openAddSongExternal() { openAddSongModal(); }
         function openEditCurrentSong() {
             if (!activeSong) return;
-            document.getElementById('editSongId').value = activeSong.id || Date.now(); document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Edit #${activeSong.SongNumber}`;
-            document.getElementById('inputSongNum').value = activeSong.SongNumber; document.getElementById('inputTitle').value = activeSong.title;
-            setQHtml(chorusQuill, activeSong.Song.Chorus || ''); setQHtml(bridgeQuill, activeSong.Song.Bridge || '');
-            document.getElementById('stanzasContainer').innerHTML = ''; stanzaQuills = [];
-            Object.keys(activeSong.Song).forEach(k => { if(k!=='Chorus' && k!=='Bridge' && k!=='Verse') addStanzaRow(activeSong.Song[k]); });
-            document.getElementById('deleteSongBtn').classList.remove('hidden'); toggleModal('songModal', true);
+            document.getElementById('editSongId').value = activeSong.id || Date.now();
+            document.getElementById('modalHeaderTitle').innerHTML = `<i class="fa-solid fa-pen-to-square mr-1.5"></i> Edit Song #${activeSong.SongNumber}`;
+            document.getElementById('inputSongNum').value = activeSong.SongNumber;
+            document.getElementById('inputTitle').value = activeSong.title;
+            setQHtml(chorusQuill, activeSong.Song.Chorus || '');
+            setQHtml(bridgeQuill, activeSong.Song.Bridge || '');
+            document.getElementById('stanzasContainer').innerHTML = '';
+            stanzaQuills = [];
+            Object.keys(activeSong.Song).forEach(k => {
+                if (k !== 'Chorus' && k !== 'Bridge' && k !== 'Verse') addStanzaRow(activeSong.Song[k]);
+            });
+            document.getElementById('deleteSongBtn').classList.remove('hidden');
+            toggleModal('songModal', true);
         }
 
         function addStanzaRow(txt = '') {
-            let container = document.getElementById('stanzasContainer'); let editorId = 'stz_' + Date.now(); let card = document.createElement('div');
-            card.className = 'stanza-card bg-slate-50/80 p-3 rounded-2xl border border-slate-200/80 space-y-2';
+            let container = document.getElementById('stanzasContainer');
+            let editorId = 'stz_' + Date.now();
+            let card = document.createElement('div');
+            card.className = 'stanza-card bg-slate-50 dark:bg-slate-800 p-3 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-2';
             card.innerHTML = `<div class="flex items-center justify-between text-xs font-bold text-slate-500"><span class="stanza-label">Stanza</span><div><button onclick="this.closest('.stanza-card').remove()" class="text-red-500 hover:text-red-700 p-1"><i class="fa-solid fa-trash"></i></button></div></div><div id="${editorId}"></div>`;
-            container.appendChild(card); let q = new Quill('#'+editorId, { theme: 'snow', modules: { toolbar: quillToolbarOptions }}); setQHtml(q, txt);
+            container.appendChild(card);
+            let q = new Quill('#' + editorId, { theme: 'snow', modules: { toolbar: quillToolbarOptions } });
+            setQHtml(q, txt);
             stanzaQuills.push({ id: editorId, instance: q, card: card });
         }
 
         function saveSongForm() {
-            let id = document.getElementById('editSongId').value; let num = parseInt(document.getElementById('inputSongNum').value); let title = document.getElementById('inputTitle').value.trim();
-            if (!num || !title) return alert("Number and Title required.");
+            let id = document.getElementById('editSongId').value;
+            let num = parseInt(document.getElementById('inputSongNum').value);
+            let title = document.getElementById('inputTitle').value.trim();
+            if (!num || !title) return alert("Number and Title are required.");
 
-            let songObj = {}; let c = getQHtml(chorusQuill); if(c) songObj.Chorus = c; let b = getQHtml(bridgeQuill); if(b) songObj.Bridge = b;
-            
+            let songObj = {};
+            let c = getQHtml(chorusQuill); if (c) songObj.Chorus = c;
+            let b = getQHtml(bridgeQuill); if (b) songObj.Bridge = b;
+
             let i = 1;
-            document.querySelectorAll('.stanza-card').forEach(card => { let sq = stanzaQuills.find(q => q.card === card); if(sq) { let t = getQHtml(sq.instance); if(t) { songObj[i.toString()] = t; i++; } } });
+            document.querySelectorAll('.stanza-card').forEach(card => {
+                let sq = stanzaQuills.find(q => q.card === card);
+                if (sq) {
+                    let t = getQHtml(sq.instance);
+                    if (t) { songObj[i.toString()] = t; i++; }
+                }
+            });
 
-            let newSongData = { id: id || Date.now(), SongNumber: num, title: title, categoryId: document.getElementById('inputCategory').value, Song: songObj };
+            let newSongData = {
+                id: id || Date.now(),
+                SongNumber: num,
+                title: title,
+                categoryId: document.getElementById('inputCategory').value,
+                Song: songObj
+            };
 
             let existingIdx = appSongs.findIndex(s => s.id == id || s.SongNumber == num);
-            if (existingIdx >= 0) { appSongs[existingIdx] = newSongData; } 
-            else { appSongs.push(newSongData); }
-            
-            // Save ONLY custom/edited songs to Firebase for this specific church
-            db.collection("song_databases").doc(currentSessionId).set({ customSongs: appSongs }, { merge: true });
-            
-            renderAccordionCategories(); toggleModal('songModal', false); loadSong(num);
-        }
+            if (existingIdx >= 0) appSongs[existingIdx] = newSongData;
+            else appSongs.push(newSongData);
 
+            db.collection("song_databases").doc(currentSessionId).set({ customSongs: appSongs }, { merge: true });
+            renderAccordionCategories();
+            toggleModal('songModal', false);
+            loadSong(num);
+        }
     </script>
 </head>
 
-<body>
+<body class="bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 dark:from-slate-950 dark:via-blue-950 dark:to-slate-900 text-slate-900 dark:text-slate-100 font-sans h-screen overflow-hidden flex flex-col">
+    
     <!-- DESKTOP HEADER (Hidden in Dock Mode) -->
-    <header id="desktopHeader" class="glass-header text-white sticky top-0 z-40 shadow-2xl shrink-0 hidden">
+    <header id="desktopHeader" class="glass-header text-white sticky top-0 z-40 shadow-2xl shrink-0">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
-                <div class="bg-gradient-to-tr from-blue-600 to-indigo-400 p-2 rounded-xl shadow-lg border border-blue-400/30"><i class="fa-solid fa-music text-lg"></i></div>
+                <div class="bg-gradient-to-tr from-blue-600 to-indigo-400 p-2 rounded-xl shadow-lg border border-blue-400/30">
+                    <i class="fa-solid fa-music text-lg"></i>
+                </div>
                 <div>
                     <h1 class="text-base font-bold leading-none font-telugu tracking-wide">సీయోను గీతములు</h1>
-                    <p class="text-[10px] text-blue-200/80 mt-1">v3 Cloud Sync</p>
+                    <p class="text-[10px] text-blue-200/80 mt-1">v4.7 Typing Animation</p>
                 </div>
-                <button onclick="toggleMobileDrawer()" class="md:hidden ml-2 bg-blue-600/40 px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-400/30"><i class="fa-solid fa-bars"></i></button>
+                <button onclick="toggleMobileDrawer()" class="md:hidden ml-2 bg-blue-600/40 px-3 py-1.5 rounded-lg text-xs font-bold border border-blue-400/30">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
             </div>
 
-            <!-- Search -->
-            <div class="flex-1 max-w-xl relative hidden sm:block">
+            <!-- Search (Hidden on Bible tab) -->
+            <div id="desktopSearchBoxContainer" class="flex-1 max-w-xl relative hidden sm:block">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-blue-300 text-sm"></i>
-                <input type="text" id="song_no" onkeyup="desktopSearch(this)" placeholder="Search song number or title..." autocomplete="off" class="w-full pl-10 pr-10 py-2.5 bg-slate-900/50 backdrop-blur-md text-white border border-blue-500/30 rounded-xl focus:ring-2 focus:ring-blue-400 text-sm outline-none">
-                <button id="clearSearch" onclick="clearInp('song_no','suggestions','clearSearch')" class="absolute right-3 top-3 text-blue-300 hidden"><i class="fa-solid fa-circle-xmark"></i></button>
-                <div id="suggestions" class="absolute left-0 right-0 top-full mt-2 bg-white rounded-xl shadow-2xl hidden max-h-60 overflow-y-auto z-50 border border-slate-100">
-                    <ul id="suggestionsList" class="divide-y text-slate-800 text-sm"></ul>
+                <input type="text" id="song_no" onkeyup="desktopSearch(this)"
+                    placeholder="Search song number or title..." autocomplete="off"
+                    class="w-full pl-10 pr-10 py-2.5 bg-slate-900/50 backdrop-blur-md text-white border border-blue-500/30 rounded-xl focus:ring-2 focus:ring-blue-400 text-sm outline-none">
+                <button id="clearSearch" onclick="clearInp('song_no','suggestions','clearSearch')" class="absolute right-3 top-3 text-blue-300 hidden">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </button>
+                <div id="suggestions" class="absolute left-0 right-0 top-full mt-2 bg-white dark:bg-slate-900 rounded-xl shadow-2xl hidden max-h-60 overflow-y-auto z-50 border border-slate-100 dark:border-slate-800">
+                    <ul id="suggestionsList" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-900 dark:text-slate-100 text-sm"></ul>
                 </div>
             </div>
 
-            <!-- Toolbar -->
+            <!-- Header Toolbar -->
             <div class="flex items-center gap-2">
-                <button onclick="clearScreenMaster()" class="hidden md:flex bg-white/10 hover:bg-white/20 text-amber-300 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-eraser"></i> Clear</button>
-                <button onclick="toggleModal('connModal', true)" class="hidden lg:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-tower-broadcast text-emerald-400"></i> Room & OBS</button>
-                <button onclick="toggleModal('obsSettingsModal', true)" class="hidden md:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15"><i class="fa-solid fa-display text-blue-400"></i> Canvas Settings</button>
-                <button onclick="openAddSongModal()" class="bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg"><i class="fa-solid fa-plus"></i> Add</button>
+                <button onclick="toggleTheme()" class="bg-white/10 hover:bg-white/20 p-2.5 rounded-xl text-xs font-bold flex items-center justify-center border border-white/15 transition shadow-sm" title="Toggle Light/Dark Theme">
+                    <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400 text-sm"></i>
+                </button>
+                <button onclick="clearScreenMaster()" class="hidden md:flex bg-white/10 hover:bg-white/20 text-amber-300 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15">
+                    <i class="fa-solid fa-eraser"></i> Clear
+                </button>
+                <button onclick="toggleModal('connModal', true)" class="hidden lg:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15">
+                    <i class="fa-solid fa-tower-broadcast text-emerald-400"></i> Room & OBS
+                </button>
+                <button onclick="toggleModal('obsSettingsModal', true)" class="hidden md:flex bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl text-xs font-bold items-center gap-1.5 border border-white/15">
+                    <i class="fa-solid fa-display text-blue-400"></i> Canvas
+                </button>
+                <button id="desktopAddSongBtn" onclick="openAddSongModal()" class="bg-blue-600 hover:bg-blue-500 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg text-white">
+                    <i class="fa-solid fa-plus"></i> Add
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- WORKSPACE -->
+    <!-- WORKSPACE CONTAINER -->
     <div id="mainLayoutContainer" class="max-w-7xl mx-auto w-full px-4 py-4 flex-1 grid grid-cols-1 md:grid-cols-12 gap-6 overflow-hidden min-h-0 relative">
-        
-        <!-- Mobile Drawer -->
+
+        <!-- Mobile Drawer Categories -->
         <div id="mobileCategoryDrawer" class="fixed inset-0 bg-slate-950/70 z-50 md:hidden hidden flex-col justify-end">
-            <div class="glass-card rounded-t-3xl p-4 max-h-[80vh] flex flex-col text-slate-800">
-                <div class="flex justify-between border-b pb-2 mb-2"><span class="font-bold text-sm">Categories</span><button onclick="toggleMobileDrawer()"><i class="fa-solid fa-xmark"></i></button></div>
+            <div class="glass-card rounded-t-3xl p-4 max-h-[80vh] flex flex-col text-slate-900 dark:text-slate-100">
+                <div class="flex justify-between border-b pb-2 mb-2">
+                    <span class="font-bold text-sm">Song Categories</span>
+                    <button onclick="toggleMobileDrawer()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <div id="song_categories_mobile" class="overflow-y-auto flex-1"></div>
             </div>
         </div>
 
-        <!-- Sidebar (Hidden in Dock Mode) -->
+        <!-- Sidebar Navigation (Hidden in Dock Mode) -->
         <aside id="desktopSidebar" class="hidden md:flex col-span-3 h-full flex-col min-h-0">
-            <div class="glass-card rounded-2xl flex flex-col h-full min-h-0 text-slate-800 overflow-hidden shadow-lg border-blue-200/40">
-                <div class="p-4 border-b bg-blue-50 flex justify-between items-center shrink-0">
-                    <span class="text-xs font-bold uppercase">Song Library</span>
-                    <button onclick="toggleModal('connModal', true)" class="lg:hidden p-1.5 bg-white rounded shadow text-emerald-600"><i class="fa-solid fa-tower-broadcast"></i></button>
+            <div class="glass-card rounded-2xl flex flex-col h-full min-h-0 text-slate-900 dark:text-slate-100 overflow-hidden shadow-lg border-blue-200/40">
+                <div class="p-3 border-b border-slate-200 dark:border-slate-800 bg-blue-50/50 dark:bg-slate-900/50 flex gap-2 shrink-0">
+                    <button id="songsTabBtn" onclick="switchMainTab('songs')" class="flex-1 py-1.5 px-2 text-xs font-bold rounded-lg bg-blue-600 text-white shadow"><i class="fa-solid fa-music mr-1"></i>Songs</button>
+                    <button id="bibleTabBtn" onclick="switchMainTab('bible')" class="flex-1 py-1.5 px-2 text-xs font-bold rounded-lg bg-slate-200/60 dark:bg-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-800"><i class="fa-solid fa-book-bible mr-1"></i>Bible</button>
                 </div>
-                <div id="song_categories" class="overflow-y-auto flex-1 divide-y divide-slate-100"></div>
+
+                <div id="desktopSongsPane" class="flex flex-col h-full overflow-hidden">
+                    <div class="p-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/40 flex justify-between items-center shrink-0">
+                        <span class="text-xs font-bold uppercase text-slate-600 dark:text-slate-400">Song Library</span>
+                        <button onclick="toggleModal('connModal', true)" class="lg:hidden p-1.5 bg-white dark:bg-slate-800 rounded shadow text-emerald-600"><i class="fa-solid fa-tower-broadcast"></i></button>
+                    </div>
+                    <div id="song_categories" class="overflow-y-auto flex-1 divide-y divide-slate-100 dark:divide-slate-800"></div>
+                </div>
             </div>
         </aside>
 
-        <!-- Main Workspace -->
+        <!-- Main Content Workspace -->
         <main id="mainWorkspaceParent" class="col-span-1 md:col-span-9 flex flex-col h-full min-h-0">
-            <div id="mainWorkspaceCard" class="glass-card rounded-2xl p-4 sm:p-6 flex-1 flex flex-col shadow-xl border-blue-200/40 text-slate-800 overflow-hidden min-h-0">
-                
-                <!-- NATIVE OBS DOCK HEADER (Only visible in ?mode=dock) -->
-                <div id="obsDockHeader" class="hidden flex-col gap-1 p-2 bg-[#2b2b2b] border-b border-[#111] shrink-0">
-                    <div class="flex gap-1">
-                        <div class="relative flex-1 flex flex-col">
-                            <input type="text" id="dockSearch" onkeyup="dockSearch(this)" placeholder="Search song..." autocomplete="off" class="w-full pl-2 pr-6 py-1 text-xs font-sans">
-                            <button id="dockClearSearch" onclick="clearInp('dockSearch','dockSuggestions','dockClearSearch')" class="absolute right-1 top-1 text-[#888] hover:text-white hidden"><i class="fa-solid fa-xmark"></i></button>
-                            <div id="dockSuggestions" class="absolute left-0 right-0 top-full mt-1 hidden z-50 max-h-48 overflow-auto shadow-xl border border-[#111]">
-                                <ul id="dockSuggestionsList" class="text-xs divide-y divide-[#222]"></ul>
-                            </div>
-                        </div>
-                        <button onclick="clearScreenMaster()" class="px-2 py-1 text-xs whitespace-nowrap danger-btn" title="Clear Screen"><i class="fa-solid fa-eraser"></i> Clear</button>
+            
+            <!-- Mobile Action Bar -->
+            <div id="mobileSongActions" class="md:hidden flex flex-col gap-2 mb-3 shrink-0">
+                <div class="flex gap-2 items-center">
+                    <div class="flex bg-slate-200/80 dark:bg-slate-800 p-1 rounded-xl shadow-inner">
+                        <button onclick="switchMainTab('songs')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-600 text-white shadow">Songs</button>
+                        <button onclick="switchMainTab('bible')" class="px-3 py-1.5 text-xs font-bold rounded-lg text-slate-700 dark:text-slate-300">Bible</button>
+                    </div>
+                    <div class="relative flex-1">
+                        <input type="text" id="mobileSearchInp" onkeyup="desktopSearch(this)" placeholder="Search songs..." class="w-full text-xs py-2 pl-8 pr-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-xs"></i>
+                    </div>
+                    <button onclick="openAddSongModal()" class="bg-blue-600 text-white px-3 py-2 rounded-xl text-xs font-bold shadow"><i class="fa-solid fa-plus"></i></button>
+                </div>
+            </div>
+
+            <div id="mainWorkspaceCard" class="glass-card rounded-2xl p-4 sm:p-6 flex-1 flex flex-col shadow-xl border-blue-200/40 text-slate-900 dark:text-slate-100 overflow-hidden min-h-0">
+
+                <!-- NATIVE OBS DOCK HEADER -->
+                <div id="obsDockHeader" class="hidden flex items-center justify-between p-2 bg-gray-100 dark:bg-[#2b2b2b] border-b border-gray-300 dark:border-[#111] shrink-0">
+                    <div class="flex bg-gray-200 dark:bg-[#1e1e1e] p-0.5 rounded border border-gray-300 dark:border-[#111] shrink-0">
+                        <button id="dockSongsTabBtn" onclick="switchMainTab('songs')" class="px-2.5 py-1 text-xs font-bold rounded bg-white text-black shadow-sm dark:bg-[#444] dark:text-white transition-colors">Songs</button>
+                        <button id="dockBibleTabBtn" onclick="switchMainTab('bible')" class="px-2.5 py-1 text-xs font-bold rounded text-gray-600 dark:text-[#aaa] transition-colors">Bible</button>
                     </div>
                     
-                    <div class="flex justify-between items-center mt-1 px-1">
-                        <div class="text-[13px] font-bold text-[#aaa] font-telugu truncate flex-1" id="dockSongTitle">No Song Selected</div>
-                        <div class="flex gap-1 shrink-0">
-                            <button onclick="openAddSongExternal()" class="text-[#888] hover:text-white px-2 py-0.5" title="Add New Song (Opens Web Browser)"><i class="fa-solid fa-plus text-xs"></i></button>
-                            <button onclick="toggleDockPanel('dockDisplayPanel')" class="text-[#888] hover:text-white px-2 py-0.5" title="Display Canvas Settings"><i class="fa-solid fa-palette text-xs"></i></button>
-                            <button onclick="toggleDockPanel('dockSettingsPanel')" class="text-[#888] hover:text-white px-2 py-0.5" title="Connection Settings"><i class="fa-solid fa-gear text-xs"></i></button>
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <!-- Theme Toggle in Dock -->
+                        <button onclick="toggleTheme()" class="w-7 h-7 flex items-center justify-center rounded bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 dark:bg-[#333] dark:hover:bg-[#444] dark:text-white dark:border-[#222] shadow-sm dark:shadow-none" title="Toggle Theme"><i id="dockThemeToggleIcon" class="fa-solid fa-sun text-xs text-amber-400"></i></button>
+                        <button onclick="openAddSongExternal()" class="w-7 h-7 flex items-center justify-center rounded bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 dark:bg-[#333] dark:hover:bg-[#444] dark:text-white dark:border-[#222] shadow-sm dark:shadow-none" title="Add Song"><i class="fa-solid fa-plus text-xs"></i></button>
+                        <button onclick="toggleDockPanel('dockDisplayPanel')" class="w-7 h-7 flex items-center justify-center rounded bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 dark:bg-[#333] dark:hover:bg-[#444] dark:text-white dark:border-[#222] shadow-sm dark:shadow-none" title="Display Options"><i class="fa-solid fa-palette text-xs"></i></button>
+                        <button onclick="toggleSettings()" class="w-7 h-7 flex items-center justify-center rounded bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 dark:bg-[#333] dark:hover:bg-[#444] dark:text-white dark:border-[#222] shadow-sm dark:shadow-none" title="Settings"><i class="fa-solid fa-gear text-xs"></i></button>
+                    </div>
+        
+                    <button onclick="clearScreenMaster()" class="px-2.5 py-1.5 text-[11px] font-bold bg-white hover:bg-gray-100 text-gray-800 border border-gray-300 dark:bg-[#333] dark:hover:bg-[#444] dark:text-white dark:border-[#222] shadow-sm dark:shadow-none rounded flex items-center gap-1 shrink-0"><i class="fa-solid fa-eraser"></i> Clear</button>
+                </div>
+
+                <!-- Dock Panel Overlays for OBS Settings (Hidden by default) -->
+                <div id="dockSettingsPanel" class="hidden flex flex-col gap-1.5 p-2 bg-gray-50 dark:bg-[#1e1e1e] border-b border-gray-300 dark:border-[#111] shrink-0">
+                    <div class="flex justify-between items-center"><span class="text-[10px] text-gray-500 dark:text-[#888] uppercase font-bold tracking-wide">OBS WebSocket Setup</span><span id="dockObsStatusBadge" class="w-2 h-2 rounded-full bg-red-500"></span></div>
+                    <div class="flex gap-1">
+                        <input type="text" id="dockObsUrl" value="ws://127.0.0.1:4455" class="flex-1 text-[10px] p-1 font-mono text-gray-900 border border-gray-300 dark:border-none rounded">
+                        <input type="password" id="dockObsPassword" placeholder="Pass" class="w-16 text-[10px] p-1 text-gray-900 border border-gray-300 dark:border-none rounded">
+                        <button onclick="connectOBS()" class="text-[10px] py-1 px-2 font-bold bg-blue-600 dark:bg-[#4488ff] text-white rounded">Conn</button>
+                    </div>
+                    <div class="text-[10px] text-gray-500 dark:text-[#888] mt-1 uppercase font-bold tracking-wide">Sync Room</div>
+                    <div class="flex gap-1">
+                        <input type="text" id="dockRoomCodeInput" class="flex-1 text-[10px] p-1 font-mono font-bold text-gray-900 border border-gray-300 dark:border-none rounded">
+                        <button onclick="joinRoom()" class="px-2 py-1 text-[10px] font-bold bg-blue-600 dark:bg-[#4488ff] text-white rounded">Join</button>
+                    </div>
+                </div>
+
+                <div id="dockDisplayPanel" class="hidden flex flex-col gap-2 p-2 bg-gray-50 dark:bg-[#1e1e1e] border-b border-gray-300 dark:border-[#111] text-[11px] shrink-0">
+                    <div class="text-[10px] text-gray-500 dark:text-[#888] uppercase font-bold tracking-wide border-b border-gray-200 dark:border-[#333] pb-1">Canvas Setup</div>
+                    <div class="flex items-center gap-2">
+                        <label class="w-10 text-gray-600 dark:text-[#aaa]">Size</label>
+                        <input type="range" id="dockObsFontSize" min="1.5" max="8.0" step="0.2" value="4.0" oninput="applyDesktopStylesFromModal()" class="flex-1 h-1 bg-gray-300 dark:bg-[#333] rounded-lg appearance-none">
+                    </div>
+                </div>
+
+                <!-- SONG WORKSPACE CONTAINER -->
+                <div id="desktopSongWorkspace" class="flex flex-col h-full min-h-0 flex-1">
+                    
+                    <!-- Dedicated Dock Search Bar for Songs Tab -->
+                    <div id="dockSearchBar" class="hidden p-2 bg-gray-100 dark:bg-[#2b2b2b] shrink-0 border-b border-gray-300 dark:border-[#111]">
+                        <div class="relative w-full">
+                            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-gray-400 dark:text-[#888] text-[11px]"></i>
+                            <input type="text" id="dockSearch" onkeyup="dockSearch(this)" placeholder="Search songs..." autocomplete="off" class="w-full pl-8 pr-6 py-1.5 text-xs font-sans bg-white border border-gray-300 text-gray-900 dark:bg-[#1e1e1e] dark:border-[#111] dark:text-white rounded outline-none focus:border-blue-400 dark:focus:border-[#444]">
+                            <button id="dockClearSearch" onclick="clearInp('dockSearch','dockSuggestions','dockClearSearch')" class="absolute right-2 top-1.5 text-gray-400 dark:text-[#888] hidden"><i class="fa-solid fa-xmark text-xs"></i></button>
+                            <div id="dockSuggestions" class="absolute left-0 right-0 top-full mt-1 hidden z-50 max-h-48 overflow-auto shadow-xl border border-gray-200 bg-white dark:border-[#111] dark:bg-[#222]">
+                                <ul id="dockSuggestionsList" class="text-xs divide-y divide-gray-100 dark:divide-[#333]"></ul>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Collapsible Connection Panel -->
-                    <div id="dockSettingsPanel" class="hidden flex flex-col gap-1.5 mt-2 p-2 bg-[#1e1e1e] border border-[#111] rounded">
-                         <div class="flex justify-between items-center"><span class="text-[10px] text-[#888] uppercase font-bold tracking-wide">OBS WebSocket Setup</span><span id="dockObsStatusBadge" class="w-2.5 h-2.5 rounded-full bg-red-500" title="Disconnected"></span></div>
-                         <div class="flex gap-1">
-                            <input type="text" id="dockObsUrl" value="ws://127.0.0.1:4455" class="flex-1 text-[10px] p-1 font-mono" placeholder="ws://127.0.0.1:4455">
-                            <input type="password" id="dockObsPassword" placeholder="Pass" class="w-16 text-[10px] p-1">
-                            <input type="hidden" id="dockObsSourceName" value="Lyrics">
-                            <button onclick="connectOBS()" class="text-[10px] py-1 px-2 primary-btn font-bold">Connect</button>
-                         </div>
-                         
-                         <div class="text-[10px] text-[#888] mt-1 uppercase font-bold tracking-wide">Church Sync Room</div>
-                         <div class="flex gap-1">
-                             <input type="text" id="dockRoomCodeInput" class="flex-1 text-[10px] p-1 font-mono font-bold">
-                             <button onclick="joinRoom()" class="px-2 py-1 text-[10px] primary-btn font-bold">Join</button>
-                         </div>
+                    <!-- Non-Dock Standard Header -->
+                    <div id="desktopSongHeader" class="border-b border-slate-200 dark:border-slate-800 pb-3 mb-3 flex items-start justify-between gap-3 shrink-0 mt-2">
+                        <div class="flex items-center gap-2">
+                            <div class="px-3 py-1 bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-800 rounded-full text-xs font-bold shrink-0">
+                                #<span id="displaySongNum"></span>
+                            </div>
+                            <div id="displayTitle" class="flex-1"></div>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="openEditCurrentSong()" class="px-3 py-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-lg shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700">
+                                <i class="fa-solid fa-pen text-blue-600 dark:text-blue-400 mr-1"></i> Edit
+                            </button>
+                            <button onclick="changeFontSize(2)" class="p-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200">A+</button>
+                            <button onclick="changeFontSize(-2)" class="p-1.5 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg text-xs font-bold text-slate-700 dark:text-slate-200">A-</button>
+                        </div>
                     </div>
 
-                    <!-- Collapsible Display Canvas Settings Panel -->
-                    <div id="dockDisplayPanel" class="hidden flex flex-col gap-2 mt-2 p-2 bg-[#1e1e1e] border border-[#111] rounded text-[11px]">
-                         <div class="text-[10px] text-[#888] uppercase font-bold tracking-wide border-b border-[#333] pb-1">Canvas Display Setup</div>
-                         <div class="flex items-center gap-2"><label class="w-10 text-[#aaa]">Size</label><input type="range" id="dockObsFontSize" min="1.5" max="8.0" step="0.2" value="4.0" oninput="applyDockStyles()" class="flex-1 h-1 bg-[#333] rounded-lg appearance-none cursor-pointer"></div>
-                         <div class="flex items-center gap-2"><label class="w-10 text-[#aaa]">Font</label><select id="dockObsFontFamily" onchange="applyDockStyles()" class="flex-1 bg-[#2b2b2b] border border-[#111] text-white rounded p-1 outline-none text-[10px]"><option value="'Mandali', sans-serif">Mandali</option><option value="'Gidugu', sans-serif">Gidugu</option></select></div>
-                         <div class="flex items-center gap-2"><label class="w-10 text-[#aaa]">Align</label><select id="dockObsTextAlign" onchange="applyDockStyles()" class="flex-1 bg-[#2b2b2b] border border-[#111] text-white rounded p-1 outline-none text-[10px]"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></div>
-                         <div class="flex items-center gap-2">
-                             <div class="flex items-center gap-1.5 flex-1 border border-[#333] p-1 rounded bg-[#2b2b2b]"><label class="text-[#aaa] w-8">Text</label><input type="color" id="dockObsTextColor" value="#ffffff" onchange="applyDockStyles()" class="w-full h-4 border-0 bg-transparent cursor-pointer"></div>
-                             <div class="flex items-center gap-1.5 flex-1 border border-[#333] p-1 rounded bg-[#2b2b2b]"><label class="text-[#aaa] w-8">Bg</label><input type="color" id="dockObsBgColor" value="#008000" onchange="applyDockStyles()" class="w-full h-4 border-0 bg-transparent cursor-pointer"></div>
-                         </div>
-                         <div class="flex gap-4 items-center border-t border-[#333] pt-1.5 mt-0.5">
-                             <label class="flex items-center gap-1.5 cursor-pointer text-[#aaa] hover:text-white"><input type="checkbox" id="dockObsTextShadow" checked onchange="applyDockStyles()"> Shadow</label>
-                             <label class="flex items-center gap-1.5 cursor-pointer text-[#aaa] hover:text-white"><input type="checkbox" id="dockObsHidePipes" onchange="applyDockStyles()"> Hide Pipes</label>
-                         </div>
+                    <div class="flex-1 flex flex-col overflow-y-auto pr-2 min-h-0 pt-2" id="dock_lyrics_wrapper">
+                        <div id="fixed_song_meta" class="space-y-1 mb-1 shrink-0"></div>
+                        <div id="full_song_lyrics" class="space-y-1 flex-1"></div>
                     </div>
                 </div>
 
-                <!-- DESKTOP SONG HEADER (Hidden in Dock Mode) -->
-                <div id="desktopSongHeader" class="border-b pb-3 mb-3 flex items-start justify-between gap-3 shrink-0">
-                    <div class="flex items-center gap-2">
-                        <div class="px-3 py-1 bg-blue-50 text-blue-800 border rounded-full text-xs font-bold shrink-0">#<span id="displaySongNum"></span></div>
-                        <div id="displayTitle" class="flex-1"></div>
+                <!-- BIBLE WORKSPACE CONTAINER -->
+                <div id="desktopBibleWorkspace" class="hidden flex flex-col h-full min-h-0 flex-1">
+                    
+                    <!-- Collapsible Bible Settings Panel -->
+                    <div id="bibleSettingsPanel" class="bg-gray-50 border-gray-200 dark:bg-white dark:border-gray-200 rounded-b-2xl p-3 mx-2 mb-2 flex-col gap-3 text-[11px] shrink-0 shadow-md transition-all duration-300 border-x border-b">
+                        <div class="flex gap-2.5 w-full">
+                            <div class="flex flex-col gap-1 flex-1">
+                                <label class="font-bold text-slate-800 text-[10px]">Nav Lang:</label>
+                                <select id="bibleNavLang" onchange="handleNavLangChange(this)" class="border border-gray-300 dark:border-[#111] rounded p-1.5 bg-white text-gray-900 dark:bg-[#222] dark:text-white font-bold outline-none cursor-pointer">
+                                    <option value="telugu">Telugu</option>
+                                    <option value="english">English</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1 flex-1">
+                                <label class="font-bold text-slate-800 text-[10px]">Primary Lang:</label>
+                                <select id="bibleLang1" onchange="syncBibleSettingsToUI()" class="border border-gray-300 dark:border-[#111] rounded p-1.5 bg-white text-gray-900 dark:bg-[#222] dark:text-white font-bold outline-none cursor-pointer">
+                                    <option value="telugu">Telugu</option>
+                                    <option value="english">English</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1 flex-1">
+                                <label class="font-bold text-slate-800 text-[10px]">Second Lang:</label>
+                                <select id="bibleLang2" onchange="syncBibleSettingsToUI()" class="border border-gray-300 dark:border-[#111] rounded p-1.5 bg-white text-gray-900 dark:bg-[#222] dark:text-white font-bold outline-none cursor-pointer">
+                                    <option value="none">None</option>
+                                    <option value="telugu">Telugu</option>
+                                    <option value="english">English</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex gap-2.5 w-full mt-2 items-end">
+                            <div class="flex flex-col gap-1 flex-1">
+                                <label class="font-bold text-slate-800 text-[10px]">Font:</label>
+                                <select id="bibleFont1" onchange="syncBibleSettingsToUI()" class="border border-gray-300 dark:border-[#111] rounded p-1.5 bg-white text-gray-900 dark:bg-[#222] dark:text-white font-bold outline-none cursor-pointer">
+                                    <option value="'Mandali', sans-serif">Mandali</option>
+                                    <option value="'Gidugu', sans-serif">Gidugu</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1 flex-1">
+                                <label class="font-bold text-slate-800 text-[10px]">Align:</label>
+                                <select id="bibleAlign" onchange="syncBibleSettingsToUI()" class="border border-gray-300 dark:border-[#111] rounded p-1.5 bg-white text-gray-900 dark:bg-[#222] dark:text-white font-bold outline-none cursor-pointer">
+                                    <option value="justify">Justify</option>
+                                    <option value="center">Center</option>
+                                    <option value="left">Left</option>
+                                </select>
+                            </div>
+                            <div class="flex flex-col gap-1 flex-1">
+                                <label class="font-bold text-slate-800 text-[10px]" title="Duration in seconds">Dur(s):</label>
+                                <input type="number" id="bibleDuration" value="0" min="0" onchange="syncBibleSettingsToUI()" class="border border-gray-300 dark:border-[#111] rounded p-1.5 w-full text-center bg-white text-gray-900 dark:bg-[#222] dark:text-white font-bold outline-none">
+                            </div>
+                        </div>
+                        <div class="flex justify-end w-full mt-2">
+                            <label class="flex items-center gap-1.5 font-bold text-slate-800 cursor-pointer text-[10px]">
+                                <input type="checkbox" id="bibleOnlyRef" onchange="syncBibleSettingsToUI()" class="w-3.5 h-3.5 rounded"> Only Ref
+                            </label>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-1.5">
-                        <button onclick="openEditCurrentSong()" class="px-3 py-1.5 border bg-white text-slate-700 text-xs font-semibold rounded-lg shadow-sm"><i class="fa-solid fa-pen text-blue-600"></i> Edit</button>
-                        <button onclick="changeFontSize(2)" class="p-1.5 border bg-white rounded-lg text-xs font-bold">A+</button>
-                        <button onclick="changeFontSize(-2)" class="p-1.5 border bg-white rounded-lg text-xs font-bold">A-</button>
-                    </div>
+
+                    <!-- Dynamic Drilldown Container -->
+                    <div id="bibleDrilldownContainer" class="flex flex-col flex-1 min-h-0"></div>
                 </div>
 
-                <!-- LYRICS VIEW -->
-                <div class="flex-1 flex flex-col overflow-y-auto pr-2 min-h-0" id="dock_lyrics_wrapper">
-                    <div id="fixed_song_meta" class="space-y-1 mb-1 shrink-0"></div>
-                    <div id="full_song_lyrics" class="space-y-1 flex-1"></div>
-                </div>
-                
-                <!-- LIVE PREVIEW BANNER (Hidden in Dock Mode) -->
-                <div id="livePreviewBoxOuter" class="mt-3 bg-slate-900 rounded-xl p-3 shadow-inner flex items-center gap-3 shrink-0">
+                <!-- LIVE PREVIEW BANNER (Standard UI Only) -->
+                <div id="livePreviewBoxOuter" class="mt-3 bg-slate-900 dark:bg-slate-950 rounded-xl p-3 shadow-inner flex items-center gap-3 shrink-0 border border-slate-800">
                     <div class="text-[9px] uppercase font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded shrink-0">Live Output</div>
                     <div id="livePreviewBox" class="text-sm font-bold text-emerald-400 font-telugu truncate flex-1">(Standby...)</div>
                 </div>
@@ -675,25 +1325,31 @@
         </main>
     </div>
 
-    <!-- MODAL: CONNECTION & SYNC (Desktop only) -->
+    <!-- MODAL: CONNECTION & SYNC -->
     <div id="connModal" class="fixed inset-0 bg-slate-950/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-modal rounded-2xl w-full max-w-md flex flex-col overflow-hidden text-slate-800 shadow-2xl">
-            <div class="px-5 py-3 border-b bg-blue-50 flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-tower-broadcast text-blue-600 mr-2"></i>Sync & OBS Connection</h3><button onclick="toggleModal('connModal',false)"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="glass-modal rounded-2xl w-full max-w-md flex flex-col overflow-hidden text-slate-900 dark:text-slate-100 shadow-2xl">
+            <div class="px-5 py-3 border-b border-slate-200 dark:border-slate-800 bg-blue-50 dark:bg-slate-900 flex justify-between items-center">
+                <h3 class="font-bold text-sm"><i class="fa-solid fa-tower-broadcast text-blue-600 dark:text-blue-400 mr-2"></i>Sync & OBS Connection</h3>
+                <button onclick="toggleModal('connModal',false)"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             <div class="p-5 space-y-4">
-                <div class="bg-blue-50/50 p-3 rounded-xl border border-blue-100">
-                    <label class="block text-xs font-bold mb-1 text-slate-600">Church Sync Room (Multi-Tenant)</label>
+                <div class="bg-blue-50/50 dark:bg-slate-900/60 p-3 rounded-xl border border-blue-100 dark:border-slate-800">
+                    <label class="block text-xs font-bold mb-1 text-slate-600 dark:text-slate-400">Church Sync Room</label>
                     <div class="flex gap-2">
-                        <input type="text" id="roomCodeInput" class="flex-1 border rounded-lg px-3 py-2 text-sm font-mono font-bold outline-none focus:border-blue-500">
-                        <button onclick="joinRoom()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 rounded-lg text-xs font-bold">Join Room</button>
+                        <input type="text" id="roomCodeInput" class="flex-1 border dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg px-3 py-2 text-sm font-mono font-bold">
+                        <button onclick="joinRoom()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 rounded-lg text-xs font-bold">Join</button>
                     </div>
                 </div>
-                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <div class="flex justify-between items-center mb-2"><label class="text-xs font-bold text-slate-600">OBS Native WebSocket (v5)</label><span id="obsStatusBadge" class="text-[10px] font-bold px-2 py-1 bg-slate-200 rounded text-slate-500">Disconnected</span></div>
+                <div class="bg-slate-50 dark:bg-slate-900/40 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs font-bold text-slate-600 dark:text-slate-400">OBS Native WebSocket</label>
+                        <span id="obsStatusBadge" class="text-[10px] font-bold px-2 py-1 bg-slate-200 dark:bg-slate-800 rounded text-slate-500 dark:text-slate-400">Disconnected</span>
+                    </div>
                     <div class="space-y-2">
-                        <input type="text" id="obsUrl" value="ws://127.0.0.1:4455" placeholder="ws://127.0.0.1:4455" class="w-full border rounded-lg px-3 py-2 text-sm font-mono">
+                        <input type="text" id="obsUrl" value="ws://127.0.0.1:4455" class="w-full border dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg px-3 py-2 text-sm font-mono">
                         <div class="flex gap-2">
-                            <input type="text" id="obsSourceName" value="Lyrics" placeholder="Text Source Name" class="flex-1 border rounded-lg px-3 py-2 text-sm">
-                            <input type="password" id="obsPassword" placeholder="WS Password" class="flex-1 border rounded-lg px-3 py-2 text-sm">
+                            <input type="text" id="obsSourceName" value="Lyrics" class="flex-1 border dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg px-3 py-2 text-sm">
+                            <input type="password" id="obsPassword" placeholder="WS Password" class="flex-1 border dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg px-3 py-2 text-sm">
                         </div>
                         <button onclick="connectOBS()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded-lg text-sm font-bold shadow-md">Connect to OBS Studio</button>
                     </div>
@@ -702,39 +1358,102 @@
         </div>
     </div>
 
-    <!-- MODAL: OBS DISPLAY SETTINGS (Desktop only) -->
+    <!-- MODAL: CANVAS STYLE OPTIONS -->
     <div id="obsSettingsModal" class="fixed inset-0 bg-slate-950/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-modal rounded-2xl w-full max-w-lg flex flex-col overflow-hidden text-slate-800 shadow-2xl">
-            <div class="px-5 py-3 border-b bg-blue-50 flex justify-between items-center"><h3 class="font-bold text-sm"><i class="fa-solid fa-sliders text-blue-600 mr-2"></i>Canvas Style Options</h3><button onclick="toggleModal('obsSettingsModal',false)"><i class="fa-solid fa-xmark"></i></button></div>
-            <div class="p-5 space-y-4 max-h-[70vh] overflow-y-auto text-xs">
-                <div><div class="flex justify-between mb-1"><label class="font-bold">Font Size</label><span id="fontSizeVal" class="text-blue-600 font-bold">4.0vw</span></div><input type="range" id="obsFontSize" min="1.5" max="8.0" step="0.2" value="4.0" oninput="applyDesktopStylesFromModal()" class="w-full"></div>
-                <div><label class="block font-bold mb-1">Font Family</label><select id="obsFontFamily" onchange="applyDesktopStylesFromModal()" class="w-full border rounded p-2"><option value="'Mandali', sans-serif">Mandali</option><option value="'Gidugu', sans-serif">Gidugu</option></select></div>
-                <div class="grid grid-cols-2 gap-3"><div><label class="block font-bold mb-1">Text Color</label><input type="color" id="obsTextColor" value="#ffffff" onchange="applyDesktopStylesFromModal()" class="w-full h-8 rounded border p-0.5"></div><div><label class="block font-bold mb-1">Background (Chroma)</label><input type="color" id="obsBgColor" value="#008000" onchange="applyDesktopStylesFromModal()" class="w-full h-8 rounded border p-0.5"></div></div>
-                <div class="flex items-center justify-between p-2 bg-blue-50 rounded border"><label class="font-bold">Text Shadow</label><input type="checkbox" id="obsTextShadow" checked onchange="applyDesktopStylesFromModal()" class="w-4 h-4"></div>
-                <div class="flex items-center justify-between p-2 bg-blue-50 rounded border"><label class="font-bold">Hide Verse Tags (Pipes)</label><input type="checkbox" id="obsHidePipesText" onchange="applyDesktopStylesFromModal()" class="w-4 h-4"></div>
+        <div class="glass-modal rounded-2xl w-full max-w-lg flex flex-col overflow-hidden text-slate-900 dark:text-slate-100 shadow-2xl">
+            <div class="px-5 py-3 border-b border-slate-200 dark:border-slate-800 bg-blue-50 dark:bg-slate-900 flex justify-between items-center">
+                <h3 class="font-bold text-sm"><i class="fa-solid fa-sliders text-blue-600 dark:text-blue-400 mr-2"></i>Canvas Style Options</h3>
+                <button onclick="toggleModal('obsSettingsModal',false)"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="px-5 py-3 border-t bg-slate-50 flex justify-end"><button onclick="toggleModal('obsSettingsModal',false)" class="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold">Done</button></div>
+            <div class="p-5 space-y-4 max-h-[70vh] overflow-y-auto text-xs">
+                <div>
+                    <div class="flex justify-between mb-1"><label class="font-bold">Font Size</label><span id="fontSizeVal" class="text-blue-600 dark:text-blue-400 font-bold">4.0vw</span></div>
+                    <input type="range" id="obsFontSize" min="1.5" max="8.0" step="0.2" value="4.0" oninput="applyDesktopStylesFromModal()" class="w-full">
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">Font Family</label>
+                    <select id="obsFontFamily" onchange="applyDesktopStylesFromModal()" class="w-full border dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded p-2">
+                        <option value="'Mandali', sans-serif">Mandali</option>
+                        <option value="'Gidugu', sans-serif">Gidugu</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold mb-1">Text Color</label>
+                        <input type="color" id="obsTextColor" value="#ffffff" onchange="applyDesktopStylesFromModal()" class="w-full h-8 rounded border dark:border-slate-700 p-0.5 bg-transparent cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block font-bold mb-1">Background (Chroma)</label>
+                        <input type="color" id="obsBgColor" value="#008000" onchange="applyDesktopStylesFromModal()" class="w-full h-8 rounded border dark:border-slate-700 p-0.5 bg-transparent cursor-pointer">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold mb-1">Bg Image URL (Leave empty for transparent)</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="obsBgImage" placeholder="Image URL..." oninput="applyDesktopStylesFromModal()" class="w-full border dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded p-2">
+                        <button onclick="clearBgImageInput('obsBgImage')" class="px-3 bg-slate-200 dark:bg-slate-700 font-bold rounded text-slate-800 dark:text-slate-200">Clear</button>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between p-2 bg-blue-50 dark:bg-slate-900 rounded border border-blue-100 dark:border-slate-800">
+                    <label class="font-bold">Text Shadow</label>
+                    <input type="checkbox" id="obsTextShadow" checked onchange="applyDesktopStylesFromModal()" class="w-4 h-4">
+                </div>
+                <div class="flex items-center justify-between p-2 bg-blue-50 dark:bg-slate-900 rounded border border-blue-100 dark:border-slate-800">
+                    <label class="font-bold">Hide Verse Tags (Pipes)</label>
+                    <input type="checkbox" id="obsHidePipesText" onchange="applyDesktopStylesFromModal()" class="w-4 h-4">
+                </div>
+            </div>
+            <div class="px-5 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-end">
+                <button onclick="toggleModal('obsSettingsModal',false)" class="bg-blue-600 text-white px-4 py-1.5 rounded-lg text-sm font-bold">Done</button>
+            </div>
         </div>
     </div>
 
     <!-- MODAL: ADD/EDIT SONG -->
     <div id="songModal" class="fixed inset-0 bg-slate-950/60 z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-modal rounded-2xl w-full max-w-3xl flex flex-col overflow-hidden text-slate-800 shadow-2xl h-[90vh]">
-            <div class="px-5 py-3 border-b bg-blue-50 flex justify-between items-center"><h3 id="modalHeaderTitle" class="font-bold text-sm"></h3><button onclick="toggleModal('songModal',false)"><i class="fa-solid fa-xmark"></i></button></div>
+        <div class="glass-modal rounded-2xl w-full max-w-3xl flex flex-col overflow-hidden text-slate-900 dark:text-slate-100 shadow-2xl h-[90vh]">
+            <div class="px-5 py-3 border-b border-slate-200 dark:border-slate-800 bg-blue-50 dark:bg-slate-900 flex justify-between items-center">
+                <h3 id="modalHeaderTitle" class="font-bold text-sm"></h3>
+                <button onclick="toggleModal('songModal',false)"><i class="fa-solid fa-xmark"></i></button>
+            </div>
             <div class="p-5 overflow-y-auto space-y-4 flex-1">
                 <input type="hidden" id="editSongId">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div><label class="block text-xs font-bold mb-1">Song Number</label><input type="number" id="inputSongNum" class="w-full border rounded-lg p-2 text-sm"></div>
-                    <div><label class="block text-xs font-bold mb-1">Category</label><select id="inputCategory" class="w-full border rounded-lg p-2 text-sm"></select></div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">Number</label>
+                        <input type="number" id="inputSongNum" class="w-full border dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">Category</label>
+                        <select id="inputCategory" class="w-full border dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 text-sm"></select>
+                    </div>
                 </div>
-                <div><label class="block text-xs font-bold mb-1">Title (English || Telugu)</label><input type="text" id="inputTitle" class="w-full border rounded-lg p-2 text-sm"></div>
-                <div class="bg-amber-50 p-3 border rounded-xl space-y-2"><label class="block text-xs font-bold text-amber-900">Chorus</label><div id="inputChorusEditor"></div></div>
-                <div class="bg-purple-50 p-3 border rounded-xl space-y-2"><label class="block text-xs font-bold text-purple-900">Bridge</label><div id="inputBridgeEditor"></div></div>
-                <div><div class="flex justify-between items-center mb-2"><label class="text-xs font-bold">Stanzas</label><button onclick="addStanzaRow()" class="text-xs text-blue-600 font-bold">+ Add Stanza</button></div><div id="stanzasContainer" class="space-y-3"></div></div>
+                <div>
+                    <label class="block text-xs font-bold mb-1">Title</label>
+                    <input type="text" id="inputTitle" class="w-full border dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-lg p-2 text-sm">
+                </div>
+                <div class="bg-amber-50 dark:bg-amber-950/30 p-3 border border-amber-200 dark:border-amber-900/50 rounded-xl space-y-2">
+                    <label class="block text-xs font-bold text-amber-900 dark:text-amber-200">Chorus</label>
+                    <div id="inputChorusEditor" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"></div>
+                </div>
+                <div class="bg-purple-50 dark:bg-purple-950/30 p-3 border border-purple-200 dark:border-purple-900/50 rounded-xl space-y-2">
+                    <label class="block text-xs font-bold text-purple-900 dark:text-purple-200">Bridge</label>
+                    <div id="inputBridgeEditor" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100"></div>
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-xs font-bold">Stanzas</label>
+                        <button onclick="addStanzaRow()" class="text-xs text-blue-600 dark:text-blue-400 font-bold">+ Add</button>
+                    </div>
+                    <div id="stanzasContainer" class="space-y-3"></div>
+                </div>
             </div>
-            <div class="px-5 py-3 border-t bg-slate-50 flex justify-between">
+            <div class="px-5 py-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-between">
                 <button id="deleteSongBtn" class="text-red-600 text-xs font-bold hidden">Delete</button>
-                <div class="flex gap-2 ml-auto"><button onclick="toggleModal('songModal',false)" class="px-4 py-2 text-slate-600 text-xs font-bold">Cancel</button><button onclick="saveSongForm()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold">Save Song</button></div>
+                <div class="flex gap-2 ml-auto">
+                    <button onclick="toggleModal('songModal',false)" class="px-4 py-2 text-slate-600 dark:text-slate-400 text-xs font-bold">Cancel</button>
+                    <button onclick="saveSongForm()" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold">Save</button>
+                </div>
             </div>
         </div>
     </div>

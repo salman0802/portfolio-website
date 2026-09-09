@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akai MPK Mini Signal Monitor</title>
+  <style>
+    :root {
+      --bg-color: #121214;
+      --card-bg: #1e1e24;
+      --accent-color: #ff3b30;
+      --text-color: #e4e4e7;
+      --muted-color: #a1a1aa;
+      --border-color: #27272a;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    header {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      color: #ffffff;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background-color: #333;
+      color: #fff;
+    }
+
+    .status-connected {
+      background-color: #10b981;
+      color: #000;
+    }
+
+    .status-disconnected {
+      background-color: #ef4444;
+      color: #fff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .card h3 {
+      margin: 0 0 10px 0;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: var(--muted-color);
+      letter-spacing: 0.05em;
+    }
+
+    .card .value {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: var(--accent-color);
+    }
+
+    .log-container {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 15px;
+    }
+
+    .log-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    button {
+      background-color: #27272a;
+      color: #fff;
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background-color: #3f3f46;
+    }
+
+    .log-table-wrapper {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-family: monospace;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      color: var(--muted-color);
+      position: sticky;
+      top: 0;
+      background-color: var(--card-bg);
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>Akai MPK Mini Monitor</h1>
+      <div id="status" class="status-badge status-disconnected">Disconnected</div>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Input Type</h3>
+        <div id="last-type" class="value">--</div>
+      </div>
+      <div class="card">
+        <h3>Control / Note #</h3>
+        <div id="last-number" class="value">--</div>
+      </div>
+      <div class="card">
+        <h3>Value / Velocity</h3>
+        <div id="last-value" class="value">--</div>
+      </div>
+      <div class="card">
+        <h3>Channel</h3>
+        <div id="last-channel" class="value">--</div>
+      </div>
+    </div>
+
+    <div class="log-container">
+      <div class="log-header">
+        <h2 style="margin: 0; font-size: 1.1rem;">Live Signal Feed</h2>
+        <button id="clear-btn">Clear Feed</button>
+      </div>
+      <div class="log-table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Channel</th>
+              <th>Event</th>
+              <th>Note/Control</th>
+              <th>Value/Velocity</th>
+              <th>Raw Hex</th>
+            </tr>
+          </thead>
+          <tbody id="log-body">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--muted-color);">Connect your device and press a key/pad or turn a knob...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    const lastTypeEl = document.getElementById('last-type');
+    const lastNumberEl = document.getElementById('last-number');
+    const lastValueEl = document.getElementById('last-value');
+    const lastChannelEl = document.getElementById('last-channel');
+    const logBodyEl = document.getElementById('log-body');
+    const clearBtn = document.getElementById('clear-btn');
+
+    let firstEntry = true;
+
+    // Check Web MIDI Support
+    if (navigator.requestMIDIAccess) {
+      navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
+    } else {
+      statusEl.textContent = 'Web MIDI API Not Supported';
+      alert('Your browser does not support the Web MIDI API. Please use Chrome, Edge, or Opera.');
+    }
+
+    function onMIDISuccess(midiAccess) {
+      statusEl.textContent = 'Ready - Waiting for Input';
+      
+      const inputs = midiAccess.inputs.values();
+      for (let input of inputs) {
+        if (input.name.toLowerCase().includes('mpk') || input.name.toLowerCase().includes('midi')) {
+          statusEl.textContent = `Connected: ${input.name}`;
+          statusEl.className = 'status-badge status-connected';
+        }
+        input.onmidimessage = handleMIDIMessage;
+      }
+
+      // Handle device connection/disconnection dynamically
+      midiAccess.onstatechange = (e) => {
+        if (e.port.type === 'input') {
+          if (e.port.state === 'connected') {
+            statusEl.textContent = `Connected: ${e.port.name}`;
+            statusEl.className = 'status-badge status-connected';
+            e.port.onmidimessage = handleMIDIMessage;
+          } else {
+            statusEl.textContent = 'Disconnected';
+            statusEl.className = 'status-badge status-disconnected';
+          }
+        }
+      };
+    }
+
+    function onMIDIFailure() {
+      statusEl.textContent = 'Failed to access MIDI devices';
+    }
+
+    function handleMIDIMessage(event) {
+      const [status, data1, data2] = event.data;
+      
+      // Parse MIDI status byte
+      const command = status >> 4;
+      const channel = (status & 0xf) + 1;
+
+      let eventType = 'Unknown';
+      
+      switch (command) {
+        case 9:
+          eventType = data2 > 0 ? 'Note On' : 'Note Off';
+          break;
+        case 8:
+          eventType = 'Note Off';
+          break;
+        case 11:
+          eventType = 'Control Change (Knob)';
+          break;
+        case 14:
+          eventType = 'Pitch Bend';
+          break;
+        case 13:
+          eventType = 'Aftertouch';
+          break;
+      }
+
+      // Convert MIDI Note Number to Musical Pitch (e.g., C4, A#3)
+      const noteName = getNoteName(data1);
+
+      // Raw hex format for debugging
+      const rawHex = Array.from(event.data)
+        .map(b => '0x' + b.toString(16).padStart(2, '0').toUpperCase())
+        .join(' ');
+
+      // Update Summary Cards
+      lastTypeEl.textContent = eventType;
+      lastNumberEl.textContent = command === 11 ? `CC #${data1}` : `${data1} (${noteName})`;
+      lastValueEl.textContent = data2 !== undefined ? data2 : '--';
+      lastChannelEl.textContent = channel;
+
+      // Add to Log Feed
+      addLogEntry(channel, eventType, command === 11 ? `CC ${data1}` : `${data1} (${noteName})`, data2, rawHex);
+    }
+
+    function getNoteName(noteNumber) {
+      const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+      const octave = Math.floor(noteNumber / 12) - 1;
+      const note = notes[noteNumber % 12];
+      return `${note}${octave}`;
+    }
+
+    function addLogEntry(channel, type, number, val, raw) {
+      if (firstEntry) {
+        logBodyEl.innerHTML = '';
+        firstEntry = false;
+      }
+
+      const timestamp = new Date().toLocaleTimeString() + '.' + String(new Date().getMilliseconds()).padStart(3, '0');
+      const row = document.createElement('tr');
+      
+      row.innerHTML = `
+        <td>${timestamp}</td>
+        <td>Ch ${channel}</td>
+        <td>${type}</td>
+        <td>${number}</td>
+        <td>${val !== undefined ? val : '--'}</td>
+        <td style="color: var(--muted-color);">${raw}</td>
+      `;
+
+      logBodyEl.insertBefore(row, logBodyEl.firstChild);
+
+      // Keep maximum 50 rows to keep UI performant
+      if (logBodyEl.children.length > 50) {
+        logBodyEl.removeChild(logBodyEl.lastChild);
+      }
+    }
+
+    clearBtn.addEventListener('click', () => {
+      logBodyEl.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--muted-color);">Log cleared. Waiting for input...</td></tr>`;
+      firstEntry = true;
+    });
+  </script>
+</body>
+</html>

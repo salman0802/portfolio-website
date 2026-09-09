@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acoustic to MIDI Capture</title>
+    <script src="https://unpkg.com/@tonejs/midi"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #020408; color: #f0f6fc; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .card { background: rgba(10, 15, 25, 0.9); padding: 30px; border-radius: 12px; border: 1px solid rgba(0, 240, 255, 0.18); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.7); display: flex; flex-direction: column; align-items: center; gap: 15px;}
+        button { background: rgba(18, 26, 43, 0.95); color: #f0f6fc; border: 1px solid rgba(0, 240, 255, 0.18); padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; margin: 5px; }
+        button:hover:not(:disabled) { border-color: #00f0ff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.25); color: #00f0ff; }
+        button.recording { background: #ff3366; border-color: #fff; color: #fff; animation: pulse 1.5s infinite; }
+        button:disabled { opacity: 0.4; cursor: not-allowed; }
+        .note-display { font-size: 3.5rem; font-weight: 900; color: #00f0ff; margin: 10px 0; min-height: 80px; text-shadow: 0 0 15px rgba(0,240,255,0.4); transition: color 0.1s;}
+        canvas { background: #030508; border: 1px solid #1e293b; border-radius: 8px; width: 100%; max-width: 400px; height: 100px; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0.8); } 70% { box-shadow: 0 0 0 12px rgba(255, 51, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 51, 102, 0); } }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Audio to MIDI</h2>
+        <canvas id="oscilloscope"></canvas>
+        <div class="note-display" id="note-display">--</div>
+        <div>
+            <button id="btn-record">🔴 Start Recording</button>
+            <button id="btn-download" disabled>💾 Download MIDI</button>
+        </div>
+        <div id="status-text" style="font-size: 0.8rem; color: #8b949e; margin-top: 10px;">Waiting for mic...</div>
+    </div>
+
+    <script>
+        let audioContext, analyser, microphone, micProcessor;
+        let isRecording = false;
+        let recordingStartTime = 0;
+        let recordedNotes = [];
+        let currentNote = null; 
+        
+        const btnRecord = document.getElementById('btn-record');
+        const btnDownload = document.getElementById('btn-download');
+        const display = document.getElementById('note-display');
+        const statusText = document.getElementById('status-text');
+        const canvas = document.getElementById('oscilloscope');
+        const canvasCtx = canvas.getContext('2d');
+
+        canvas.width = 400;
+        canvas.height = 100;
+
+        const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        
+        function freqToMidi(freq) { return Math.round(12 * (Math.log(freq / 440) / Math.log(2))) + 69; }
+        function midiToName(midi) { return noteNames[midi % 12] + Math.floor(midi / 12 - 1); }
+
+        async function toggleRecording() {
+            if (isRecording) { stopRecording(); return; }
+
+            try {
+                statusText.innerText = "Requesting microphone access...";
+                // Disable speech-processing filters that destroy instrumental sustain
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } 
+                });
+                
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                await audioContext.resume(); // Satisfy browser autoplay policies
+                
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 2048;
+                microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                
+                isRecording = true;
+                recordedNotes = [];
+                currentNote = null;
+                recordingStartTime = audioContext.currentTime;
+                
+                btnRecord.innerText = "⏹ Stop Recording";
+                btnRecord.classList.add('recording');
+                btnDownload.disabled = true;
+                statusText.innerText = "Recording active. Play a note!";
+                
+                detectPitch();
+            } catch (err) {
+                statusText.innerText = "Error: Mic access denied. Must run on localhost or HTTPS.";
+                statusText.style.color = "#ff3366";
+            }
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            cancelAnimationFrame(micProcessor);
+            if (microphone) {
+                microphone.mediaStream.getTracks().forEach(track => track.stop());
+                microphone.disconnect();
+            }
+            if (audioContext) audioContext.close();
+            
+            if (currentNote) {
+                currentNote.duration = (audioContext.currentTime - recordingStartTime) - currentNote.time;
+                if (currentNote.duration > 0.05) recordedNotes.push(currentNote);
+                currentNote = null;
+            }
+
+            display.innerText = "--";
+            display.style.color = "#00f0ff";
+            btnRecord.innerText = "🔴 Start Recording";
+            btnRecord.classList.remove('recording');
+            btnDownload.disabled = recordedNotes.length === 0;
+            statusText.innerText = recordedNotes.length > 0 ? `${recordedNotes.length} notes captured. Ready to download.` : "No notes captured.";
+            
+            canvasCtx.fillStyle = '#030508';
+            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function detectPitch() {
+            if (!isRecording) return;
+            
+            const buffer = new Float32Array(analyser.fftSize);
+            analyser.getFloatTimeDomainData(buffer);
+            
+            // Draw real-time oscilloscope waveform
+            canvasCtx.fillStyle = '#030508';
+            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+            canvasCtx.lineWidth = 2;
+            canvasCtx.strokeStyle = '#00f0ff';
+            canvasCtx.beginPath();
+            const sliceWidth = canvas.width * 1.0 / buffer.length;
+            let x = 0;
+            for (let i = 0; i < buffer.length; i++) {
+                const v = buffer[i] * 100.0;
+                const y = (canvas.height / 2) + v;
+                if (i === 0) canvasCtx.moveTo(x, y); else canvasCtx.lineTo(x, y);
+                x += sliceWidth;
+            }
+            canvasCtx.lineTo(canvas.width, canvas.height / 2);
+            canvasCtx.stroke();
+
+            let rms = 0;
+            for (let i = 0; i < buffer.length; i++) rms += buffer[i] * buffer[i];
+            rms = Math.sqrt(rms / buffer.length);
+
+            const currentTime = audioContext.currentTime - recordingStartTime;
+
+            if (rms < 0.015) {
+                display.innerText = "--";
+                display.style.color = "#00f0ff";
+                if (currentNote) {
+                    currentNote.duration = currentTime - currentNote.time;
+                    if (currentNote.duration > 0.05) recordedNotes.push(currentNote);
+                    currentNote = null;
+                }
+            } else {
+                let c = new Array(buffer.length).fill(0);
+                for (let i = 0; i < buffer.length; i++) {
+                    for (let j = 0; j < buffer.length - i; j++) c[i] += buffer[j] * buffer[j + i];
+                }
+                let d = 0; while (c[d] > c[d + 1]) d++;
+                let maxval = -1, maxpos = -1;
+                for (let i = d; i < buffer.length; i++) {
+                    if (c[i] > maxval) { maxval = c[i]; maxpos = i; }
+                }
+                
+                let pitch = audioContext.sampleRate / maxpos;
+                let midi = freqToMidi(pitch);
+                
+                if (midi > 30 && midi < 100) {
+                    const noteName = midiToName(midi);
+                    display.innerText = noteName;
+                    display.style.color = "#ffd700"; // Gold when actively tracking
+
+                    if (!currentNote || currentNote.midi !== midi) {
+                        if (currentNote) {
+                            currentNote.duration = currentTime - currentNote.time;
+                            if (currentNote.duration > 0.05) recordedNotes.push(currentNote);
+                        }
+                        currentNote = { midi: midi, time: currentTime, duration: 0, velocity: Math.min(1, rms * 5) };
+                    }
+                }
+            }
+            micProcessor = requestAnimationFrame(detectPitch);
+        }
+
+        function downloadMIDI() {
+            if (recordedNotes.length === 0) return;
+            
+            const midi = new Midi();
+            const track = midi.addTrack();
+            
+            recordedNotes.forEach(note => {
+                track.addNote({ midi: note.midi, time: note.time, duration: note.duration, velocity: note.velocity });
+            });
+
+            const blob = new Blob([midi.toArray()], { type: "audio/midi" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "acoustic_capture.mid";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        btnRecord.addEventListener('click', toggleRecording);
+        btnDownload.addEventListener('click', downloadMIDI);
+    </script>
+</body>
+</html>
