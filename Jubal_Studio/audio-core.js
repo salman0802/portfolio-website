@@ -1,6 +1,15 @@
 // 2. Audio Core
 // Owns the single Tone.js graph and all shared synth instances.
 
+// Use Tone.js' default browser AudioContext. Replacing the global context after
+// Tone has initialised can create subtle scheduling/output problems across browsers.
+// Live MIDI/keyboard notes bypass look-ahead with Tone.immediate(); sequenced MIDI
+// playback uses the dedicated playback-engine look-ahead scheduler.
+if (Tone?.context) {
+  Tone.context.lookAhead = 0.02;
+  Tone.context.updateInterval = 0.01;
+}
+
 export const masterFilter = new Tone.Filter(20000, "lowpass").toDestination();
 export const masterReverb = new Tone.Reverb({ decay: 2, wet: 0.1 }).connect(masterFilter);
 export const masterDelay = new Tone.FeedbackDelay("8n", 0.2).connect(masterReverb);
@@ -46,7 +55,7 @@ export const voices = {
   }).connect(mainBus)
 };
 
-export const editorVoice = new Tone.PolySynth(Tone.Synth).toDestination();
+export const editorVoice = new Tone.PolySynth(Tone.Synth).connect(mainBus);
 
 export const activeDrumKit = {
   36: new Tone.MembraneSynth({
@@ -94,16 +103,25 @@ export function setActiveAccompanimentVoice(nameOrVoice) {
 }
 
 export async function ensureToneStarted() {
+  // Always ask Tone to start/resume from a user gesture path. Some browsers report
+  // the wrapper as running while the underlying AudioContext is still suspended.
   if (Tone.context.state !== "running") await Tone.start();
+  const raw = Tone.context.rawContext || Tone.context._context || null;
+  if (raw?.state === "suspended" && typeof raw.resume === "function") await raw.resume();
+  return Tone.context.state === "running" || raw?.state === "running";
 }
 
-export function triggerNotes(voice, notes, { time = Tone.now(), velocity = 0.8, source = "app" } = {}) {
-  voice.triggerAttack(notes, time, velocity);
+export function triggerNotes(voice, notes, { time = null, velocity = 0.8, source = "app" } = {}) {
+  const liveInput = source === "midi" || source === "live-keyboard" || source === "learn-keyboard" || source === "mini-viz";
+  const when = time ?? (liveInput ? Tone.immediate() : Tone.now());
+  voice.triggerAttack(notes, when, velocity);
   return { voice, notes, source };
 }
 
-export function releaseNotes(voice, notes, time = Tone.now()) {
-  voice.triggerRelease(notes, time);
+export function releaseNotes(voice, notes, time = null, source = "app") {
+  const liveInput = source === "midi" || source === "live-keyboard" || source === "learn-keyboard" || source === "mini-viz";
+  const when = time ?? (liveInput ? Tone.immediate() : Tone.now());
+  voice.triggerRelease(notes, when);
 }
 
 const activeRoutes = new Map();
@@ -111,14 +129,14 @@ const activeRoutes = new Map();
 export function playRoutedNotes({ sourceId, notes, voice, velocity = 0.8, source = "keyboard" }) {
   const route = { notes: [...notes], voice, source };
   activeRoutes.set(sourceId, route);
-  triggerNotes(voice, route.notes, { time: Tone.now(), velocity, source });
+  triggerNotes(voice, route.notes, { velocity, source });
   return route;
 }
 
 export function releaseRoutedNotes(sourceId) {
   const route = activeRoutes.get(sourceId);
   if (!route) return null;
-  releaseNotes(route.voice, route.notes);
+  releaseNotes(route.voice, route.notes, null, route.source);
   activeRoutes.delete(sourceId);
   return route;
 }

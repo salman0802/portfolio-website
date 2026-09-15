@@ -103,8 +103,8 @@ export function drawWaterfall() {
         ctx.fillStyle = "rgba(255,255,255,0.4)";
         ctx.fillRect(x + 1, yBottom - 4, Math.max(1, w - 2), 4);
       };
-      whiteNotes.forEach(n => drawNote(n, "rgba(168, 85, 247, 0.8)"));
-      blackNotes.forEach(n => drawNote(n, "rgba(0, 240, 255, 0.95)"));
+      whiteNotes.forEach(n => drawNote(n, "rgba(91, 141, 239, 0.82)"));
+      blackNotes.forEach(n => drawNote(n, "rgba(216, 168, 78, 0.92)"));
     }
   }
 

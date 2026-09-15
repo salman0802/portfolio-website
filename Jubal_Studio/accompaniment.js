@@ -27,11 +27,13 @@ export function getAccompanimentSettings() {
 
 export function setAutoAccompanimentEnabled(enabled) {
   autoAccompanimentEnabled = Boolean(enabled);
-  const button = document.getElementById("accompaniment-toggle");
-  if (button) {
+  ["accompaniment-toggle", "learn-accompaniment-toggle"].forEach(id => {
+    const button = document.getElementById(id);
+    if (!button) return;
     button.innerText = autoAccompanimentEnabled ? "ON" : "OFF";
     button.classList.toggle("active-toggle", autoAccompanimentEnabled);
-  }
+    button.setAttribute("aria-pressed", String(autoAccompanimentEnabled));
+  });
 }
 
 export function shiftAccompZone(octaves) {
@@ -47,6 +49,10 @@ export function shiftAccompZone(octaves) {
   if (start && end) {
     shift(start);
     shift(end);
+    const practiceStart = document.getElementById("learn-accomp-zone-start");
+    const practiceEnd = document.getElementById("learn-accomp-zone-end");
+    if (practiceStart) practiceStart.value = start.value;
+    if (practiceEnd) practiceEnd.value = end.value;
   }
   window.dispatchEvent(new CustomEvent("jubal:settingsChanged"));
 }
@@ -168,16 +174,18 @@ export function getSmartAccompaniment(midiNote, primaryNoteName) {
 }
 
 window.addEventListener("jubal:noteOn", e => {
-  const { containerId, sourceId, midi: physicalMidi, note: physicalNote, velocity = 0.8 } = e.detail;
+  const { containerId, sourceId, midi: physicalMidi, note: physicalNote, velocity = 0.8, source = "keyboard" } = e.detail;
   const { activeLiveVoice, activeLearnVoice, activeAccompanimentVoice } = getActiveVoices();
   const isLive = containerId === "live-keyboard";
+  const isPracticeKeyboard = containerId === "learn-keyboard";
   const midi = isLive ? physicalMidi + Number(window.jubalLiveTranspose || 0) : physicalMidi;
   const note = isLive ? midiToNote(midi) : physicalNote;
   const primary = midiToNote(midi);
 
-  if (isLive) {
+  if (isLive || isPracticeKeyboard) {
     const chordResult = getSmartAccompaniment(midi, primary);
-    const voice = chordResult.isAccomp ? activeAccompanimentVoice : activeLiveVoice;
+    const primaryVoice = isLive ? activeLiveVoice : activeLearnVoice;
+    const voice = chordResult.isAccomp ? activeAccompanimentVoice : primaryVoice;
     if (chordResult.isAccomp) activeMouseAccompMap.set(sourceId, chordResult.notes);
 
     playRoutedNotes({
@@ -185,13 +193,13 @@ window.addEventListener("jubal:noteOn", e => {
       notes: chordResult.notes,
       voice,
       velocity,
-      source: "keyboard"
+      source
     });
     window.dispatchEvent(new CustomEvent("jubal:resolvedNoteOn", {
       detail: { sourceId, midi, note: primary, notes: chordResult.notes, isAccomp: chordResult.isAccomp, velocity, containerId }
     }));
   } else {
-    playRoutedNotes({ sourceId, notes: [note], voice: activeLearnVoice, velocity, source: "keyboard" });
+    playRoutedNotes({ sourceId, notes: [note], voice: activeLearnVoice, velocity, source });
     window.dispatchEvent(new CustomEvent("jubal:resolvedNoteOn", {
       detail: { sourceId, midi, note, notes: [note], isAccomp: false, velocity, containerId }
     }));
@@ -201,7 +209,7 @@ window.addEventListener("jubal:noteOn", e => {
 window.addEventListener("jubal:noteOff", e => {
   const { containerId, sourceId, midi, note } = e.detail;
   const route = releaseRoutedNotes(sourceId);
-  if (containerId === "live-keyboard") activeMouseAccompMap.delete(sourceId);
+  if (containerId === "live-keyboard" || containerId === "learn-keyboard") activeMouseAccompMap.delete(sourceId);
   if (route) {
     window.dispatchEvent(new CustomEvent("jubal:resolvedNoteOff", {
       detail: { sourceId, midi, note, notes: route.notes, isAccomp: activeMouseAccompMap.has(sourceId), containerId }

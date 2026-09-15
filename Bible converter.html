@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible JSON Converter</title>
+
+```
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+    }
+
+    .file-box {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    input[type="file"] {
+        margin-bottom: 10px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    pre {
+        background: #f5f5f5;
+        padding: 20px;
+        overflow: auto;
+        max-height: 600px;
+        border: 1px solid #ddd;
+        white-space: pre-wrap;
+    }
+
+    #status {
+        margin: 20px 0;
+        font-weight: bold;
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+```
+<h1>Bible JSON Converter</h1>
+
+<div class="file-box">
+    <label for="bibleFile">Select Bible JSON</label>
+    <input type="file" id="bibleFile" accept=".json">
+</div>
+
+<div class="file-box">
+    <label for="booksFile">Select books.json</label>
+    <input type="file" id="booksFile" accept=".json">
+</div>
+
+<button id="convertBtn">Convert JSON</button>
+
+<div id="status"></div>
+
+<h2>Output Preview</h2>
+<pre id="output"></pre>
+
+<script>
+    const bibleFileInput = document.getElementById("bibleFile");
+    const booksFileInput = document.getElementById("booksFile");
+    const convertBtn = document.getElementById("convertBtn");
+    const outputElement = document.getElementById("output");
+    const statusElement = document.getElementById("status");
+
+    function readJSONFile(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = event => {
+                try {
+                    const json = JSON.parse(event.target.result);
+                    resolve(json);
+                } catch (error) {
+                    reject(
+                        new Error(`Invalid JSON in ${file.name}`)
+                    );
+                }
+            };
+
+            reader.onerror = () => {
+                reject(
+                    new Error(`Could not read ${file.name}`)
+                );
+            };
+
+            reader.readAsText(file, "UTF-8");
+        });
+    }
+
+    convertBtn.addEventListener("click", async () => {
+        try {
+            const bibleFile = bibleFileInput.files[0];
+            const booksFile = booksFileInput.files[0];
+
+            if (!bibleFile) {
+                throw new Error(
+                    "Please select the Bible JSON file."
+                );
+            }
+
+            if (!booksFile) {
+                throw new Error(
+                    "Please select the books.json file."
+                );
+            }
+
+            statusElement.textContent = "Reading files...";
+
+            const bibleData = await readJSONFile(bibleFile);
+            const books = await readJSONFile(booksFile);
+
+            // Validate Bible JSON
+            if (
+                !bibleData.Book ||
+                !Array.isArray(bibleData.Book)
+            ) {
+                throw new Error(
+                    'Bible JSON must contain a "Book" array.'
+                );
+            }
+
+            // Validate books.json
+            if (!Array.isArray(books)) {
+                throw new Error(
+                    "books.json must contain an array of book names."
+                );
+            }
+
+            // Make sure both files contain the same number of books
+            if (bibleData.Book.length !== books.length) {
+                throw new Error(
+                    `Book count mismatch. Bible has ${bibleData.Book.length} books, ` +
+                    `but books.json has ${books.length} books.`
+                );
+            }
+
+            const convertedData = {};
+
+            bibleData.Book.forEach((book, bookIndex) => {
+
+                const bookName = books[bookIndex];
+
+                if (!bookName) {
+                    throw new Error(
+                        `Missing book name at index ${bookIndex}.`
+                    );
+                }
+
+                if (!Array.isArray(book.Chapter)) {
+                    throw new Error(
+                        `Book "${bookName}" does not contain a Chapter array.`
+                    );
+                }
+
+                const chapters = {};
+
+                book.Chapter.forEach((chapter, chapterIndex) => {
+
+                    const chapterNumber =
+                        String(chapterIndex + 1);
+
+                    if (!Array.isArray(chapter.Verse)) {
+                        throw new Error(
+                            `Book "${bookName}", Chapter ${chapterNumber} ` +
+                            `does not contain a Verse array.`
+                        );
+                    }
+
+                    // Convert verses
+                    chapters[chapterNumber] =
+                        chapter.Verse.map((verse, verseIndex) => {
+
+                            return {
+                                verse: verseIndex + 1,
+                                Verseid: verse.Verseid,
+                                text: verse.Verse
+                            };
+
+                        });
+                });
+
+                convertedData[bookName] = {
+                    name: bookName,
+                    chapters: chapters
+                };
+            });
+
+            // Convert to formatted JSON
+            const jsonOutput = JSON.stringify(
+                convertedData,
+                null,
+                2
+            );
+
+            // Show preview
+            outputElement.textContent = jsonOutput;
+
+            // Create download
+            const blob = new Blob(
+                [jsonOutput],
+                {
+                    type: "application/json;charset=utf-8"
+                }
+            );
+
+            const url = URL.createObjectURL(blob);
+
+            const downloadLink =
+                document.createElement("a");
+
+            downloadLink.href = url;
+            downloadLink.download =
+                "Bible_Converted.json";
+
+            document.body.appendChild(downloadLink);
+
+            downloadLink.click();
+
+            document.body.removeChild(downloadLink);
+
+            URL.revokeObjectURL(url);
+
+            statusElement.textContent =
+                "Conversion completed successfully!";
+
+        } catch (error) {
+
+            console.error(error);
+
+            statusElement.textContent =
+                "Error: " + error.message;
+
+            outputElement.textContent = "";
+        }
+    });
+</script>
+```
+
+</body>
+</html>

@@ -19,7 +19,7 @@ import {
   triggerFill, selectArrangerSection
 } from "./arranger.js";
 import {
-  bindSequencerUI, toggleRecording, playRecording, stopRecordingPlayback
+  bindSequencerUI, toggleRecording, playRecording, stopRecordingPlayback, isRecordingPlaybackActive
 } from "./sequencer.js";
 import {
   initMIDI, processMIDI, getMidiMap, setMidiMap, updateMidiMap,
@@ -27,18 +27,16 @@ import {
   arrangerPadMappings, appPadMappings, appKnobMappings, updateHardwareUI
 } from "./midi.js";
 import {
-  bindMidiEditorUI, closeEditor
+  bindMidiEditorUI, closeEditor, isEditorPlaying
 } from "./midi-editor.js";
 import {
-  bindTrackPlayerUI, getTimelineState, getFileMidi, setTimelineLoop, stopFile, playFile
+  bindTrackPlayerUI, getTimelineState, getFileMidi, setTimelineLoop, stopFile, playFile, isFilePlaying
 } from "./track-player.js";
 import { bindAcademyVisualizer } from "./academy-visualizer.js";
 import {
   getLiveNotes, getLearnNotes, clearLiveVisuals, clearLearnVisuals,
   updateLiveVisuals, updateLearnVisuals
 } from "./main-visuals.js";
-
-Tone.context.lookAhead = 0.01;
 
 let liveBaseOctave = 2;
 let liveTranspose = 0;
@@ -57,6 +55,51 @@ window.jubalProcessMIDI = processMIDI;
 function refreshGlobals() {
   window.jubalLearnBaseOctave = learnBaseOctave;
   window.jubalLiveTranspose = liveTranspose;
+}
+
+const CONTROL_MIRRORS = {
+  "scale-root": "learn-scale-root",
+  "scale-type": "learn-scale-type",
+  "accomp-voice-select": "learn-accomp-voice-select",
+  "accomp-zone-start": "learn-accomp-zone-start",
+  "accomp-zone-end": "learn-accomp-zone-end",
+  "accomp-inversion": "learn-accomp-inversion"
+};
+
+function setMirroredValue(primaryId, value) {
+  const primary = document.getElementById(primaryId);
+  const mirror = document.getElementById(CONTROL_MIRRORS[primaryId]);
+  if (primary && value !== undefined && value !== null) primary.value = value;
+  if (mirror && value !== undefined && value !== null) mirror.value = value;
+}
+
+function mirrorControlValue(sourceId, targetId) {
+  const source = document.getElementById(sourceId);
+  const target = document.getElementById(targetId);
+  if (source && target) target.value = source.value;
+}
+
+function syncPracticeHarmonyFromLive() {
+  Object.entries(CONTROL_MIRRORS).forEach(([primaryId, mirrorId]) => mirrorControlValue(primaryId, mirrorId));
+}
+
+function bindMirroredControl(primaryId, mirrorId, eventName, onChange) {
+  const bind = (sourceId, targetId) => {
+    document.getElementById(sourceId)?.addEventListener(eventName, e => {
+      const target = document.getElementById(targetId);
+      if (target) target.value = e.currentTarget.value;
+      onChange?.(e.currentTarget.value, e);
+      saveAppSettings();
+    });
+  };
+  bind(primaryId, mirrorId);
+  bind(mirrorId, primaryId);
+}
+
+function shiftSharedAccompZone(octaves) {
+  shiftAccompZone(octaves);
+  syncPracticeHarmonyFromLive();
+  saveAppSettings();
 }
 
 function saveAppSettings() {
@@ -89,12 +132,12 @@ function applySettings(settings) {
     if (el && value !== undefined && value !== null) el.value = value;
   };
 
-  setValue("scale-root", settings.scaleRoot);
-  setValue("scale-type", settings.scaleType);
-  setValue("accomp-zone-start", settings.accompStart);
-  setValue("accomp-zone-end", settings.accompEnd);
-  setValue("accomp-voice-select", settings.accompVoice);
-  setValue("accomp-inversion", settings.accompInversion);
+  setMirroredValue("scale-root", settings.scaleRoot);
+  setMirroredValue("scale-type", settings.scaleType);
+  setMirroredValue("accomp-zone-start", settings.accompStart);
+  setMirroredValue("accomp-zone-end", settings.accompEnd);
+  setMirroredValue("accomp-voice-select", settings.accompVoice);
+  setMirroredValue("accomp-inversion", settings.accompInversion);
   setValue("live-voice", settings.liveVoice);
   setValue("learn-instrument", settings.learnInstrument);
   setValue("keyboard-size-select", settings.keyboardSize);
@@ -134,20 +177,32 @@ function applySettings(settings) {
   const knobEl = document.getElementById("knob-mode-toggle");
   if (octaveEl) octaveEl.innerText = liveBaseOctave;
   if (transEl) transEl.innerText = liveTranspose > 0 ? `+${liveTranspose}` : liveTranspose;
-  if (padEl) padEl.innerText = `PADS: ${currentPadMode.toUpperCase()}`;
-  if (knobEl) knobEl.innerText = `KNOBS: ${knobModeSynth ? "SYNTH" : "APP"}`;
+  if (padEl) {
+    padEl.dataset.mode = currentPadMode;
+    padEl.innerText = `PADS · ${currentPadMode === "arranger" ? "ARR" : "APP"}`;
+  }
+  if (knobEl) {
+    knobEl.dataset.mode = knobModeSynth ? "synth" : "app";
+    knobEl.innerText = `KNOBS · ${knobModeSynth ? "SYN" : "APP"}`;
+  }
 
+  syncPracticeHarmonyFromLive();
   refreshGlobals();
 }
 
 function bindVoiceAndPanelControls() {
-  document.getElementById("accomp-voice-select")?.addEventListener("change", e => {
-    setActiveAccompanimentVoice(e.target.value);
-    saveAppSettings();
+  bindMirroredControl("accomp-voice-select", "learn-accomp-voice-select", "change", value => {
+    setActiveAccompanimentVoice(value);
   });
 
   document.getElementById("live-voice")?.addEventListener("change", e => {
     setActiveLiveVoice(e.target.value);
+    saveAppSettings();
+  });
+
+  document.getElementById("learn-instrument")?.addEventListener("change", e => {
+    const instrument = e.target.value;
+    setActiveLearnVoice(instrument === "piano" ? "grand" : instrument);
     saveAppSettings();
   });
 
@@ -156,7 +211,7 @@ function bindVoiceAndPanelControls() {
     liveBaseOctave++;
     document.getElementById("octave-val").innerText = liveBaseOctave;
     buildKeyboard("live-keyboard", liveBaseOctave, liveKeyCount);
-    if (autoAccompanimentEnabled) shiftAccompZone(1);
+    if (autoAccompanimentEnabled) shiftSharedAccompZone(1);
     refreshGlobals();
     saveAppSettings();
   });
@@ -166,7 +221,7 @@ function bindVoiceAndPanelControls() {
     liveBaseOctave--;
     document.getElementById("octave-val").innerText = liveBaseOctave;
     buildKeyboard("live-keyboard", liveBaseOctave, liveKeyCount);
-    if (autoAccompanimentEnabled) shiftAccompZone(-1);
+    if (autoAccompanimentEnabled) shiftSharedAccompZone(-1);
     refreshGlobals();
     saveAppSettings();
   });
@@ -187,14 +242,22 @@ function bindVoiceAndPanelControls() {
     saveAppSettings();
   });
 
-  document.getElementById("btn-accomp-oct-up")?.addEventListener("click", () => shiftAccompZone(1));
-  document.getElementById("btn-accomp-oct-down")?.addEventListener("click", () => shiftAccompZone(-1));
+  document.getElementById("btn-accomp-oct-up")?.addEventListener("click", () => shiftSharedAccompZone(1));
+  document.getElementById("btn-accomp-oct-down")?.addEventListener("click", () => shiftSharedAccompZone(-1));
+  document.getElementById("btn-learn-accomp-oct-up")?.addEventListener("click", () => shiftSharedAccompZone(1));
+  document.getElementById("btn-learn-accomp-oct-down")?.addEventListener("click", () => shiftSharedAccompZone(-1));
 
-  document.getElementById("accompaniment-toggle")?.addEventListener("click", e => {
-    autoAccompanimentEnabled = !autoAccompanimentEnabled;
-    setAutoAccompanimentEnabled(autoAccompanimentEnabled);
-    saveAppSettings();
+  ["accompaniment-toggle", "learn-accompaniment-toggle"].forEach(id => {
+    document.getElementById(id)?.addEventListener("click", () => {
+      autoAccompanimentEnabled = !autoAccompanimentEnabled;
+      setAutoAccompanimentEnabled(autoAccompanimentEnabled);
+      saveAppSettings();
+    });
   });
+
+  bindMirroredControl("accomp-zone-start", "learn-accomp-zone-start", "change");
+  bindMirroredControl("accomp-zone-end", "learn-accomp-zone-end", "change");
+  bindMirroredControl("accomp-inversion", "learn-accomp-inversion", "change");
 
   document.getElementById("keyboard-size-select")?.addEventListener("change", e => {
     liveKeyCount = Number(e.target.value);
@@ -202,14 +265,8 @@ function bindVoiceAndPanelControls() {
     saveAppSettings();
   });
 
-  document.getElementById("scale-root")?.addEventListener("change", () => {
-    updateScaleHighlight();
-    saveAppSettings();
-  });
-  document.getElementById("scale-type")?.addEventListener("change", () => {
-    updateScaleHighlight();
-    saveAppSettings();
-  });
+  bindMirroredControl("scale-root", "learn-scale-root", "change", () => updateScaleHighlight());
+  bindMirroredControl("scale-type", "learn-scale-type", "change", () => updateScaleHighlight());
 
   document.getElementById("live-tempo")?.addEventListener("input", e => {
     const bpm = Number(e.target.value);
@@ -217,6 +274,7 @@ function bindVoiceAndPanelControls() {
     document.getElementById("live-tempo-val").innerText = bpm;
     document.getElementById("learn-tempo").value = bpm;
     document.getElementById("learn-tempo-val").innerText = bpm;
+    window.dispatchEvent(new CustomEvent("jubal:tempoChanged", { detail: { bpm, source: "live" } }));
     saveAppSettings();
   });
   document.getElementById("learn-tempo")?.addEventListener("input", e => {
@@ -225,19 +283,22 @@ function bindVoiceAndPanelControls() {
     document.getElementById("learn-tempo-val").innerText = bpm;
     document.getElementById("live-tempo").value = bpm;
     document.getElementById("live-tempo-val").innerText = bpm;
+    window.dispatchEvent(new CustomEvent("jubal:tempoChanged", { detail: { bpm, source: "practice" } }));
     saveAppSettings();
   });
 
   document.getElementById("pads-toggle")?.addEventListener("click", e => {
     currentPadMode = currentPadMode === "arranger" ? "app" : "arranger";
-    e.currentTarget.innerText = `PADS: ${currentPadMode.toUpperCase()}`;
+    e.currentTarget.dataset.mode = currentPadMode;
+    e.currentTarget.innerText = `PADS · ${currentPadMode === "arranger" ? "ARR" : "APP"}`;
     updateHardwareUI({ currentPadMode, knobModeSynth });
     saveAppSettings();
   });
 
   document.getElementById("knob-mode-toggle")?.addEventListener("click", e => {
     knobModeSynth = !knobModeSynth;
-    e.currentTarget.innerText = `KNOBS: ${knobModeSynth ? "SYNTH" : "APP"}`;
+    e.currentTarget.dataset.mode = knobModeSynth ? "synth" : "app";
+    e.currentTarget.innerText = `KNOBS · ${knobModeSynth ? "SYN" : "APP"}`;
     updateHardwareUI({ currentPadMode, knobModeSynth });
     saveAppSettings();
   });
@@ -258,7 +319,7 @@ function bindVoiceAndPanelControls() {
   document.getElementById("metronome-toggle")?.addEventListener("click", async e => {
     await ensureToneStarted();
     metronomeRunning = !metronomeRunning;
-    e.target.innerText = `METRONOME: ${metronomeRunning ? "ON" : "OFF"}`;
+    e.target.innerText = `MET · ${metronomeRunning ? "ON" : "OFF"}`;
     if (metronomeRunning && Tone.Transport.state !== "started") Tone.Transport.start();
   });
 
@@ -296,6 +357,7 @@ function executeAppControl(actionKey, value = null) {
       document.getElementById("live-tempo-val").innerText = bpm;
       document.getElementById("learn-tempo").value = bpm;
       document.getElementById("learn-tempo-val").innerText = bpm;
+      window.dispatchEvent(new CustomEvent("jubal:tempoChanged", { detail: { bpm, source: "mapping" } }));
       break;
     }
     case "loopStart":
@@ -316,8 +378,11 @@ function executeAppControl(actionKey, value = null) {
       break;
     }
     case "playStop":
-      if (Tone.Transport.state === "started") isLive ? stopRecordingPlayback() : stopFile();
-      else if (isLive) playRecording(); else playFile();
+      if (isLive) {
+        if (isRecordingPlaybackActive()) stopRecordingPlayback(); else playRecording();
+      } else {
+        if (isFilePlaying()) stopFile(); else playFile();
+      }
       break;
     case "record":
       toggleRecording();
@@ -368,7 +433,8 @@ function bindHardwareEvents() {
         note: Tone.Frequency(midi, "midi").toNote(),
         velocity: e.detail.velocity,
         containerId: document.getElementById("view-live")?.classList.contains("active") ? "live-keyboard" : "learn-keyboard",
-        sourceId: `midi:${e.detail.channel ?? 0}:${midi}`
+        sourceId: `midi:${e.detail.channel ?? 0}:${midi}`,
+        source: "midi"
       }
     }));
   });
@@ -379,15 +445,14 @@ function bindHardwareEvents() {
         midi,
         note: Tone.Frequency(midi, "midi").toNote(),
         containerId: document.getElementById("view-live")?.classList.contains("active") ? "live-keyboard" : "learn-keyboard",
-        sourceId: `midi:${e.detail.channel ?? 0}:${midi}`
+        sourceId: `midi:${e.detail.channel ?? 0}:${midi}`,
+        source: "midi"
       }
     }));
   });
 }
 
 function bindContextActions() {
-  document.getElementById("editor-close")?.addEventListener("click", closeEditor);
-  document.querySelectorAll("[data-action='close-editor']").forEach(btn => btn.addEventListener("click", closeEditor));
   window.addEventListener("jubal:refreshDiatonic", () => updateDiatonicListDisplay());
   window.addEventListener("contextmenu", e => e.preventDefault());
 }
@@ -396,10 +461,10 @@ function bindSpacebarPlayback() {
   window.addEventListener("jubal:spacePressed", () => {
     const editor = document.getElementById("editor-modal");
     if (editor?.style.display === "flex") {
-      if (Tone.Transport.state === "started") document.getElementById("editor-btn-stop")?.click();
+      if (isEditorPlaying()) document.getElementById("editor-btn-stop")?.click();
       else document.getElementById("editor-btn-play")?.click();
     } else if (document.getElementById("view-learning")?.classList.contains("active")) {
-      if (Tone.Transport.state === "started") document.getElementById("btn-file-stop")?.click();
+      if (isFilePlaying()) document.getElementById("btn-file-stop")?.click();
       else if (!document.getElementById("btn-file-play")?.disabled) document.getElementById("btn-file-play")?.click();
     }
   });
@@ -445,6 +510,12 @@ function boot() {
   window.clearMidiMap = clearMidiMap;
   window.closeEditor = closeEditor;
   window.saveSettings = saveAppSettings;
+
+  // Prime Web Audio on the first real browser gesture. MIDI messages themselves do
+  // not satisfy autoplay policies, so doing this once avoids a delayed first note.
+  const unlockAudio = () => ensureToneStarted().catch(() => {});
+  window.addEventListener("pointerdown", unlockAudio, { once: true, capture: true });
+  window.addEventListener("keydown", unlockAudio, { once: true, capture: true });
 
   initMIDI();
 }

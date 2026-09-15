@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authentic Teak Bed & Decor Studio</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/STLExporter.js"></script>
+</head>
+<body>
+  <div id="app-container">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <h2>Teak Bed Studio</h2>
+      <p class="subtitle">Photorealistic Timber & Natural Lighting</p>
+
+      <!-- Presets -->
+      <div class="control-group">
+        <label for="preset-select">Standard Dimensions</label>
+        <select id="preset-select">
+          <option value="king" selected>King (78" W x 84" L)</option>
+          <option value="queen">Queen (60" W x 80" L)</option>
+          <option value="full">Full (54" W x 75" L)</option>
+          <option value="custom">Custom Dimensions</option>
+        </select>
+      </div>
+
+      <!-- Wood Finish & Shader Tuning -->
+      <h3>Wood Finish & Realism</h3>
+      
+      <div class="control-group">
+        <label for="woodFinish">Timber Species</label>
+        <select id="woodFinish">
+          <option value="teak" selected>Natural Golden Teak</option>
+          <option value="walnut">Rich Dark Walnut</option>
+          <option value="oak">Honey White Oak</option>
+          <option value="rosewood">Brazilian Rosewood</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <div class="label-val"><label for="roughness">Finish Gloss / Satin</label><span id="val-roughness">0.40</span></div>
+        <input type="range" id="roughness" min="0.1" max="0.9" step="0.05" value="0.40">
+      </div>
+
+      <div class="control-group">
+        <div class="label-val"><label for="bumpScale">Grain Relief Depth</label><span id="val-bumpScale">0.05</span></div>
+        <input type="range" id="bumpScale" min="0.0" max="0.15" step="0.01" value="0.05">
+      </div>
+
+      <!-- Lighting Controls -->
+      <h3>Room Lighting Studio</h3>
+      
+      <div class="control-group">
+        <label for="lightPreset">Lighting Atmosphere</label>
+        <select id="lightPreset">
+          <option value="warmSun" selected>Warm Afternoon Sun</option>
+          <option value="softStudio">Soft Studio Daylight</option>
+          <option value="cozyEvening">Cozy Evening Lamp</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <div class="label-val"><label for="sunAngle">Sun Rotation</label><span id="val-sunAngle">120°</span></div>
+        <input type="range" id="sunAngle" min="0" max="360" value="120">
+      </div>
+
+      <!-- Back Panel & Enclosure -->
+      <h3>Back Panel & Enclosure</h3>
+      
+      <div class="control-group checkbox-group">
+        <label for="hasFullBack">Solid Sealed Back Panel</label>
+        <input type="checkbox" id="hasFullBack" checked>
+      </div>
+
+      <div class="control-group">
+        <div class="label-val"><label for="backPanelThickness">Panel Thickness</label><span id="val-backPanelThickness">0.75 in</span></div>
+        <input type="range" id="backPanelThickness" min="0.25" max="2" step="0.25" value="0.75">
+      </div>
+
+      <!-- Add Custom Items / Decor -->
+      <h3>Add Custom Decor</h3>
+      <div class="add-decor-box">
+        <select id="decor-type">
+          <option value="lamp">Brass Table Lamp</option>
+          <option value="book">Book Stack</option>
+          <option value="clock">Alarm Clock</option>
+          <option value="plant">Potted Plant</option>
+          <option value="pillow">Linen Pillow</option>
+        </select>
+        <button id="add-decor-btn">➕ Add Item</button>
+      </div>
+
+      <div id="decor-list">
+        <p class="section-hint">Placed Items (Click in 3D scene to move):</p>
+        <ul id="items-ul"></ul>
+      </div>
+
+      <!-- Bed Dimensions -->
+      <h3>Dimensions (Inches)</h3>
+      
+      <div class="control-group">
+        <div class="label-val"><label for="width">Width (W)</label><span id="val-width">78 in</span></div>
+        <input type="range" id="width" min="38" max="96" value="78">
+      </div>
+
+      <div class="control-group">
+        <div class="label-val"><label for="length">Length (L)</label><span id="val-length">84 in</span></div>
+        <input type="range" id="length" min="60" max="96" value="84">
+      </div>
+
+      <div class="control-group">
+        <div class="label-val"><label for="legHeight">Leg Height</label><span id="val-legHeight">10 in</span></div>
+        <input type="range" id="legHeight" min="6" max="18" value="10">
+      </div>
+
+      <div class="control-group">
+        <div class="label-val"><label for="hbHeight">Headboard Height</label><span id="val-hbHeight">43 in</span></div>
+        <input type="range" id="hbHeight" min="30" max="60" value="43">
+      </div>
+
+      <div class="control-group">
+        <div class="label-val"><label for="rattanWidth">Rattan Panel Width</label><span id="val-rattanWidth">18 in</span></div>
+        <input type="range" id="rattanWidth" min="10" max="28" value="18">
+      </div>
+
+      <!-- Options -->
+      <h3>Display Toggles</h3>
+
+      <div class="control-group checkbox-group">
+        <label for="hasCenterDrawers">Include Center Drawers</label>
+        <input type="checkbox" id="hasCenterDrawers" checked>
+      </div>
+
+      <div class="control-group checkbox-group">
+        <label for="hasMattress">Show Mattress</label>
+        <input type="checkbox" id="hasMattress" checked>
+      </div>
+
+      <!-- Export -->
+      <button id="export-btn">Export Complete Design (.STL)</button>
+    </aside>
+
+    <!-- 3D Canvas -->
+    <main id="viewport-container">
+      <div id="canvas-holder"></div>
+      <div id="viewport-overlay">
+        <p>🖱️ Left Drag: Rotate Camera | Right Drag: Pan | Click & Drag Items to Place</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

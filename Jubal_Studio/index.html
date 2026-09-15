@@ -5,40 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jubal Studio | MIDI Workstation</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <script>
+      try {
+        const savedTheme = localStorage.getItem("jubalStudioTheme");
+        if (savedTheme === "light") document.documentElement.dataset.theme = "light";
+        const savedKeyboardSticky = localStorage.getItem("jubalStudioKeyboardSticky");
+        if (savedKeyboardSticky === "true") document.documentElement.dataset.keyboardSticky = "true";
+      } catch {}
+    </script>
     
     <!-- Cloud CDNs -->
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
 
-    <header>
+    <header class="app-header">
         <div class="brand">
-            <span class="brand-icon">⚡</span>
-            <h2>Jubal Studio</h2>
+            <span class="brand-icon" aria-hidden="true">J</span>
+            <div class="brand-copy">
+                <h2>Jubal Studio</h2>
+                <span>Performance workstation</span>
+            </div>
         </div>
-        <div class="nav-tabs">
-            <button class="tab-btn active" data-view="live">Live Matrix & Pads</button>
-            <button class="tab-btn" data-view="learning">Academy & Player</button>
-        </div>
+        <nav class="nav-tabs" aria-label="Primary workspace">
+            <button type="button" class="tab-btn active" data-view="live">Live</button>
+            <button type="button" class="tab-btn" data-view="learning">Practice</button>
+        </nav>
         <div class="header-right">
             <div class="status-badge" id="mic-status-badge" style="display: none;">
-                <div class="status-dot active" id="mic-dot"></div><span id="mic-text">Mic On</span>
+                <div class="status-dot active" id="mic-dot"></div><span id="mic-text">Mic active</span>
             </div>
             <div class="status-badge">
                 <div class="status-dot" id="midi-dot"></div><span id="midi-text">MIDI: Offline</span>
             </div>
+            <button type="button" class="header-action compact-action" id="theme-toggle" title="Switch color theme" aria-label="Switch color theme" aria-pressed="false">◐</button>
+            <button type="button" class="header-action" id="btn-open-midi-map" title="Configure MIDI controller mapping">MIDI</button>
         </div>
     </header>
 
-    <div class="panel-toggler-bar">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <span>Show/Hide Panels:</span>
-            <div class="toggle-chip active" id="toggle-scale-panel" data-panel-toggle="scale">Scale Zones</div>
-            <div class="toggle-chip active" id="toggle-hardware-panel" data-panel-toggle="hardware">Hardware</div>
-            <div class="toggle-chip active" id="toggle-arranger-panel" data-panel-toggle="arranger">Arranger Control</div>
-            <div class="toggle-chip active" id="toggle-seq-panel" data-panel-toggle="seq">Sequencer</div>
+    <div class="panel-toggler-bar" aria-label="Workspace panels">
+        <div class="panel-toolbar-label">
+            <span class="eyebrow">Workspace</span>
+            <strong>Visible panels</strong>
         </div>
-        <button class="primary" style="padding: 4px 12px;" id="btn-open-midi-map">🎛️ MIDI MAPPING</button>
+        <div class="panel-toggle-group">
+            <button type="button" class="toggle-chip active" id="toggle-scale-panel" data-panel-toggle="scale">Harmony</button>
+            <button type="button" class="toggle-chip active" id="toggle-hardware-panel" data-panel-toggle="hardware">Controller</button>
+            <button type="button" class="toggle-chip active" id="toggle-arranger-panel" data-panel-toggle="arranger">Arranger</button>
+            <button type="button" class="toggle-chip active" id="toggle-seq-panel" data-panel-toggle="seq">Recorder</button>
+            <span class="dock-toolbar-hint">Drag headers · resize edges · Esc cancels</span>
+            <button type="button" class="toggle-chip layout-lock compact-action" id="btn-lock-layout" aria-pressed="false" title="Lock workspace layout" aria-label="Lock workspace layout">⌑</button>
+            <button type="button" class="toggle-chip layout-reset compact-action" id="btn-reset-layout" title="Reset workspace layout" aria-label="Reset workspace layout">↺</button>
+        </div>
     </div>
 
     <!-- VIEW 1: LIVE PERFORMANCE MATRIX -->
@@ -47,7 +65,7 @@
         <!-- PRO LCD WORKSTATION DISPLAY -->
         <div class="lcd-workstation">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid #1a2a40; padding-bottom: 8px;">
-                <div style="font-family: var(--font-display); font-size: 0.7rem; color: #5090cc; text-transform: uppercase; letter-spacing: 3px; font-weight: 900;">JUBAL PRO-Dashboard</div>
+                <div style="font-family: var(--font-display); font-size: 0.7rem; color: #5090cc; text-transform: uppercase; letter-spacing: 3px; font-weight: 900;">Performance Console</div>
                 <div style="font-family: var(--font-display); font-size: 0.7rem; color: #00e5ff; font-weight: 700; letter-spacing: 1px;" id="arr-status">ARRANGER: STOPPED</div>
             </div>
             
@@ -55,7 +73,7 @@
                 <!-- Left: Voice Selection -->
                 <div style="display:flex; flex-direction:column; gap:12px;">
                     <div class="lcd-box">
-                        <span class="lcd-label">Main Voice (R1)</span>
+                        <span class="lcd-label">Main instrument</span>
                         <select id="live-voice" class="lcd-select">
                             <option value="grand">Sanctuary Grand Piano</option>
                             <option value="strings">Symphonic Strings</option>
@@ -67,7 +85,7 @@
                     </div>
                     <div class="lcd-box">
                         <div class="lcd-label">
-                            <span>Accomp Voice (L1)</span>
+                            <span>Accompaniment</span>
                             <button id="accompaniment-toggle" class="lcd-btn active-toggle">ON</button>
                         </div>
                         <select id="accomp-voice-select" class="lcd-select">
@@ -114,7 +132,7 @@
                         </div>
                     </div>
                     <div class="lcd-box">
-                        <span class="lcd-label">Scale Assist / Key</span>
+                        <span class="lcd-label">Key & scale</span>
                         <div style="display:flex; gap:6px;">
                             <select id="scale-root" class="lcd-select" style="width: 65px;">
                                 <option value="C">C</option><option value="C#">C#</option><option value="D" selected>D</option><option value="D#">D#</option>
@@ -145,137 +163,162 @@
             </div>
             
             <div style="display:flex; align-items:center; margin-top: 4px; border-top: 1px solid #1a2a40; padding-top: 12px;">
-                <span class="lcd-label" style="margin:0;">Master Tempo</span>
+                <span class="lcd-label" style="margin:0;">Tempo</span>
                 <input type="range" id="live-tempo" min="40" max="240" value="120" style="flex:1; margin:0 15px;">
             </div>
         </div>
 
-        <div class="studio-workspace" id="live-workspace-grid">
-            <div class="panel-card" id="panel-scale">
-                <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">ACCOMPANIMENT ZONING</label>
-                
-                <div style="display: flex; gap: 4px; align-items: center; justify-content: space-between;">
-                    <div style="display: flex; gap: 4px; align-items: center;">
-                        <input type="text" id="accomp-zone-start" value="C2" style="width: 35px; text-align: center; font-weight: bold; padding: 4px; font-size: 0.7rem;">
-                        <span style="font-size: 0.6rem; color: var(--text-muted); font-family: var(--font-display);">-</span>
-                        <input type="text" id="accomp-zone-end" value="B2" style="width: 35px; text-align: center; font-weight: bold; padding: 4px; font-size: 0.7rem;">
-                    </div>
-                    <div style="display: flex; gap: 4px;">
-                        <button id="btn-accomp-oct-down" style="padding: 4px; font-size: 0.6rem;">- OCT</button>
-                        <button id="btn-accomp-oct-up" style="padding: 4px; font-size: 0.6rem;">+ OCT</button>
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
-                    <label style="font-size: 0.55rem; color: var(--text-muted);">ACCOMP INVERSION ALGORITHM</label>
-                    <select id="accomp-inversion" style="width: 100%; font-size: 0.75rem; padding: 6px;">
-                        <option value="0">Root Position</option>
-                        <option value="1">1st Inversion</option>
-                        <option value="2">2nd Inversion</option>
-                    </select>
-                </div>
-
-                <div class="mini-chord-viz" id="mini-accomp-viz" style="margin-top: auto;"></div>
-            </div>
-
-            <div class="panel-card" id="panel-hardware" style="align-items: center;">
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700; letter-spacing: 2px;">HARDWARE CONSOLE</label>
-                    <select id="keyboard-size-select" style="font-size: 0.6rem; padding: 4px; width: 85px;">
-                        <option value="25">25 Keys</option>
-                        <option value="32">32 Keys</option>
-                        <option value="37">37 Keys</option>
-                        <option value="49">49 Keys</option>
-                        <option value="61" selected>61 Keys</option>
-                        <option value="88">88 Keys</option>
-                    </select>
-                </div>
-                
-                <div class="hardware-matrix">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-size: 0.6rem; color: var(--accent-cyan); font-family: var(--font-display);">PAD ROUTING</span>
-                        <div style="display: flex; gap: 8px;">
-                            <button id="pads-toggle" class="primary" style="padding: 2px 8px; font-size: 0.6rem;" title="Toggle Pad Mode">PADS: ARRANGER</button>
+        <div class="performance-workarea" id="performance-workarea" aria-label="Performance modules and keyboard">
+            <div class="studio-workspace" id="live-workspace-grid">
+                <div class="panel-card" id="panel-scale" data-dock-key="scale" data-dock-title="Harmony & Accompaniment">
+                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">HARMONY & ACCOMPANIMENT</label>
+                    
+                    <div class="harmony-zone-row">
+                        <div class="harmony-range" aria-label="Accompaniment keyboard zone">
+                            <span class="harmony-range-label">Zone</span>
+                            <input type="text" id="accomp-zone-start" value="C2" aria-label="Accompaniment zone start">
+                            <span class="harmony-range-separator">–</span>
+                            <input type="text" id="accomp-zone-end" value="B2" aria-label="Accompaniment zone end">
+                        </div>
+                        <div class="octave-stepper" role="group" aria-label="Shift accompaniment zone by octave">
+                            <button id="btn-accomp-oct-down" type="button" class="octave-step-button" title="Shift zone down one octave" aria-label="Shift zone down one octave">−</button>
+                            <span class="octave-step-label"><small>ZONE</small><strong>OCT</strong></span>
+                            <button id="btn-accomp-oct-up" type="button" class="octave-step-button" title="Shift zone up one octave" aria-label="Shift zone up one octave">+</button>
                         </div>
                     </div>
-                    <div class="pad-grid" id="drum-pad-grid">
-                        <div class="drum-pad">PAD 1</div>
-                        <div class="drum-pad">PAD 2</div>
-                        <div class="drum-pad">PAD 3</div>
-                        <div class="drum-pad">PAD 4</div>
-                        <div class="drum-pad">PAD 5</div>
-                        <div class="drum-pad">PAD 6</div>
-                        <div class="drum-pad">PAD 7</div>
-                        <div class="drum-pad" style="border-color: var(--accent-gold); color: var(--accent-gold);">TOGGLE</div>
+    
+                    <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+                        <label style="font-size: 0.55rem; color: var(--text-muted);">CHORD VOICING</label>
+                        <select id="accomp-inversion" style="width: 100%; font-size: 0.75rem; padding: 6px;">
+                            <option value="0">Root Position</option>
+                            <option value="1">1st Inversion</option>
+                            <option value="2">2nd Inversion</option>
+                        </select>
                     </div>
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
-                        <span style="font-size: 0.6rem; color: var(--accent-cyan); font-family: var(--font-display);">KNOB ROUTING</span>
-                        <button id="knob-mode-toggle" class="primary" style="padding: 2px 8px; font-size: 0.6rem;" title="Toggle between Synthesizer control and App control">KNOBS: SYNTH</button>
+    
+                    <div class="mini-chord-viz" id="mini-accomp-viz" style="margin-top: auto;"></div>
+                </div>
+    
+                <div class="panel-card" id="panel-hardware" data-dock-key="hardware" data-dock-title="Controller Surface">
+                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700; letter-spacing: 2px;">CONTROLLER SURFACE</label>
+    
+                    <div class="controller-surface-toolbar">
+                        <div class="controller-kbd-size">
+                            <span>Keyboard</span>
+                            <select id="keyboard-size-select" aria-label="Keyboard size">
+                                <option value="25">25 Keys</option>
+                                <option value="32">32 Keys</option>
+                                <option value="37">37 Keys</option>
+                                <option value="49">49 Keys</option>
+                                <option value="61" selected>61 Keys</option>
+                                <option value="88">88 Keys</option>
+                            </select>
+                        </div>
+                        <div class="controller-mode-switches">
+                            <button id="pads-toggle" class="controller-mode-button primary" title="Toggle pad mode" aria-label="Toggle pad mode">PADS · ARR</button>
+                            <button id="knob-mode-toggle" class="controller-mode-button primary" title="Toggle knob mode" aria-label="Toggle knob mode">KNOBS · SYN</button>
+                        </div>
                     </div>
-                    <div class="knob-grid">
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-0"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-0">Filter</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-1"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-1">Reso</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-2"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-2">Rev Size</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-3"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-3">Rev Mix</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-4"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-4">Dly Time</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-5"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-5">Dly Fbk</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-6"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-6">Chorus</span></div>
-                        <div class="cc-knob-container"><div class="cc-knob" id="knob-7"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-7">Master</span></div>
+    
+                    <div class="hardware-matrix controller-surface-grid">
+                        <section class="controller-bank controller-pad-bank" aria-label="Performance pads">
+                            <div class="controller-bank-heading">
+                                <span>Performance pads</span>
+                                <small>8 assignable triggers</small>
+                            </div>
+                            <div class="pad-grid" id="drum-pad-grid">
+                                <div class="drum-pad">PAD 1</div>
+                                <div class="drum-pad">PAD 2</div>
+                                <div class="drum-pad">PAD 3</div>
+                                <div class="drum-pad">PAD 4</div>
+                                <div class="drum-pad">PAD 5</div>
+                                <div class="drum-pad">PAD 6</div>
+                                <div class="drum-pad">PAD 7</div>
+                                <div class="drum-pad controller-mode-pad">TOGGLE</div>
+                            </div>
+                        </section>
+    
+                        <section class="controller-bank controller-knob-bank" aria-label="Continuous controls">
+                            <div class="controller-bank-heading">
+                                <span>Continuous controls</span>
+                                <small>CC 70–77 / mapped app controls</small>
+                            </div>
+                            <div class="knob-grid">
+                                <div class="cc-knob-container"><div class="cc-knob" id="knob-0"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-0">Filter</span></div>
+                                <div class="cc-knob-container"><div class="cc-knob" id="knob-1"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-1">Reso</span></div>
+                                <div class="cc-knob-container"><div class="cc-knob" id="knob-2"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-2">Rev Size</span></div>
+                                <div class="cc-knob-container"><div class="cc-knob" id="knob-3"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-3">Rev Mix</span></div>
+                                <div class="cc-knob-container"><div class="cc-knob" id="knob-4"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-4">Dly Time</span></div>
+                                <div class="cc-knob-container"><div class="cc-knob" id="knob-5"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-5">Dly Fbk</span></div>
+                                <div class="cc-knob-container"><div class="cc-knob" id="knob-6"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-6">Chorus</span></div>
+                                <div class="cc-knob-container"><div class="cc-knob" id="knob-7"><div class="cc-knob-indicator"></div></div><span class="cc-label" id="lbl-knob-7">Master</span></div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+    
+                <!-- ARRANGER ENGINE PANEL -->
+                <div class="panel-card" id="panel-arranger" data-dock-key="arranger" data-dock-title="Arranger">
+                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">ARRANGER</label>
+                    
+                    <select id="arr-style" style="width: 100%;">
+                        <option value="4_4">4-4 — Worship / Pop</option>
+                        <option value="2_4">2-4 — March / Energetic Praise</option>
+                        <option value="4_2">4-2 — Praise / Gospel</option>
+                        <option value="6_8">6-8 — Worship (6/8)</option>
+                        <option value="12_8">12-8 — Gospel Shuffle</option>
+                    </select>
+    
+                    <div style="display: flex; gap: 6px;">
+                        <button id="btn-arr-sync" style="flex: 1; font-size: 0.6rem;" title="Sync start">SYNC</button>
+                        <button id="btn-arr-start" class="danger" style="flex: 1; font-size: 0.6rem;" title="Start or stop arranger">RUN</button>
+                        <button id="btn-arr-fill" style="flex: 1; font-size: 0.6rem; background: #eab308; color: #000; border-color: #ca8a04;" title="Trigger fill">FILL</button>
+                    </div>
+    
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 4px;">
+                        <button class="arr-section-btn" data-section="intro" style="font-size: 0.55rem; padding: 6px 2px;" title="Intro">IN</button>
+                        <button class="arr-section-btn primary" data-section="mainA" style="font-size: 0.55rem; padding: 6px 2px;" title="Main A">A</button>
+                        <button class="arr-section-btn" data-section="mainB" style="font-size: 0.55rem; padding: 6px 2px;" title="Main B">B</button>
+                        <button class="arr-section-btn" data-section="ending" style="font-size: 0.55rem; padding: 6px 2px;" title="Ending">END</button>
+                    </div>
+                </div>
+    
+                <div class="panel-card" id="panel-seq" data-dock-key="seq" data-dock-title="Recorder">
+                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">RECORDER</label>
+                    
+                    <div style="display: flex; gap: 8px;">
+                        <button id="btn-record" class="danger transport-icon" style="flex: 1;" title="Record" aria-label="Record">●</button>
+                        <button id="btn-open-editor" class="transport-icon" style="flex: 1;" title="Edit recording" aria-label="Edit recording" disabled>✎</button>
+                        <button id="btn-save" class="primary transport-icon" style="flex: 1;" title="Save MIDI" aria-label="Save MIDI" disabled>↓</button>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button id="btn-play-rec" class="primary transport-icon" style="flex: 1;" title="Play recording" aria-label="Play recording" disabled>▶</button>
+                        <button id="btn-stop-rec" class="danger transport-icon" style="flex: 1;" title="Stop recording playback" aria-label="Stop recording playback" disabled>■</button>
+                    </div>
+    
+                    <button id="metronome-toggle" class="short-state-button" style="padding: 8px 10px; font-size: 0.6rem; margin-top: 8px;" title="Toggle metronome">MET · OFF</button>
+    
+                    <div class="recorder-import" style="display: flex; flex-direction: column; gap: 4px; margin-top: auto;">
+                        <div class="recorder-import-heading">
+                            <label style="font-size: 0.55rem; color: var(--text-muted);">IMPORT MIDI</label>
+                            <span id="recorder-file-status">No file loaded</span>
+                        </div>
+                        <input type="file" id="live-file-input" accept=".mid,.midi" style="width: 100%;">
                     </div>
                 </div>
             </div>
-
-            <!-- ARRANGER ENGINE PANEL -->
-            <div class="panel-card" id="panel-arranger">
-                <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">STUDIO-ACCOMP ENGINE</label>
-                
-                <select id="arr-style" style="width: 100%;">
-                    <option value="4_4">4-4 — Worship / Pop</option>
-                    <option value="2_4">2-4 — March / Energetic Praise</option>
-                    <option value="4_2">4-2 — Praise / Gospel</option>
-                    <option value="6_8">6-8 — Worship (6/8)</option>
-                    <option value="12_8">12-8 — Gospel Shuffle</option>
-                </select>
-
-                <div style="display: flex; gap: 6px;">
-                    <button id="btn-arr-sync" style="flex: 1; font-size: 0.6rem;">SYNC START</button>
-                    <button id="btn-arr-start" class="danger" style="flex: 1; font-size: 0.6rem;">START/STOP</button>
-                    <button id="btn-arr-fill" style="flex: 1; font-size: 0.6rem; background: #eab308; color: #000; border-color: #ca8a04;">FILL IN</button>
+    
+            <div class="keyboard-stage" id="live-keyboard-stage">
+                <button type="button" id="keyboard-sticky-toggle" class="keyboard-pin-toggle"
+                        title="Pin keyboard" aria-label="Keep main keyboard visible while scrolling" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M8.6 3.5h6.8l-.8 4.1 2.8 2.8v1.4H13v7.1l-1 1.6-1-1.6v-7.1H6.6v-1.4l2.8-2.8-.8-4.1Z"/>
+                    </svg>
+                </button>
+                <div class="keyboard-dock" id="live-keyboard-dock">
+                    <div class="keyboard" id="live-keyboard"></div>
                 </div>
-
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 4px;">
-                    <button class="arr-section-btn" data-section="intro" style="font-size: 0.55rem; padding: 6px 2px;">INTRO</button>
-                    <button class="arr-section-btn primary" data-section="mainA" style="font-size: 0.55rem; padding: 6px 2px;">MAIN A</button>
-                    <button class="arr-section-btn" data-section="mainB" style="font-size: 0.55rem; padding: 6px 2px;">MAIN B</button>
-                    <button class="arr-section-btn" data-section="ending" style="font-size: 0.55rem; padding: 6px 2px;">ENDING</button>
-                </div>
-            </div>
-
-            <div class="panel-card" id="panel-seq">
-                <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SEQUENCER</label>
-                
-                <div style="display: flex; gap: 8px;">
-                    <button id="btn-record" class="danger" style="flex: 1;">🔴 REC</button>
-                    <button id="btn-open-editor" style="flex: 1;" disabled>🎛️ EDIT</button>
-                    <button id="btn-save" class="primary" style="flex: 1;" disabled>💾 SAVE</button>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <button id="btn-play-rec" class="primary" style="flex: 1;" disabled>▶ PLAY</button>
-                    <button id="btn-stop-rec" class="danger" style="flex: 1;" disabled>■ STOP</button>
-                </div>
-
-                <button id="metronome-toggle" style="padding: 8px 10px; font-size: 0.6rem; margin-top: 8px;">METRONOME: OFF</button>
-
-                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: auto;">
-                    <label style="font-size: 0.55rem; color: var(--text-muted);">IMPORT STREAM</label>
-                    <input type="file" id="live-file-input" accept=".mid,.midi" style="width: 100%;">
-                </div>
-            </div>
         </div>
-
-        <div class="keyboard-dock">
-            <div class="keyboard" id="live-keyboard"></div>
         </div>
     </section>
 
@@ -289,14 +332,14 @@
             
             <div class="panel-card" style="width: 100%; max-width: 1400px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                 <div>
-                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">SEQUENCE TRACK PLAYER & LOOP SELECTION</label>
+                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">TRACK PLAYER</label>
                     <div style="display: flex; gap: 8px; margin-bottom: 12px; margin-top: 8px;">
                         <input type="file" id="file-input" accept=".mid,.midi" style="width: 100%;">
-                        <button id="btn-open-file-editor" disabled>🎛️ EDIT</button>
+                        <button id="btn-open-file-editor" class="transport-icon" title="Edit MIDI file" aria-label="Edit MIDI file" disabled>✎</button>
                     </div>
 
                     <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <label style="font-size: 0.55rem; color: var(--text-muted);">TELEMETRY TIMELINE (Drag to select loop range)</label>
+                        <label style="font-size: 0.55rem; color: var(--text-muted);">TIMELINE — DRAG TO CREATE A LOOP</label>
                         <div class="timeline-track" id="timeline-track">
                             <canvas id="timeline-canvas"></canvas>
                             <div class="timeline-progress" id="timeline-progress" style="width: 0%;"></div>
@@ -310,22 +353,98 @@
                     </div>
                     
                     <div style="display: flex; gap: 8px; margin-top: 12px;">
-                        <button id="btn-file-play" class="primary" style="flex: 1;" disabled>▶ Play</button>
-                        <button id="btn-file-stop" class="danger" style="flex: 1;" disabled>⏹ Stop</button>
+                        <button id="btn-file-play" class="primary transport-icon" style="flex: 1;" title="Play MIDI file" aria-label="Play MIDI file" disabled>▶</button>
+                        <button id="btn-file-stop" class="danger transport-icon" style="flex: 1;" title="Stop MIDI file" aria-label="Stop MIDI file" disabled>■</button>
                     </div>
                     <div style="font-size: 0.55rem; color: #888; text-align: center; margin-top: 8px;">Press Spacebar to Play/Stop</div>
                 </div>
 
                 <div>
-                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">ACADEMY VISUALIZER</label>
+                    <label style="font-family: var(--font-display); font-size: 0.65rem; color: var(--text-muted); font-weight: 700;">PRACTICE VISUALIZER</label>
                     <select id="learn-instrument" style="width: 100%; margin-bottom: 12px; margin-top: 8px;">
                         <option value="piano">Grand Piano (Keys)</option>
                         <option value="recorder">Alto Recorder (Fingering)</option>
                         <option value="bansuri">Indian Flute (Bansuri)</option>
                     </select>
 
+                    <div class="practice-harmony-panel" aria-label="Practice scale and accompaniment controls">
+                        <div class="practice-control-heading">
+                            <span>Scale</span>
+                            <small>Shared with Live</small>
+                        </div>
+                        <div class="practice-scale-row">
+                            <label class="practice-field">
+                                <span>Root</span>
+                                <select id="learn-scale-root" aria-label="Practice scale root">
+                                    <option value="C">C</option><option value="C#">C#</option><option value="D" selected>D</option><option value="D#">D#</option>
+                                    <option value="E">E</option><option value="F">F</option><option value="F#">F#</option><option value="G">G</option>
+                                    <option value="G#">G#</option><option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
+                                </select>
+                            </label>
+                            <label class="practice-field practice-scale-type">
+                                <span>Scale / Raga</span>
+                                <select id="learn-scale-type" aria-label="Practice scale or raga">
+                                    <optgroup label="Western">
+                                        <option value="none">Off</option><option value="major" selected>Major</option><option value="minor">Natural Minor</option>
+                                        <option value="harmonic">Harmonic Minor</option><option value="pentatonic">Pentatonic</option>
+                                    </optgroup>
+                                    <optgroup label="Hindustani Ragas">
+                                        <option value="yaman">Yaman</option><option value="bhairav">Bhairav</option><option value="bhairavi">Bhairavi</option>
+                                        <option value="malkauns">Malkauns</option><option value="darbari_kanada">Darbari Kanada</option><option value="bhimpalasi">Bhimpalasi</option>
+                                        <option value="jaunpuri">Jaunpuri</option><option value="ahir_bhairav">Ahir Bhairav</option><option value="bihag">Bihag</option>
+                                        <option value="miyan_malhar">Miyan Malhar</option>
+                                    </optgroup>
+                                    <optgroup label="Carnatic Ragas">
+                                        <option value="hamsadhwani">Hamsadhwani</option><option value="mohanam">Mohanam</option><option value="kalyani">Kalyani</option>
+                                        <option value="sankarabharanam">Sankarabharanam</option><option value="kharaharapriya">Kharaharapriya</option><option value="todi">Todi</option>
+                                        <option value="abheri">Abheri</option><option value="kalyani_vasantham">Kalyani Vasantham</option><option value="c_bhairavi">Bhairavi (Carnatic)</option>
+                                        <option value="anandabhairavi">Anandabhairavi</option>
+                                    </optgroup>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="practice-control-heading practice-accomp-heading">
+                            <span>Accompaniment</span>
+                            <button type="button" id="learn-accompaniment-toggle" class="practice-state-button active-toggle" aria-pressed="true" title="Toggle accompaniment">ON</button>
+                        </div>
+                        <div class="practice-accomp-grid">
+                            <label class="practice-field practice-accomp-voice">
+                                <span>Voice</span>
+                                <select id="learn-accomp-voice-select" aria-label="Practice accompaniment voice">
+                                    <option value="warm-ep">Rhodes Electric Piano</option>
+                                    <option value="strings">Symphonic Strings</option>
+                                    <option value="grand">Sanctuary Grand Piano</option>
+                                    <option value="bass">Warm Deep Bass</option>
+                                    <option value="choir">Cosmic Choir Synth</option>
+                                </select>
+                            </label>
+                            <label class="practice-field">
+                                <span>Voicing</span>
+                                <select id="learn-accomp-inversion" aria-label="Practice accompaniment inversion">
+                                    <option value="0">Root Position</option>
+                                    <option value="1">1st Inversion</option>
+                                    <option value="2">2nd Inversion</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="practice-zone-row">
+                            <div class="practice-zone-fields" aria-label="Practice accompaniment zone">
+                                <span>Zone</span>
+                                <input type="text" id="learn-accomp-zone-start" value="C2" aria-label="Practice accompaniment zone start">
+                                <span class="practice-zone-separator">–</span>
+                                <input type="text" id="learn-accomp-zone-end" value="B2" aria-label="Practice accompaniment zone end">
+                            </div>
+                            <div class="practice-octave-stepper" role="group" aria-label="Shift practice accompaniment zone by octave">
+                                <button type="button" id="btn-learn-accomp-oct-down" title="Shift accompaniment zone down one octave" aria-label="Shift accompaniment zone down one octave">−</button>
+                                <span>OCT</span>
+                                <button type="button" id="btn-learn-accomp-oct-up" title="Shift accompaniment zone up one octave" aria-label="Shift accompaniment zone up one octave">+</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="mic-training-panel" style="display: none; flex-direction: column; gap: 8px; background: rgba(0, 240, 255, 0.05); padding: 12px; border-radius: 8px; border: 1px dashed var(--accent-cyan);">
-                        <label style="font-size: 0.6rem; color: var(--accent-cyan); font-family: var(--font-display);">ACOUSTIC MIC TRAINING</label>
+                        <label style="font-size: 0.6rem; color: var(--accent-cyan); font-family: var(--font-display);">LIVE PITCH COACH</label>
                         <button id="btn-toggle-mic" style="width: 100%;">🎤 Enable Microphone</button>
                         <div style="text-align: center;">
                             <div style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 900; color: var(--text-main);" id="mic-note-display">--</div>
@@ -372,7 +491,7 @@
     <div class="modal-overlay" id="midi-map-modal">
         <div class="modal-card small-modal">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px;">
-                <h3 style="margin: 0; font-family: var(--font-display); font-size: 1.1rem; color: #fff; letter-spacing: 1px;">Global MIDI Control Mapping</h3>
+                <h3 style="margin: 0; font-family: var(--font-display); font-size: 1.1rem; color: #fff; letter-spacing: 1px;">MIDI Control Mapping</h3>
                 <button data-action="close-midi-map" style="padding: 6px 16px; background: #333; border-color: #555;">✕ Close</button>
             </div>
             
@@ -381,7 +500,7 @@
             <div style="background: #0a0a0a; border: 1px solid #222; border-radius: 8px; overflow-y: auto; max-height: 60vh;">
                 <!-- CC Mappings (Knobs) -->
                 <div class="midi-map-row"><span class="midi-map-label">Master Volume (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-masterVolume" placeholder="--" min="0" max="127" ><button id="listen-masterVolume" data-midi-listen="masterVolume:cc">🎧 Listen</button></div></div>
-                <div class="midi-map-row"><span class="midi-map-label">Master Tempo (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-tempo" placeholder="--" min="0" max="127" ><button id="listen-tempo" data-midi-listen="tempo:cc">🎧 Listen</button></div></div>
+                <div class="midi-map-row"><span class="midi-map-label">Tempo (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-tempo" placeholder="--" min="0" max="127" ><button id="listen-tempo" data-midi-listen="tempo:cc">🎧 Listen</button></div></div>
                 <div class="midi-map-row"><span class="midi-map-label">Timeline Loop Start (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-loopStart" placeholder="--" min="0" max="127" ><button id="listen-loopStart" data-midi-listen="loopStart:cc">🎧 Listen</button></div></div>
                 <div class="midi-map-row"><span class="midi-map-label">Timeline Loop Length (CC)</span> <div style="display: flex; gap:10px;"><input type="number" class="midi-map-input" id="input-loopLength" placeholder="--" min="0" max="127" ><button id="listen-loopLength" data-midi-listen="loopLength:cc">🎧 Listen</button></div></div>
                 
@@ -416,46 +535,79 @@
 
     <!-- MODAL: MIDI EDITOR -->
     <div class="modal-overlay" id="editor-modal">
-        <div class="modal-card">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px;">
-                <h3 style="margin: 0; font-family: var(--font-display); font-size: 1.2rem; color: #fff; letter-spacing: 1px;" id="editor-title">Neural Piano Roll Editor</h3>
-                <button data-action="close-editor" style="padding: 6px 16px; background: #333; border-color: #555;">✕ Close & Sync</button>
+        <div class="modal-card editor-modal-card">
+            <div class="editor-header">
+                <div class="editor-heading">
+                    <h3 id="editor-title">MIDI Editor</h3>
+                    <span>Double-click grid to add · drag to move · drag right edge to resize</span>
+                </div>
+                <div class="editor-header-actions">
+                    <span class="editor-time" id="editor-time-display">0:00.00 / 0:00.00</span>
+                    <button type="button" data-action="close-editor">Close &amp; Apply</button>
+                </div>
             </div>
 
-            <div class="editor-toolbar">
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <button id="editor-btn-play" class="primary" style="padding: 6px 16px; font-size: 0.75rem;">▶ Play (Space)</button>
-                    <button id="editor-btn-stop" class="danger" style="padding: 6px 16px; font-size: 0.75rem;" disabled>⏸ Pause (Space)</button>
+            <div class="editor-commandbar">
+                <div class="editor-command-group editor-transport">
+                    <button type="button" id="editor-btn-play" class="primary" title="Play / Space">▶ Play</button>
+                    <button type="button" id="editor-btn-stop" title="Pause / Space" disabled>Ⅱ Pause</button>
                 </div>
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <span style="font-size: 0.7rem; color: #888;">Drag Timeline to Loop | Click to Jump</span>
-                    <span style="font-size: 0.8rem; color: #aaa; font-family: var(--font-display);" id="editor-time-display">Time: 0.0s</span>
+
+                <div class="editor-command-group">
+                    <button type="button" id="editor-action-undo" title="Undo (Ctrl/Cmd+Z)">↶</button>
+                    <button type="button" id="editor-action-redo" title="Redo (Ctrl/Cmd+Shift+Z)">↷</button>
+                    <span class="editor-command-separator"></span>
+                    <button type="button" id="editor-action-cut" title="Cut (Ctrl/Cmd+X)">Cut</button>
+                    <button type="button" id="editor-action-copy" title="Copy (Ctrl/Cmd+C)">Copy</button>
+                    <button type="button" id="editor-action-paste" title="Paste (Ctrl/Cmd+V)">Paste</button>
+                    <button type="button" id="editor-action-delete" title="Delete selected notes">Delete</button>
+                </div>
+
+                <div class="editor-command-group editor-grid-controls">
+                    <label for="editor-snap">Snap</label>
+                    <select id="editor-snap" title="Grid snap">
+                        <option value="1">1/4</option>
+                        <option value="0.5">1/8</option>
+                        <option value="0.25" selected>1/16</option>
+                        <option value="0.125">1/32</option>
+                        <option value="0">Off</option>
+                    </select>
+                    <button type="button" id="editor-action-quantize" title="Quantize selected notes (Q)">Quantize</button>
+                </div>
+
+                <div class="editor-command-group editor-zoom-controls">
+                    <span>Time</span>
+                    <button type="button" id="editor-zoom-out" title="Zoom out horizontally">−</button>
+                    <button type="button" id="editor-zoom-in" title="Zoom in horizontally">+</button>
+                    <span>Keys</span>
+                    <button type="button" id="editor-row-smaller" title="Compact rows">−</button>
+                    <button type="button" id="editor-row-larger" title="Expand rows">+</button>
                 </div>
             </div>
-            
+
             <div class="piano-roll-viewport" id="roll-viewport">
                 <div class="piano-roll-keys-sidebar-wrapper">
-                    <div style="position: sticky; top: 0; height: 35px; background: #2a2a2a; border-bottom: 1px solid #111; z-index: 75; box-sizing: border-box;"></div>
+                    <div class="editor-corner">Keys</div>
                     <div class="editor-keys-container" id="editor-keys-sidebar"></div>
                 </div>
-                
+
                 <div class="piano-roll-canvas-wrapper" id="roll-canvas-wrapper">
                     <div class="editor-timeline-ruler" id="editor-timeline-ruler">
                         <canvas id="ruler-canvas"></canvas>
-                        <div class="editor-loop-overlay" id="editor-loop-overlay"></div>
                     </div>
-                    
                     <div class="piano-roll-canvas-container" id="roll-canvas-container">
                         <div class="piano-roll-bg" id="roll-canvas-bg"></div>
+                        <div class="editor-loop-overlay" id="editor-loop-overlay"></div>
                         <div class="editor-playhead" id="editor-playhead"></div>
                         <div class="piano-roll-canvas-content" id="roll-canvas-content"></div>
                     </div>
                 </div>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 5px;">
-                <span style="font-size: 0.75rem; color: #888;">💡 <b>Shift+Click</b> notes to multi-select. Drag blocks to move. Drag edge to resize. Click to audition.</span>
-                <button class="primary" id="editor-close" style="padding: 8px 20px;">Apply Changes</button>
+            <div class="editor-statusbar">
+                <div id="editor-selection-info">0 notes</div>
+                <div class="editor-shortcuts">Shift/Ctrl-click multi-select · drag empty grid for marquee · Q quantize · Ctrl/Cmd+A select all</div>
+                <button type="button" class="primary" id="editor-close">Apply Changes</button>
             </div>
         </div>
     </div>

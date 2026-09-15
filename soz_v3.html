@@ -211,7 +211,7 @@
         let bibleState = {
             lang1: 'telugu',
             lang2: 'none',
-            navLang: 'telugu',
+            navLang: 'english',
             book: 'Genesis',
             chapter: '1',
             font1: "'Mandali', sans-serif",
@@ -251,19 +251,19 @@
             let trimmed = fullName.trim();
             let mapping = {
                 "Genesis": "Gen (ఆది)", "Exodus": "Exo (నిర్గమ)", "Leviticus": "Lev (లేవీయ)", "Numbers": "Num (సంఖ్యా)", "Deuteronomy": "Deut (ద్వితీయ)",
-                "Joshua": "Josh (యెహోషువ)", "Judges": "Judg (న్యాయా)", "Ruth": "Ruth (రూతు)", "1 Samuel": "1 Sam", "2 Samuel": "2 Sam",
-                "1 Kings": "1 Kgs", "2 Kings": "2 Kgs", "1 Chronicles": "1 Chron", "2 Chronicles": "2 Chron", "Ezra": "Ezra (ఎజ్రా)",
-                "Nehemiah": "Neh (నెహెమ్యా)", "Esther": "Esth (ఎస్తేరు)", "Job": "Job (యోబు)", "Psalms": "Psalms (కీర్తనలు)", "Proverbs": "Prov (సామెతలు)",
-                "Ecclesiastes": "Eccl (ప్రసంగి)", "Song of Solomon": "Song (పరమగీతము)", "Isaiah": "Isa (యెషయా)", "Jeremiah": "Jer (యిర్మియా)",
-                "Lamentations": "Lam (విలాపవాక్యములు)", "Ezekiel": "Ezek (యెహెజ్కేలు)", "Daniel": "Dan (దానియేలు)", "Hosea": "Hos (హోషేయ)",
-                "Joel": "Joel (యోయేలు)", "Amos": "Amos (ఆమోసు)", "Obadiah": "Obad (ఓబద్యా)", "Jonah": "Jonah (యోనా)", "Micah": "Micah (మీకా)",
-                "Nahum": "Nah (నహూము)", "Habakkuk": "Hab (హబక్కూకు)", "Zephaniah": "Zeph (జెఫన్యా)", "Haggai": "Hag (హగ్గయి)",
-                "Zechariah": "Zech (జెకర్యా)", "Malachi": "Mal (మలాకీ)", "Matthew": "Matt (మత్తయి)", "Mark": "Mark (మార్కు)",
-                "Luke": "Luke (లూకా)", "John": "John (యోహాను)", "Acts": "Acts (అపొస్తలుల)", "Romans": "Rom (రోమీయులకు)", "1 Corinthians": "1 Cor",
-                "2 Corinthians": "2 Cor", "Galatians": "Gal (గలతీయులకు)", "Ephesians": "Eph (ఎఫెసీయులకు)", "Philippians": "Phil (ఫిలిప్పీయులకు)",
-                "Colossians": "Col (కొలొస్సయులకు)", "1 Thessalonians": "1 Thess", "2 Thessalonians": "2 Thess", "1 Timothy": "1 Tim",
-                "2 Timothy": "2 Tim", "Titus": "Titus (తీతుకు)", "Philemon": "Philem", "Hebrews": "Heb (హెబ్రీయులకు)", "James": "James (యాకోబు)",
-                "1 Peter": "1 Pet", "2 Peter": "2 Pet", "1 John": "1 John", "2 John": "2 John", "3 John": "3 John", "Jude": "Jude (యూదా)", "Revelation": "Rev (ప్రకటన)"
+                "Joshua": "Josh (యెహో)", "Judges": "Judg (న్యాయా)", "Ruth": "Ruth (రూతు)", "1 Samuel": "1 Sam (సమూ)", "2 Samuel": "2 Sam (సమూ)",
+                "1 Kings": "1 Kgs (రాజు)", "2 Kings": "2 Kgs (రాజు)", "1 Chronicles": "1 Chron (దిన)", "2 Chronicles": "2 Chron (దిన)", "Ezra": "Ezra (ఎజ్రా)",
+                "Nehemiah": "Neh (నెహె)", "Esther": "Esth (ఎస్తే)", "Job": "Job (యోబు)", "Psalms": "Psalms (కీర్త)", "Proverbs": "Prov (సామె)",
+                "Ecclesiastes": "Eccl (ప్రస)", "Song of Solomon": "Song (పర)", "Isaiah": "Isa (యెషయా)", "Jeremiah": "Jer (యిర్మి)",
+                "Lamentations": "Lam (విలా)", "Ezekiel": "Ezek (యెహె)", "Daniel": "Dan (దాని)", "Hosea": "Hos (హోషే)",
+                "Joel": "Joel (యోయే)", "Amos": "Amos (ఆమో)", "Obad": "Obad (ఓబ)", "Jonah": "Jonah (యోనా)", "Micah": "Micah (మీకా)",
+                "Nahum": "Nah (నహూ)", "Habakkuk": "Hab (హబ)", "Zephaniah": "Zeph (జెఫ)", "Haggai": "Hag (హగ్గ)",
+                "Zechariah": "Zech (జెక)", "Malachi": "Mal (మలా)", "Matthew": "Matt (మత్త)", "Mark": "Mark (మార్కు)",
+                "Luke": "Luke (లూకా)", "John": "John (యోహా)", "Acts": "Acts (అపొ)", "Romans": "Rom (రోమ)", "1 Corinthians": "1 Cor (కొరిం)",
+                "2 Corinthians": "2 Cor (కొరిం)", "Galatians": "Gal (గలతీ)", "Ephesians": "Eph (ఎఫెసీ)", "Philippians": "Phil (ఫిలిప్పీ)",
+                "Colossians": "Col (కొలొ)", "1 Thessalonians": "1 Thess (థెస్స)", "2 Thessalonians": "2 Thess (థెస్స)", "1 Timothy": "1 Tim (తిమో)",
+                "2 Timothy": "2 Tim (తిమో)", "Titus": "Titus (తీతు)", "Philemon": "Phil (ఫిలే)", "Hebrews": "Heb (హెబ్రీ)", "James": "James (యాకో)",
+                "1 Peter": "1 Pet (పేతు)", "2 Peter": "2 Pet (పేతు)", "1 John": "1 Jo (యోహా)", "2 John": "2 Jo (యోహా)", "3 John": "3 Jo (యోహా)", "Jude": "Jude (యూదా)", "Revelation": "Rev (ప్రక)"
             };
             if (mapping[trimmed]) return mapping[trimmed];
             return trimmed.length > 12 ? trimmed.substring(0, 10) + '...' : trimmed;
@@ -283,8 +283,10 @@
                 document.body.style.margin = "0";
                 document.body.style.overflow = "hidden";
                 document.body.innerHTML = `
-                    <div id="obsDisplayContainer" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; background-color: #008000; overflow: hidden; background-size: cover; background-position: center;">
-                        <p id="obsDisplayText" style="width: 90%; margin: 0; padding: 20px; text-align: justify; font-weight: 700; line-height: 1.35; transition: all 0.15s ease-in-out;"></p>
+                    <div id="obsDisplayContainer" style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; background-color: #008000; overflow: hidden; background-size: cover; background-position: center; position: relative;">
+                        <p id="obsDisplayText" style="width: 90%; max-height: 90vh; margin: 0; padding: 20px; text-align: justify; font-weight: 700; line-height: 1.35;"></p>
+                        <!-- Invisible element to pre-calculate dynamic height requirements to avoid layout shift -->
+                        <p id="ghostDisplayText" style="width: 90%; max-height: 90vh; margin: 0; padding: 20px; text-align: justify; font-weight: 700; line-height: 1.35; position: absolute; visibility: hidden; pointer-events: none;"></p>
                     </div>`;
                 applyOBSStylesToDisplay();
                 initFirebaseSync();
@@ -457,11 +459,30 @@
                     
                     if (isDisplayMode) {
                         let textElem = document.getElementById('obsDisplayText');
+                        let ghostElem = document.getElementById('ghostDisplayText');
+                        let container = document.getElementById('obsDisplayContainer');
+
                         if (data.isClear) {
                             if (typingTimer) clearTimeout(typingTimer);
                             textElem.innerHTML = '';
+                            if (ghostElem) ghostElem.innerHTML = '';
                         }
                         else if (data.activeTextHtml) {
+                            // Calculate proper font size using a ghost element to prevent overflow clipping
+                            let baseFontSize = parseFloat(obsConfig.fontSize) || 4.0;
+                            if (ghostElem && container) {
+                                ghostElem.style.fontSize = baseFontSize + 'vw';
+                                ghostElem.innerHTML = data.activeTextHtml;
+                                
+                                let currentSize = baseFontSize;
+                                let maxHeight = container.clientHeight * 0.95; 
+                                
+                                while (ghostElem.scrollHeight > maxHeight && currentSize > 1.0) {
+                                    currentSize -= 0.15; // Step down dynamically
+                                    ghostElem.style.fontSize = currentSize + 'vw';
+                                }
+                                textElem.style.fontSize = currentSize + 'vw';
+                            }
                             typeWriterHTML(textElem, data.activeTextHtml, 15); 
                         }
                         return;
@@ -599,15 +620,23 @@
         function applyOBSStylesToDisplay() {
             var container = document.getElementById('obsDisplayContainer');
             var textElem = document.getElementById('obsDisplayText');
+            var ghostElem = document.getElementById('ghostDisplayText');
             if (!container || !textElem) return;
 
             container.style.backgroundImage = obsConfig.bgImage ? `url('${obsConfig.bgImage}')` : 'none';
             container.style.backgroundColor = obsConfig.bgImage ? 'transparent' : (obsConfig.bgColor || '#008000');
-            textElem.style.fontSize = obsConfig.fontSize || '4.0vw';
+            
             textElem.style.fontFamily = obsConfig.fontFamily || "'Mandali', sans-serif";
             textElem.style.textAlign = obsConfig.textAlign || 'justify';
             textElem.style.color = obsConfig.textColor || '#ffffff';
             textElem.style.textShadow = obsConfig.textShadow ? "2px 2px 8px rgba(0,0,0,0.8), -2px -2px 8px rgba(0,0,0,0.8)" : "none";
+            textElem.style.fontSize = obsConfig.fontSize || '4.0vw';
+            
+            if(ghostElem) {
+                ghostElem.style.fontFamily = textElem.style.fontFamily;
+                ghostElem.style.textAlign = textElem.style.textAlign;
+                ghostElem.style.fontSize = textElem.style.fontSize;
+            }
         }
 
         function applyDesktopStylesFromModal() {
@@ -775,6 +804,19 @@
             renderBibleDrillDown();
         }
 
+        function getBibleCategoryStyle(index) {
+            let base = "border transition-colors hover:opacity-90 ";
+            if (index >= 0 && index <= 4) return base + "bg-blue-600 text-white border-blue-700"; 
+            if (index >= 5 && index <= 16) return base + "bg-emerald-600 text-white border-emerald-700";
+            if (index >= 17 && index <= 21) return base + "bg-amber-600 text-white border-amber-700"; 
+            if (index >= 22 && index <= 38) return base + "bg-purple-600 text-white border-purple-700"; 
+            if (index >= 39 && index <= 42) return base + "bg-red-600 text-white border-red-700"; 
+            if (index === 43) return base + "bg-sky-500 text-white border-sky-600"; 
+            if (index >= 44 && index <= 64) return base + "bg-rose-500 text-white border-rose-600"; 
+            if (index === 65) return base + "bg-violet-600 text-white border-violet-700"; 
+            return base + "bg-white text-gray-900 border-gray-300 dark:bg-[#262626] dark:border-[#111] dark:text-white";
+        }
+
         function renderBibleDrillDown() {
             let container = document.getElementById('bibleDrilldownContainer');
             if (!container) return;
@@ -816,13 +858,17 @@
 
             if (bibleState.viewLevel === 'books') {
                 let grid = document.createElement('div');
-                grid.className = "grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 pb-4";
-                Object.keys(primaryDict).forEach(bKey => {
+                let booksGridClass = isDockMode ? "grid grid-cols-4 gap-1.5 pb-4" : "grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2.5 pb-4";
+                grid.className = booksGridClass;
+                
+                let bookKeys = Object.keys(primaryDict);
+                bookKeys.forEach((bKey, index) => {
                     let fullName = primaryDict[bKey].name || bKey;
                     let shortName = getShortBookName(fullName);
+                    let catStyle = getBibleCategoryStyle(index);
 
                     let btn = document.createElement('button');
-                    btn.className = "grid-btn bg-white border border-gray-300 hover:bg-blue-50 text-gray-900 dark:bg-[#262626] dark:border-[#111] dark:hover:bg-[#444] dark:text-white font-telugu min-h-[50px] px-2 shadow-sm dark:shadow-none";
+                    btn.className = `grid-btn font-telugu shadow-sm dark:shadow-none ${catStyle} ${isDockMode ? 'min-h-[40px] text-[11px] px-1' : 'min-h-[50px] px-2'}`;
                     btn.title = fullName;
                     btn.textContent = shortName;
                     btn.onclick = () => {
@@ -835,11 +881,13 @@
             } 
             else if (bibleState.viewLevel === 'chapters') {
                 let grid = document.createElement('div');
-                grid.className = "grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2.5 pb-4";
+                let chapsGridClass = isDockMode ? "grid grid-cols-6 gap-1.5 pb-4" : "grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2.5 pb-4";
+                grid.className = chapsGridClass;
+                
                 let chaps = Object.keys(primaryDict[bibleState.book]?.chapters || { "1": {} });
                 chaps.forEach(ch => {
                     let btn = document.createElement('button');
-                    btn.className = "grid-btn bg-white border border-gray-300 hover:bg-blue-50 text-gray-900 dark:bg-[#262626] dark:border-[#111] dark:hover:bg-[#444] dark:text-white h-[48px] text-lg font-bold shadow-sm dark:shadow-none";
+                    btn.className = `grid-btn bg-white border border-gray-300 hover:bg-blue-50 text-gray-900 dark:bg-[#262626] dark:border-[#111] dark:hover:bg-[#444] dark:text-white font-bold shadow-sm dark:shadow-none ${isDockMode ? 'h-[36px] text-sm' : 'h-[48px] text-lg'}`;
                     btn.textContent = ch;
                     btn.onclick = () => {
                         bibleState.chapter = ch;
@@ -851,7 +899,8 @@
             }
             else if (bibleState.viewLevel === 'verses') {
                 let grid = document.createElement('div');
-                grid.className = "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-1.5 pb-6";
+                let versesGridClass = isDockMode ? "grid grid-cols-6 gap-1 pb-6" : "grid grid-cols-4 sm:grid-cols-5 md:grid-cols-8 lg:grid-cols-10 gap-1.5 pb-6";
+                grid.className = versesGridClass;
 
                 let chKey = bibleState.chapter;
                 let navLang = bibleState.navLang;
@@ -881,11 +930,11 @@
 
                     let isActive = (bibleState.lastSelectedVerseNum === vNum);
                     let bgClass = isActive 
-                        ? "bg-blue-100 border-blue-400 text-blue-900 dark:bg-[#555] dark:border-[#777] dark:text-white" 
+                        ? "bg-blue-600 border-blue-700 text-white dark:bg-blue-600 dark:border-blue-700" 
                         : "bg-white border-gray-300 hover:bg-gray-100 text-gray-800 dark:bg-[#262626] dark:border-[#111] dark:hover:bg-[#444] dark:text-white";
 
                     let tile = document.createElement('button');
-                    tile.className = `bible-verse-tile h-12 ${bgClass} rounded-md font-bold text-sm flex items-center justify-center transition shadow-sm dark:shadow-none`;
+                    tile.className = `bible-verse-tile ${bgClass} rounded-md font-bold flex items-center justify-center transition shadow-sm dark:shadow-none ${isDockMode ? 'h-8 text-xs' : 'h-12 text-sm'}`;
                     tile.textContent = vNum;
                     tile.title = `${refStr}: ${text1.substring(0, 40)}...`;
 

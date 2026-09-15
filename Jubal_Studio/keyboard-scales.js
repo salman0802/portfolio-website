@@ -146,7 +146,13 @@ export function buildMiniViz() {
   const container = document.getElementById("mini-accomp-viz");
   if (!container) return;
   container.innerHTML = "";
-  let currentX = 0;
+
+  // Keep the one-octave chord keyboard fluid. The old renderer used a hard
+  // 280px width, which overflowed narrow/resized Harmony docks. Positions and
+  // key widths are now percentages of the seven white-key octave.
+  const whiteWidth = 100 / 7;
+  const blackWidth = whiteWidth * 0.6;
+  let whiteIndex = 0;
 
   notesArray.forEach(noteStr => {
     const isBlack = noteStr.includes("#");
@@ -154,9 +160,16 @@ export function buildMiniViz() {
     key.className = `mini-key ${isBlack ? "black" : "white"}`;
     key.id = `mini-viz-${noteStr}`;
     key.dataset.note = noteStr;
-    key.style.left = `${isBlack ? currentX - 12 : currentX}px`;
 
-    if (!isBlack) currentX += 40;
+    if (isBlack) {
+      key.style.left = `${whiteIndex * whiteWidth - blackWidth / 2}%`;
+      key.style.width = `${blackWidth}%`;
+    } else {
+      key.style.left = `${whiteIndex * whiteWidth}%`;
+      key.style.width = `${whiteWidth}%`;
+      whiteIndex++;
+    }
+
     key.addEventListener("mousedown", e => {
       e.preventDefault();
       emit("miniNoteOn", { note: noteStr, octave: 3, midi: noteToMidi(noteStr, 3), sourceId: `mini:${noteStr}` });
@@ -165,5 +178,6 @@ export function buildMiniViz() {
     container.appendChild(key);
   });
 
-  container.style.width = `${currentX}px`;
+  container.style.width = "100%";
 }
+

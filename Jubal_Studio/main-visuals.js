@@ -96,7 +96,28 @@ window.addEventListener("jubal:resolvedNoteOff", e => {
   notes.forEach(note => modify(map, note, false));
   if (isLive) updateLiveVisuals(); else updateLearnVisuals();
 });
-window.addEventListener("jubal:recordVisualOn", e => e.detail.notes?.forEach(note => modifyActiveLiveNote(note, true)));
-window.addEventListener("jubal:recordVisualOff", e => e.detail.notes?.forEach(note => modifyActiveLiveNote(note, false)));
+window.addEventListener("jubal:recordVisualOn", e => {
+  e.detail.notes?.forEach(note => modifyActiveLiveNote(note, true));
+  updateLiveVisuals();
+});
+window.addEventListener("jubal:recordVisualOff", e => {
+  e.detail.notes?.forEach(note => modifyActiveLiveNote(note, false));
+  updateLiveVisuals();
+});
 window.addEventListener("jubal:clearLiveVisuals", clearLiveVisuals);
 window.addEventListener("jubal:clearLearnVisuals", clearLearnVisuals);
+
+
+// Imported MIDI/player playback uses dedicated learnVisual events instead of
+// resolved keyboard events. Keep the same reference-counted visual state so
+// overlapping notes animate/release correctly on the practice keyboard.
+window.addEventListener("jubal:learnVisualOn", e => {
+  const notes = e.detail?.notes || (e.detail?.name ? [e.detail.name] : []);
+  notes.forEach(note => modifyActiveLearnNote(note, true));
+  updateLearnVisuals();
+});
+window.addEventListener("jubal:learnVisualOff", e => {
+  const notes = e.detail?.notes || (e.detail?.name ? [e.detail.name] : []);
+  notes.forEach(note => modifyActiveLearnNote(note, false));
+  updateLearnVisuals();
+});

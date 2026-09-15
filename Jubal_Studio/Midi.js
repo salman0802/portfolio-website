@@ -52,7 +52,7 @@ function flashPad(actionKey) {
   const padMap = document.getElementById("pads-toggle")?.parentElement?.parentElement?.querySelectorAll(".drum-pad");
   const index = [...arrangerPadMappings, ...appPadMappings].findIndex(x => x === actionKey);
   const pad = document.getElementById("drum-pad-grid")?.children[
-    (document.getElementById("pads-toggle")?.innerText.includes("ARRANGER") ? arrangerPadMappings : appPadMappings).indexOf(actionKey)
+    (document.getElementById("pads-toggle")?.dataset.mode !== "app" ? arrangerPadMappings : appPadMappings).indexOf(actionKey)
   ];
   if (pad) {
     pad.classList.add("active");
@@ -79,10 +79,10 @@ export function updateHardwareUI({ currentPadMode = "arranger", knobModeSynth = 
       const display = mapping.id !== null
         ? `[${mapping.type === "cc" ? "C" : "N"}${mapping.id}]`
         : "[--]";
-      pad.innerHTML = `${actionNames[actionKey]}<br><span style="font-size:0.4rem; color:var(--text-muted);">${display}</span>`;
-      pad.style.color = mapping.id !== null ? (index === 7 ? "var(--accent-gold)" : "var(--accent-cyan)") : "#475569";
-      pad.style.borderColor = mapping.id !== null ? (index === 7 ? "var(--accent-gold)" : "var(--accent-cyan)") : "#1e293b";
-      pad.style.background = index === 7 && mapping.id !== null ? "rgba(255, 215, 0, 0.08)" : (mapping.id !== null ? "rgba(0, 229, 255, 0.05)" : "");
+      pad.innerHTML = `${actionNames[actionKey]}<br><span style="font-size:0.45rem; color:var(--text-muted);">${display}</span>`;
+      pad.style.color = mapping.id !== null ? (index === 7 ? "var(--accent-gold)" : "#a9c3f7") : "var(--text-muted)";
+      pad.style.borderColor = mapping.id !== null ? (index === 7 ? "rgba(216,168,78,.55)" : "rgba(91,141,239,.5)") : "var(--border-color)";
+      pad.style.background = index === 7 && mapping.id !== null ? "rgba(216,168,78,.08)" : (mapping.id !== null ? "rgba(91,141,239,.08)" : "");
     });
   }
 
@@ -98,10 +98,10 @@ export function updateHardwareUI({ currentPadMode = "arranger", knobModeSynth = 
       const key = appKnobMappings[i];
       const mapping = midiMap[key];
       label.innerText = actionNames[key] + (mapping.id !== null ? ` [C${mapping.id}]` : " [--]");
-      knob.style.borderColor = mapping.id !== null ? "var(--accent-gold)" : "#334155";
+      knob.style.borderColor = mapping.id !== null ? "var(--accent-gold)" : "var(--border-strong)";
     } else {
       label.innerText = "--";
-      knob.style.borderColor = "#334155";
+      knob.style.borderColor = "var(--border-strong)";
     }
   }
 }
@@ -162,16 +162,19 @@ export async function initMIDI() {
   }
   try {
     access = await navigator.requestMIDIAccess();
-    const updateStatus = () => {
-      const hasInputs = [...access.inputs.values()].some(input => input.state === "connected");
+    const syncInputsAndStatus = () => {
+      const inputs = [...access.inputs.values()];
+      inputs.forEach(input => {
+        if (input.state === "connected") input.onmidimessage = processMIDI;
+      });
+      const hasInputs = inputs.some(input => input.state === "connected");
       const text = document.getElementById("midi-text");
       const dot = document.getElementById("midi-dot");
       if (text) text.innerText = hasInputs ? "MIDI: Active" : "MIDI: Offline";
       if (dot) dot.className = hasInputs ? "status-dot active" : "status-dot";
     };
-    updateStatus();
-    access.onstatechange = updateStatus;
-    access.inputs.forEach(input => input.onmidimessage = processMIDI);
+    syncInputsAndStatus();
+    access.onstatechange = syncInputsAndStatus;
   } catch {
     document.getElementById("midi-text")?.replaceChildren(document.createTextNode("MIDI Blocked"));
   }
